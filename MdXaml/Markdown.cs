@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Cache;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -18,7 +19,7 @@ using System.Windows.Shapes;
 
 namespace MdXaml
 {
-    public class Markdown : DependencyObject
+    public class Markdown : DependencyObject, IUriContext
     {
         #region const
         /// <summary>
@@ -67,6 +68,7 @@ namespace MdXaml
 
         public ICommand HyperlinkCommand { get; set; }
 
+        public Uri BaseUri { get; set; }
 
         #region dependencyobject property
 
@@ -114,6 +116,7 @@ namespace MdXaml
         public Markdown()
         {
             HyperlinkCommand = NavigationCommands.GoToPage;
+            AssetPathRoot = Environment.CurrentDirectory;
         }
 
         public FlowDocument Transform(string text)
@@ -333,6 +336,7 @@ namespace MdXaml
             return Evaluate(text, _imageInline, ImageInlineEvaluator, defaultHandler);
         }
 
+
         private Inline ImageInlineEvaluator(Match match)
         {
             if (match == null)
@@ -353,33 +357,44 @@ namespace MdXaml
 
             BitmapImage imgSource = null;
 
+            // check embedded resoruce
             try
             {
-                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !System.IO.Path.IsPathRooted(url))
+                Uri packUri;
+                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && BaseUri != null)
                 {
-                    url = System.IO.Path.Combine(AssetPathRoot ?? string.Empty, url);
-                }
-
-                if (DisabledLazyLoad)
-                {
-                    imgSource = new BitmapImage(new Uri(url, UriKind.RelativeOrAbsolute));
+                    packUri = new Uri(BaseUri, url);
                 }
                 else
                 {
-                    imgSource = new BitmapImage();
-                    imgSource.BeginInit();
-                    imgSource.CacheOption = BitmapCacheOption.None;
-                    imgSource.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
-                    imgSource.CacheOption = BitmapCacheOption.OnLoad;
-                    imgSource.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-                    imgSource.UriSource = new Uri(url);
-                    imgSource.EndInit();
+                    packUri = new Uri(url);
                 }
+
+                imgSource = MakeImage(packUri);
             }
-            catch (Exception)
+            catch { }
+
+            // check filesystem
+            if (imgSource == null)
+            {
+                try
+                {
+                    if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !System.IO.Path.IsPathRooted(url))
+                    {
+                        url = System.IO.Path.Combine(AssetPathRoot ?? string.Empty, url);
+                    }
+
+                    imgSource = MakeImage(new Uri(url, UriKind.RelativeOrAbsolute));
+                }
+                catch { }
+            }
+
+            // error
+            if (imgSource == null)
             {
                 return new Run("!" + url) { Foreground = Brushes.Red };
             }
+
 
             Image image = new Image { Source = imgSource, Tag = linkText };
             if (ImageStyle == null)
@@ -417,6 +432,27 @@ namespace MdXaml
             }
 
             return new InlineUIContainer(image);
+        }
+
+        private BitmapImage MakeImage(Uri url)
+        {
+            if (DisabledLazyLoad)
+            {
+                return new BitmapImage(url);
+            }
+            else
+            {
+                var imgSource = new BitmapImage();
+                imgSource.BeginInit();
+                imgSource.CacheOption = BitmapCacheOption.None;
+                imgSource.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
+                imgSource.CacheOption = BitmapCacheOption.OnLoad;
+                imgSource.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+                imgSource.UriSource = url;
+                imgSource.EndInit();
+
+                return imgSource;
+            }
         }
 
         #endregion
@@ -833,7 +869,7 @@ namespace MdXaml
                 )
                 [ ]*\r?\n[ ]*
                 (                           # $4 = column style
-                    \|(:?-+:?\|)+           # $5
+                    \|(:?-+:?\|)*           # $5
                 )
                 (                           # $6 = table row
                     (                       # $7
@@ -861,57 +897,18 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(match));
             }
 
-            var wholeTable = match.Groups[1].Value;
-            var header = match.Groups[2].Value.Trim();
-            var style = match.Groups[4].Value.Trim();
-            var row = match.Groups[6].Value.Trim();
+            var headerTxt = match.Groups[2].Value.Trim();
+            var styleTxt = match.Groups[4].Value.Trim();
+            var rowTxt = match.Groups[6].Value.Trim();
 
-            var styles = style.Substring(1, style.Length - 2).Split('|');
-            var headers = header.Substring(1, header.Length - 2).Split('|');
-            var rowList = row.Split('\n').Select(ritm =>
-            {
-                var trimRitm = ritm.Trim();
-                return trimRitm.Substring(1, trimRitm.Length - 2).Split('|');
-            }).ToList();
-
-            int maxColCount =
-                Math.Max(
-                    Math.Max(styles.Length, headers.Length),
-                    rowList.Select(ritm => ritm.Length).Max()
-                );
-
-
-            // table style
-            var aligns = new List<TextAlignment?>();
-            foreach (var colStyleTxt in styles)
-            {
-                var firstChar = colStyleTxt.First();
-                var lastChar = colStyleTxt.Last();
-                // center
-                if (firstChar == ':' && lastChar == ':')
+            var mdtable = new MdTable(
+                headerTxt.Substring(1, headerTxt.Length - 2).Split('|'),
+                styleTxt.Substring(1, styleTxt.Length - 2).Split('|'),
+                rowTxt.Split('\n').Select(ritm =>
                 {
-                    aligns.Add(TextAlignment.Center);
-                }
-                // right
-                else if (lastChar == ':')
-                {
-                    aligns.Add(TextAlignment.Right);
-                }
-                // left
-                else if (firstChar == ':')
-                {
-                    aligns.Add(TextAlignment.Left);
-                }
-                // default
-                else
-                {
-                    aligns.Add(null);
-                }
-            }
-            while (aligns.Count < maxColCount)
-            {
-                aligns.Add(null);
-            }
+                    var trimRitm = ritm.Trim();
+                    return trimRitm.Substring(1, trimRitm.Length - 2).Split('|');
+                }).ToList());
 
             // table
             var table = new Table();
@@ -921,10 +918,8 @@ namespace MdXaml
             }
 
             // table columns
-            while (table.Columns.Count < maxColCount)
-            {
+            while (table.Columns.Count < mdtable.ColCount)
                 table.Columns.Add(new TableColumn());
-            }
 
             // table header
             var tableHeaderRG = new TableRowGroup();
@@ -937,7 +932,7 @@ namespace MdXaml
                 tableHeaderRG.Tag = TagTableHeader;
             }
 
-            var tableHeader = CreateTableRow(headers, aligns);
+            var tableHeader = CreateTableRow(mdtable.Header);
             tableHeaderRG.Rows.Add(tableHeader);
             table.RowGroups.Add(tableHeaderRG);
 
@@ -951,11 +946,10 @@ namespace MdXaml
             {
                 tableBodyRG.Tag = TagTableBody;
             }
-            foreach (int rowIdx in Enumerable.Range(0, rowList.Count))
-            {
-                string[] rowAry = rowList[rowIdx];
 
-                var tableBody = CreateTableRow(rowAry, aligns);
+            foreach (int rowIdx in Enumerable.Range(0, mdtable.Details.Count))
+            {
+                var tableBody = CreateTableRow(mdtable.Details[rowIdx]);
                 if (!DisabledTag)
                 {
                     tableBody.Tag = (rowIdx & 1) == 0 ? TagOddTableRow : TagEvenTableRow;
@@ -968,29 +962,26 @@ namespace MdXaml
             return table;
         }
 
-        private TableRow CreateTableRow(string[] txts, List<TextAlignment?> aligns)
+        private TableRow CreateTableRow(IList<MdTableCell> mdcells)
         {
             var tableRow = new TableRow();
 
-            foreach (var idx in Enumerable.Range(0, txts.Length))
+            foreach (var mdcell in mdcells)
             {
-                var txt = txts[idx];
-                var align = aligns[idx];
+                var paragraph = Create<Paragraph, Inline>(RunSpanGamut(mdcell.Text));
 
-                var paragraph = Create<Paragraph, Inline>(RunSpanGamut(txt));
                 var cell = new TableCell(paragraph);
 
-                if (align.HasValue)
-                {
-                    cell.TextAlignment = align.Value;
-                }
+                if (mdcell.Horizontal.HasValue)
+                    cell.TextAlignment = mdcell.Horizontal.Value;
+
+                if (mdcell.RowSpan != 1)
+                    cell.RowSpan = mdcell.RowSpan;
+
+                if (mdcell.ColSpan != 1)
+                    cell.ColumnSpan = mdcell.ColSpan;
 
                 tableRow.Cells.Add(cell);
-            }
-
-            while (tableRow.Cells.Count < aligns.Count)
-            {
-                tableRow.Cells.Add(new TableCell());
             }
 
             return tableRow;

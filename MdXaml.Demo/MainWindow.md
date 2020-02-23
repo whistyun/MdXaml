@@ -28,7 +28,11 @@ If there are any bug fixes to the regular expressions in MarkdownSharp, merging 
 
 * Local images
 
-![localimage](sampleimage.jpg)
+![localimage](LocalPath.png)
+
+* Resource image
+
+![ResourceImage](Asset/ResourceImage.png)
 
 * Table
 
@@ -36,8 +40,8 @@ table begin string
 |a|b|c|d|
 |:-:|:-|-:|
 |a1234567890|b1234567890|c1234567890|d1234567890|
-|a|b|c|d|
-|A||C|
+|a|/2.b|c|d|
+|A|\2.C|
 |1|2|3|4|
 |あ|い|う|え|
 table end string
