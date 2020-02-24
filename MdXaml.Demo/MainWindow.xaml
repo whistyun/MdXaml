@@ -5,8 +5,7 @@
         xmlns:local="clr-namespace:MdXaml.Demo"
         Title="MdXaml Demo"
         Height="600"
-        Width="800"
-        Loaded="Window_Loaded_1">
+        Width="800">
     <Window.Resources>
         <local:MainWindowViewModel x:Key="ViewModel"/>
 
@@ -49,13 +48,14 @@
 
                 </ComboBox>
 
-                <TextBox x:Name="editSource1"
+                <TextBox
                     Grid.Row="1" Grid.Column="0"
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
                     TextWrapping="Wrap"
                     AcceptsReturn="True"
                     Margin="5" 
+                    Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
                     VerticalScrollBarVisibility="Auto"/>
 
                 <mdxam:MarkdownScrollViewer
@@ -64,7 +64,7 @@
                     HorizontalAlignment="Stretch"
                     Margin="5"
                     MarkdownStyle="{Binding SelectedStyleInfo.Style}"
-                    Markdown="{Binding ElementName=editSource1, Path=Text}"
+                    Markdown="{Binding Text}"
                      />
 
             </Grid>
@@ -77,7 +77,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBox x:Name="editSource2"
+                <TextBox
                      Grid.Row="0"
                      Grid.Column="0"
                      VerticalAlignment="Stretch"
@@ -85,15 +85,8 @@
                      TextWrapping="Wrap"
                      AcceptsReturn="True"
                      Margin="5" 
-                     xml:space="preserve"
-                     VerticalScrollBarVisibility="Auto"># H1 Header
-
-text contents
-**BOLD** and *Italic*
-|column1|column2|
-|--|--|
-|row1|row2|
-                </TextBox>
+                     Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalScrollBarVisibility="Auto"/>
 
                 <TextBox x:Name="outXaml3"
                     Grid.Row="0"
@@ -103,7 +96,7 @@ text contents
                     IsReadOnly="True"
                     HorizontalScrollBarVisibility="Auto"
                     VerticalScrollBarVisibility="Auto"
-                    Text="{Binding ElementName=editSource2, Path=Text, Converter={StaticResource MarkdownXamlConverter}}">
+                    Text="{Binding Path=Text, Converter={StaticResource MarkdownXamlConverter}}">
                 </TextBox>
             </Grid>
         </TabItem>

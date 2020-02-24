@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
@@ -26,11 +27,11 @@ namespace MdXaml.Demo
 
             Styles = new List<StyleInfo>();
 
-            var standardInf = new StyleInfo("Standard", MarkdownStyle.Standard);
-            SelectedStyleInfo = standardInf;
-
-            Styles.Add(standardInf);
+            Styles.Add(new StyleInfo("Plain", null));
+            Styles.Add(new StyleInfo("Standard", MarkdownStyle.Standard));
             Styles.Add(new StyleInfo("Compact", MarkdownStyle.Compact));
+
+            SelectedStyleInfo = Styles[1];
 
             foreach (var rscNm in resources.Keys)
             {
@@ -40,7 +41,22 @@ namespace MdXaml.Demo
                 }
             }
 
-            Styles.Add(new StyleInfo("Plain", null));
+            var subjectType = typeof(MainWindow);
+            var subjectAssembly = GetType().Assembly;
+            using (Stream stream = subjectAssembly.GetManifestResourceStream(subjectType.FullName + ".md"))
+            {
+
+                if (stream == null)
+                {
+                    Text = String.Format("Could not find sample text *{0}*.md", subjectType.FullName);
+                }
+
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    Text = reader.ReadToEnd();
+                }
+            }
+
         }
 
 
@@ -68,6 +84,36 @@ namespace MdXaml.Demo
             }
         }
 
+        public string _text;
+        public string Text
+        {
+            get { return _text; }
+            set
+            {
+                if (_text == value) return;
+                _text = value;
+
+                if (TextChangeEvent == null || TextChangeEvent.Status >= TaskStatus.RanToCompletion)
+                {
+                    TextChangeEvent = Task.Run(() =>
+                    {
+                        Task.Delay(100);
+                    retry:
+                        var oldVal = _text;
+
+                        Thread.MemoryBarrier();
+                        FirePropertyChanged(nameof(Text));
+
+                        Thread.MemoryBarrier();
+                        if (oldVal != _text) goto retry;
+                    });
+                }
+            }
+        }
+
+        private Task TextChangeEvent;
+
+
         /// <summary> <see cref="INotifyPropertyChanged"/> </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -93,6 +139,32 @@ namespace MdXaml.Demo
         {
             Name = name;
             Style = style;
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
+        public override bool Equals(object val)
+        {
+            if (val is StyleInfo sf)
+            {
+                return Name == sf.Name;
+            }
+            else return false;
+        }
+
+        public static bool operator ==(StyleInfo left, StyleInfo right)
+        {
+            if (Object.ReferenceEquals(left, right)) return true;
+            if (Object.ReferenceEquals(left, null)) return false;
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(StyleInfo left, StyleInfo right)
+        {
+            return !(left == right);
         }
     }
 }

@@ -26,37 +26,16 @@ namespace MdXaml.Demo
         {
             InitializeComponent();
 
-            CommandBindings.Add(new CommandBinding(NavigationCommands.GoToPage, (sender, e) => Process.Start((string)e.Parameter)));
-        }
-
-        private void Window_Loaded_1(object sender, RoutedEventArgs e)
-        {
-
-            var sampleMarkdown = LoadSample();
-
-            editSource1.Text = sampleMarkdown;
-            editSource2.Text = sampleMarkdown;
-        }
-
-        private string LoadSample()
-
-        {
-            var subjectType = GetType();
-            var subjectAssembly = subjectType.Assembly;
-
-            using (Stream stream = subjectAssembly.GetManifestResourceStream(subjectType.FullName + ".md"))
-            {
-
-                if (stream == null)
+            CommandBindings.Add(new CommandBinding(
+                NavigationCommands.GoToPage,
+                (sender, e) =>
                 {
-                    return String.Format("Could not find sample text *{0}*.md", subjectType.FullName);
-                }
+                    var proc = new Process();
+                    proc.StartInfo.UseShellExecute = true;
+                    proc.StartInfo.FileName = (string)e.Parameter;
 
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
+                    proc.Start();
+                }));
         }
     }
 }
