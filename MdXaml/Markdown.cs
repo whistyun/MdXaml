@@ -248,10 +248,9 @@ namespace MdXaml
             }
 
             return DoCodeSpans(text,
-                s0 => DoImages(s0,
-                s1 => DoAnchors(s1,
-                s2 => DoTextDecorations(s2,
-                s3 => DoText(s3)))));
+                s0 => DoImagesOrHrefs(s0,
+                s1 => DoTextDecorations(s1,
+                s2 => DoText(s2))));
 
             //text = EscapeSpecialCharsWithinTagAttributes(text);
             //text = EscapeBackslashes(text);
@@ -334,23 +333,22 @@ namespace MdXaml
 
         #endregion
 
+        #region grammer - image or href
 
-        #region grammer - image
-
-        private static readonly Regex _imageInline = new Regex(string.Format(@"
+        private static readonly Regex _imageOrHrefInline = new Regex(string.Format(@"
                 (                           # wrap whole match in $1
-                    !\[
-                        ({0})               # link text = $2
+                    (!)?\[                  # image marker = $2
+                        ({0})               # link text = $3
                     \]
                     \(                      # literal paren
                         [ ]*
-                        ({1})               # href(with title) = $3
+                        ({1})               # href(with title) = $4
                         [ ]*
                     \)
                 )", GetNestedBracketsPattern(), GetNestedParensPatternWithWhiteSpace()),
                   RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex _imageHrefWithTitle = new Regex(@"^
+        private static readonly Regex _urlWithTitle = new Regex(@"^
                 (                           # wrap whole match in $1
                     (.+?)                   # url = $2
                     [ ]+
@@ -359,35 +357,78 @@ namespace MdXaml
                     \3
                 )$", RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        /// <summary>
-        /// Turn Markdown images into images
-        /// </summary>
-        /// <remarks>
-        /// ![image alt](url) 
-        /// </remarks>
-        private IEnumerable<Inline> DoImages(string text, Func<string, IEnumerable<Inline>> defaultHandler)
+        private IEnumerable<Inline> DoImagesOrHrefs(string text, Func<string, IEnumerable<Inline>> defaultHandler)
         {
             if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
 
-            return Evaluate(text, _imageInline, ImageInlineEvaluator, defaultHandler);
+            return Evaluate(text, _imageOrHrefInline, ImageOrHrefInlineEvaluator, defaultHandler);
         }
 
-
-        private Inline ImageInlineEvaluator(Match match)
+        private Inline ImageOrHrefInlineEvaluator(Match match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            string linkText = match.Groups[2].Value;
-            string url = match.Groups[3].Value;
+            if (String.IsNullOrEmpty(match.Groups[2].Value))
+            {
+                return TreatsAsHref(match);
+            }
+            else
+            {
+                return TreatsAsImage(match);
+            }
+        }
+
+        private Inline TreatsAsHref(Match match)
+        {
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            string linkText = match.Groups[3].Value;
+            string url = match.Groups[4].Value;
+            string title = "";
+
+            var titleMatch = _urlWithTitle.Match(url);
+            if (titleMatch.Success)
+            {
+                url = titleMatch.Groups[2].Value;
+                title = titleMatch.Groups[4].Value;
+            }
+
+            var result = Create<Hyperlink, Inline>(RunSpanGamut(linkText));
+            result.Command = HyperlinkCommand;
+            result.CommandParameter = url;
+
+            if (!DisabledTootip)
+            {
+                result.ToolTip = string.IsNullOrWhiteSpace(title) ?
+                    url :
+                    String.Format("\"{0}\"\r\n{1}", title, url);
+            }
+
+            if (LinkStyle != null)
+            {
+                result.Style = LinkStyle;
+            }
+
+            return result;
+        }
+
+        private Inline TreatsAsImage(Match match)
+        {
+            string linkText = match.Groups[3].Value;
+            string url = match.Groups[4].Value;
             string title = null;
 
-            var titleMatch = _imageHrefWithTitle.Match(url);
+
+            var titleMatch = _urlWithTitle.Match(url);
             if (titleMatch.Success)
             {
                 url = titleMatch.Groups[2].Value;
@@ -493,77 +534,6 @@ namespace MdXaml
 
                 return imgSource;
             }
-        }
-
-        #endregion
-
-
-        #region grammer - anchor
-
-        private static readonly Regex _anchorInline = new Regex(string.Format(@"
-                (                           # wrap whole match in $1
-                    \[
-                        ({0})               # link text = $2
-                    \]
-                    \(                      # literal paren
-                        [ ]*
-                        ({1})               # href = $3
-                        [ ]*
-                        (                   # $4
-                        (['""])             # quote char = $5
-                        (.*?)               # title = $6
-                        \5                  # matching quote
-                        [ ]*                # ignore any spaces between closing quote and )
-                        )?                  # title is optional
-                    \)
-                )", GetNestedBracketsPattern(), GetNestedParensPattern()),
-                  RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-
-        /// <summary>
-        /// Turn Markdown link shortcuts into hyperlinks
-        /// </summary>
-        /// <remarks>
-        /// [link text](url "title") 
-        /// </remarks>
-        private IEnumerable<Inline> DoAnchors(string text, Func<string, IEnumerable<Inline>> defaultHandler)
-        {
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            // Next, inline-style links: [link text](url "optional title") or [link text](url "optional title")
-            return Evaluate(text, _anchorInline, AnchorInlineEvaluator, defaultHandler);
-        }
-
-        private Inline AnchorInlineEvaluator(Match match)
-        {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
-            string linkText = match.Groups[2].Value;
-            string url = match.Groups[3].Value;
-            string title = match.Groups[6].Value;
-
-            var result = Create<Hyperlink, Inline>(RunSpanGamut(linkText));
-            result.Command = HyperlinkCommand;
-            result.CommandParameter = url;
-
-            if (!DisabledTootip)
-            {
-                result.ToolTip = string.IsNullOrWhiteSpace(title) ?
-                    url :
-                    String.Format("\"{0}\"\r\n{1}", title, url);
-            }
-
-            if (LinkStyle != null)
-            {
-                result.Style = LinkStyle;
-            }
-
-            return result;
         }
 
         #endregion
