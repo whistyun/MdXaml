@@ -79,8 +79,8 @@ namespace MdXaml
 
 
             // apply cell style to header
-            var detailsRowCount = new List<int>();
-            var detailsRowCountSummary = 1;
+            var colCntAtDetail = new List<int>();
+            var maxColCntInDetails = 1;
             {
                 var rowSpanLife = new Dictionary<int, MdSpan>();
                 for (var rowIdx = 0; rowIdx < Details.Count; ++rowIdx)
@@ -94,7 +94,23 @@ namespace MdXaml
                         .Select(ent => ent.Value.ColSpan)
                         .Sum();
 
-                    if (rowspansColOffset < detailsRowCountSummary)
+                    /*
+                     * In this row, is space exists to insert cell?
+                     * 
+                     * eg. has space
+                     *    __________________________________
+                     *    | 2x1 cell | 1x1 cell | 1x1 cell |
+                     * -> |          |‾‾‾‾‾‾‾‾‾‾|‾‾‾‾‾‾‾‾‾‾|
+                     *    ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+                     *    
+                     * eg. has no space: multi-rows occupy all space in this row.
+                     *    __________________________________
+                     *    | 2x1 cell |      2x2 cell        |
+                     * -> |          |                      |
+                     *    ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
+                     * 
+                     */
+                    if (rowspansColOffset < maxColCntInDetails)
                     {
                         for (var colIdx = 0; colIdx < row.Count;)
                         {
@@ -143,8 +159,8 @@ namespace MdXaml
                         }
                     }
 
-                    detailsRowCount.Add(colOffset);
-                    detailsRowCountSummary = Math.Max(detailsRowCountSummary, colOffset);
+                    colCntAtDetail.Add(colOffset);
+                    maxColCntInDetails = Math.Max(maxColCntInDetails, colOffset);
 
                     if (!hasAnyCell)
                     {
@@ -152,6 +168,7 @@ namespace MdXaml
                     }
                 }
 
+                // if any multirow is left, insert an empty row.
                 while (rowSpanLife.Count > 0)
                 {
                     Details.Add(new List<MdTableCell>());
@@ -168,18 +185,18 @@ namespace MdXaml
                         }
                     }
 
-                    detailsRowCount.Add(colOffset);
+                    colCntAtDetail.Add(colOffset);
                 }
             }
 
-            ColCount = Math.Max(Math.Max(headerColumnCount, styleColumnCount), detailsRowCountSummary);
+            ColCount = Math.Max(Math.Max(headerColumnCount, styleColumnCount), maxColCntInDetails);
             RowCount = Details.Count;
 
-            while (Header.Count < ColCount)
+            for (var retry = Header.Sum(cell => cell.ColSpan); retry < ColCount; ++retry)
                 Header.Add(new MdTableCell(null));
 
             for (var rowIdx = 0; rowIdx < Details.Count; ++rowIdx)
-                for (var retry = detailsRowCount[rowIdx]; retry < ColCount; ++retry)
+                for (var retry = colCntAtDetail[rowIdx]; retry < ColCount; ++retry)
                     Details[rowIdx].Add(new MdTableCell(null));
 
             //while (Header.Count < ColCount)
