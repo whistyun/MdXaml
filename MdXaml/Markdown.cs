@@ -337,25 +337,24 @@ namespace MdXaml
 
         private static readonly Regex _imageOrHrefInline = new Regex(string.Format(@"
                 (                           # wrap whole match in $1
-                    (!)?\[                  # image marker = $2
+                    (!)?                    # image maker = $2
+                    \[
                         ({0})               # link text = $3
                     \]
                     \(                      # literal paren
                         [ ]*
-                        ({1})               # href(with title) = $4
+                        ({1})               # href = $4
                         [ ]*
+                        (                   # $5
+                        (['""])             # quote char = $6
+                        (.*?)               # title = $7
+                        \6                  # matching quote
+                        [ ]*                # ignore any spaces between closing quote and )
+                        )?                  # title is optional
                     \)
-                )", GetNestedBracketsPattern(), GetNestedParensPatternWithWhiteSpace()),
+                )", GetNestedBracketsPattern(), GetNestedParensPattern()),
                   RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex _urlWithTitle = new Regex(@"^
-                (                           # wrap whole match in $1
-                    (.+?)                   # url = $2
-                    [ ]+
-                    (['""])                 # quote char = $3
-                    (.*?)                   # title = $4
-                    \3
-                )$", RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private IEnumerable<Inline> DoImagesOrHrefs(string text, Func<string, IEnumerable<Inline>> defaultHandler)
         {
@@ -393,14 +392,7 @@ namespace MdXaml
 
             string linkText = match.Groups[3].Value;
             string url = match.Groups[4].Value;
-            string title = "";
-
-            var titleMatch = _urlWithTitle.Match(url);
-            if (titleMatch.Success)
-            {
-                url = titleMatch.Groups[2].Value;
-                title = titleMatch.Groups[4].Value;
-            }
+            string title = match.Groups[7].Value;
 
             var result = Create<Hyperlink, Inline>(RunSpanGamut(linkText));
             result.Command = HyperlinkCommand;
@@ -425,15 +417,7 @@ namespace MdXaml
         {
             string linkText = match.Groups[3].Value;
             string url = match.Groups[4].Value;
-            string title = null;
-
-
-            var titleMatch = _urlWithTitle.Match(url);
-            if (titleMatch.Success)
-            {
-                url = titleMatch.Groups[2].Value;
-                title = titleMatch.Groups[4].Value;
-            }
+            string title = match.Groups[7].Value;
 
             BitmapImage imgSource = null;
 
