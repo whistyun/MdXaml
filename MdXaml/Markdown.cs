@@ -1996,30 +1996,6 @@ namespace MdXaml
             return _nestedParensPattern;
         }
 
-        private static string _nestedParensPatternWithWhiteSpace;
-
-        /// <summary>
-        /// Reusable pattern to match balanced (parens), including whitespace. See Friedl's 
-        /// "Mastering Regular Expressions", 2nd Ed., pp. 328-331.
-        /// </summary>
-        private static string GetNestedParensPatternWithWhiteSpace()
-        {
-            // in other words (this) and (this(also)) and (this(also(too)))
-            // up to _nestDepth
-            if (_nestedParensPatternWithWhiteSpace is null)
-                _nestedParensPatternWithWhiteSpace =
-                    RepeatString(@"
-                    (?>              # Atomic matching
-                       [^()]+      # Anything other than parens
-                     |
-                       \(
-                           ", _nestDepth) + RepeatString(
-                    @" \)
-                    )*"
-                    , _nestDepth);
-            return _nestedParensPatternWithWhiteSpace;
-        }
-
         /// <summary>
         /// this is to emulate what's evailable in PHP
         /// </summary>
