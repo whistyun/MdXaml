@@ -612,4 +612,168 @@
     </TableRowGroup>
   </Table>
   <Paragraph />
+  <BlockUIContainer>
+    <Separator />
+  </BlockUIContainer>
+  <Table>
+    <Table.Columns>
+      <TableColumn />
+      <TableColumn />
+      <TableColumn />
+      <TableColumn />
+    </Table.Columns>
+    <TableRowGroup>
+      <TableRow>
+        <TableCell TextAlignment="Center">
+          <Paragraph>a</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Left">
+          <Paragraph>b</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Right">
+          <Paragraph>c</Paragraph>
+        </TableCell>
+        <TableCell>
+          <Paragraph>d</Paragraph>
+        </TableCell>
+      </TableRow>
+    </TableRowGroup>
+    <TableRowGroup>
+      <TableRow>
+        <TableCell TextAlignment="Center">
+          <Paragraph>a1234567890</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Left">
+          <Paragraph>b1234567890</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Right">
+          <Paragraph>c1234567890</Paragraph>
+        </TableCell>
+        <TableCell>
+          <Paragraph>d1234567890</Paragraph>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell TextAlignment="Center">
+          <Paragraph>a</Paragraph>
+        </TableCell>
+        <TableCell RowSpan="2" TextAlignment="Left">
+          <Paragraph>b</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Right">
+          <Paragraph>c</Paragraph>
+        </TableCell>
+        <TableCell>
+          <Paragraph>d</Paragraph>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell TextAlignment="Center">
+          <Paragraph>A</Paragraph>
+        </TableCell>
+        <TableCell ColumnSpan="2" TextAlignment="Right">
+          <Paragraph>C</Paragraph>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell TextAlignment="Center">
+          <Paragraph>1</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Left">
+          <Paragraph>2</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Right">
+          <Paragraph>3</Paragraph>
+        </TableCell>
+        <TableCell>
+          <Paragraph>4</Paragraph>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell TextAlignment="Center">
+          <Paragraph>あ</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Left">
+          <Paragraph>い</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Right">
+          <Paragraph>う</Paragraph>
+        </TableCell>
+        <TableCell>
+          <Paragraph>え</Paragraph>
+        </TableCell>
+      </TableRow>
+    </TableRowGroup>
+  </Table>
+  <Table>
+    <Table.Columns>
+      <TableColumn />
+      <TableColumn />
+      <TableColumn />
+      <TableColumn />
+    </Table.Columns>
+    <TableRowGroup>
+      <TableRow>
+        <TableCell TextAlignment="Right">
+          <Paragraph>column1</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Center">
+          <Paragraph>column2</Paragraph>
+        </TableCell>
+        <TableCell ColumnSpan="2" TextAlignment="Right">
+          <Paragraph>column3</Paragraph>
+        </TableCell>
+      </TableRow>
+    </TableRowGroup>
+    <TableRowGroup>
+      <TableRow>
+        <TableCell RowSpan="4" TextAlignment="Right">
+          <Paragraph>alpha</Paragraph>
+        </TableCell>
+        <TableCell ColumnSpan="2" RowSpan="2" TextAlignment="Center">
+          <Paragraph>beta<LineBreak />Gamma</Paragraph>
+        </TableCell>
+        <TableCell RowSpan="2">
+          <Paragraph>Farms</Paragraph>
+        </TableCell>
+      </TableRow>
+      <TableRow />
+      <TableRow>
+        <TableCell RowSpan="3" TextAlignment="Center">
+          <Paragraph>alpha</Paragraph>
+        </TableCell>
+        <TableCell ColumnSpan="2" TextAlignment="Right">
+          <Paragraph>bar3</Paragraph>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell TextAlignment="Right">
+          <Paragraph>foo3</Paragraph>
+        </TableCell>
+        <TableCell>
+          <Paragraph>foo3</Paragraph>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell RowSpan="2" TextAlignment="Right">
+          <Paragraph>delta</Paragraph>
+        </TableCell>
+        <TableCell TextAlignment="Right">
+          <Paragraph>foo3</Paragraph>
+        </TableCell>
+        <TableCell>
+          <Paragraph>foo3</Paragraph>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell ColumnSpan="2" TextAlignment="Center">
+          <Paragraph>bar3</Paragraph>
+        </TableCell>
+        <TableCell>
+          <Paragraph>foo3</Paragraph>
+        </TableCell>
+      </TableRow>
+    </TableRowGroup>
+  </Table>
+  <Paragraph />
 </FlowDocument>

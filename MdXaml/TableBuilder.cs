@@ -114,15 +114,6 @@ namespace MdXaml
                     {
                         for (var colIdx = 0; colIdx < row.Count;)
                         {
-                            var cell = row[colIdx];
-
-                            // apply text align
-                            if (!cell.Horizontal.HasValue
-                                        && styleMt.TryGetValue(colOffset, out var style))
-                            {
-                                cell.Horizontal = style;
-                            }
-
                             int colSpan;
                             if (rowSpanLife.TryGetValue(colOffset, out var span))
                             {
@@ -130,8 +121,18 @@ namespace MdXaml
                             }
                             else
                             {
-                                colSpan = cell.ColSpan;
                                 hasAnyCell = true;
+
+                                var cell = row[colIdx];
+
+                                // apply text align
+                                if (!cell.Horizontal.HasValue
+                                            && styleMt.TryGetValue(colOffset, out var style))
+                                {
+                                    cell.Horizontal = style;
+                                }
+
+                                colSpan = cell.ColSpan;
 
                                 if (cell.RowSpan > 1)
                                 {
