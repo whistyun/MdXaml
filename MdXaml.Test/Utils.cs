@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Windows.Markup;
 using System.Xml;
 
@@ -8,7 +10,7 @@ namespace MdXamlTest
     static class Utils
     {
 #if !MIG_FREE
-        const string ResourceKey = "MdXaml.Test.Md." ;
+        const string ResourceKey = "MdXaml.Test.Md.";
 #else
         const string ResourceKey = "MdXaml.TestMigfree.Md.";
 #endif
@@ -37,6 +39,32 @@ namespace MdXamlTest
                 writer.WriteLine();
                 return writer.ToString();
             }
+        }
+
+        public static string GetRuntimeName()
+        {
+            var description = RuntimeInformation.FrameworkDescription.ToLower();
+            // ".NET Framework"
+            // ".NET Core"(for .NET Core 1.0 - 3.1)
+            // ".NET Native"
+            // ".NET"(for .NET 5.0 and later versions)
+
+            if (description.Contains("framework"))
+            {
+                return "framework";
+            }
+
+            if (description.Contains("core"))
+            {
+                return "core";
+            }
+
+            if (description.Contains("native"))
+            {
+                return "native";
+            }
+
+            return "dotnet";
         }
     }
 }

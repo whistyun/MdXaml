@@ -23,10 +23,12 @@ namespace Markdown.Xaml.Test
     {
         static Tests()
         {
+            var fwNm = Utils.GetRuntimeName();
 #if !MIG_FREE
-            Approvals.RegisterDefaultNamerCreation(() => new ChangeOutputPathNamer("Out"));
+
+            Approvals.RegisterDefaultNamerCreation(() => new ChangeOutputPathNamer("Out/" + fwNm));
 #else
-            Approvals.RegisterDefaultNamerCreation(() => new ChangeOutputPathNamer("OutMF"));
+            Approvals.RegisterDefaultNamerCreation(() => new ChangeOutputPathNamer("OutMF/"+ fwNm));
 #endif
         }
 
@@ -218,11 +220,7 @@ namespace Markdown.Xaml.Test
         [Apartment(ApartmentState.STA)]
         public void Transform_givenstring()
         {
-            ResourceDictionary resources;
-            using (var stream = new FileStream("IndentTest.xaml", FileMode.Open))
-            {
-                resources = (ResourceDictionary)XamlReader.Load(stream);
-            }
+            var resources = (ResourceDictionary)XamlReader.Parse(Utils.LoadText("IndentTest.xaml"));
 
             var markdownViewer = new MarkdownScrollViewer();
             markdownViewer.MarkdownStyle = null;
@@ -238,7 +236,8 @@ namespace Markdown.Xaml.Test
 
         [Test]
         [Apartment(ApartmentState.STA)]
-        public void Transform_givenEmoji() {
+        public void Transform_givenEmoji()
+        {
             var text = Utils.LoadText("Emoji.md");
             var markdown = new Markdown();
             markdown.AssetPathRoot = assetPath;

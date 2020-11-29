@@ -20,9 +20,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Remove="Md\IndentTest.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Md\Blockquite.md" />
     <EmbeddedResource Include="Md\HorizontalRules.md" />
     <EmbeddedResource Include="Md\Images.md" />
+    <EmbeddedResource Include="Md\IndentTest.xaml" />
     <EmbeddedResource Include="Md\Links_inline_style.md" />
     <EmbeddedResource Include="Md\Lists1.md" />
     <EmbeddedResource Include="Md\Lists2.md" />
