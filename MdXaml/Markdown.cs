@@ -42,6 +42,8 @@ namespace MdXaml
         private const string TagHeading2 = "Heading2";
         private const string TagHeading3 = "Heading3";
         private const string TagHeading4 = "Heading4";
+        private const string TagHeading5 = "Heading5";
+        private const string TagHeading6 = "Heading6";
         private const string TagCode = "CodeSpan";
         private const string TagCodeBlock = "CodeBlock";
         private const string TagBlockquote = "Blockquote";
@@ -100,6 +102,8 @@ namespace MdXaml
         public Style Heading2Style { get; set; }
         public Style Heading3Style { get; set; }
         public Style Heading4Style { get; set; }
+        public Style Heading5Style { get; set; }
+        public Style Heading6Style { get; set; }
         public Style NormalParagraphStyle { get; set; }
         public Style CodeStyle { get; set; }
         public Style CodeBlockStyle { get; set; }
@@ -648,6 +652,28 @@ namespace MdXaml
                     if (!DisabledTag)
                     {
                         block.Tag = TagHeading4;
+                    }
+                    break;
+
+                case 5:
+                    if (Heading5Style != null)
+                    {
+                        block.Style = Heading5Style;
+                    }
+                    if (!DisabledTag)
+                    {
+                        block.Tag = TagHeading5;
+                    }
+                    break;
+
+                case 6:
+                    if (Heading6Style != null)
+                    {
+                        block.Style = Heading6Style;
+                    }
+                    if (!DisabledTag)
+                    {
+                        block.Tag = TagHeading6;
                     }
                     break;
             }
