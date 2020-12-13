@@ -40,11 +40,18 @@ namespace MdXaml
             typeof(MarkdownScrollViewer),
             new PropertyMetadata(null, UpdateStyleName));
 
+        public static readonly DependencyProperty AssetPathRootProperty =
+            DependencyProperty.Register(
+                nameof(AssetPathRoot),
+                typeof(string),
+                typeof(MarkdownScrollViewer),
+                new PropertyMetadata(null, UpdateAssetPathRoot));
+
         private static void UpdateMarkdown(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is MarkdownScrollViewer owner)
             {
-                var doc = owner.Engine.Transform((string)e.NewValue ?? "");
+                var doc = owner.Engine.Transform(owner.Markdown ?? "");
                 owner.SetCurrentValue(DocumentProperty, doc);
             }
         }
@@ -72,22 +79,46 @@ namespace MdXaml
             }
         }
 
-        public Markdown Engine
+        private static void UpdateAssetPathRoot(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            set;
-            get;
+            if (d is MarkdownScrollViewer owner)
+            {
+                owner.Engine.AssetPathRoot = (string)e.NewValue;
+                UpdateMarkdown(d, e);
+            }
         }
 
+        private Markdown _engine;
+        public Markdown Engine
+        {
+            set
+            {
+                _engine = value;
+
+                _engine.BaseUri = BaseUri;
+                _engine.AssetPathRoot = AssetPathRoot;
+
+                if (MarkdownStyle != null)
+                    _engine.DocumentStyle = MarkdownStyle;
+            }
+            get => _engine;
+        }
+
+        private Uri _baseUri;
         public Uri BaseUri
         {
-            set { Engine.BaseUri = value; }
-            get => Engine.BaseUri;
+            set
+            {
+                _baseUri = value;
+                Engine.BaseUri = value;
+            }
+            get => _baseUri ?? Engine.BaseUri;
         }
 
         public string AssetPathRoot
         {
-            set { Engine.AssetPathRoot = value; }
-            get => Engine.AssetPathRoot;
+            set => SetValue(AssetPathRootProperty, value);
+            get => (string)GetValue(AssetPathRootProperty);
         }
 
         public string HereMarkdown
@@ -106,29 +137,12 @@ namespace MdXaml
                     // the amount of whitespace to strip from each line 
                     var lines = Regex.Split(value, "\r\n|\r|\n", RegexOptions.Multiline);
 
-                    int CountIndent(string line)
-                    {
-                        var count = 0;
-                        foreach (var c in line)
-                        {
-                            if (c == ' ') count += 1;
-                            else if (c == '\t')
-                            {
-                                // In default in vs, tab is treated as four-spaces.
-                                count = ((count >> 2) + 1) << 2;
-                            }
-                            else break;
-                        }
-                        return count;
-                    }
-
-
                     // count last line indent
-                    int lastIdtCnt = CountIndent(lines.Last());
+                    int lastIdtCnt = IndentUtil.CountIndent(lines.Last());
                     // count full indent
                     int someIdtCnt = lines
                         .Where(line => !String.IsNullOrWhiteSpace(line))
-                        .Select(line => CountIndent(line))
+                        .Select(line => IndentUtil.CountIndent(line))
                         .Min();
 
                     var indentCount = Math.Max(lastIdtCnt, someIdtCnt);
