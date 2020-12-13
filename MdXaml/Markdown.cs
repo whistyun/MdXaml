@@ -920,7 +920,7 @@ namespace MdXaml
 
         private static readonly string _wholeList = string.Format(@"
             (                               # $1 = whole list
-              (                             # $2
+              (                             # $2 = list marker with indent
                 [ ]{{0,{1}}}
                 ({0})                       # $3 = first list item marker
                 [ ]+
@@ -962,28 +962,77 @@ namespace MdXaml
                 return Evaluate(text, _listTopLevel, ListEvaluator, defaultHandler);
         }
 
-        private Block ListEvaluator(Match match)
+        private IEnumerable<Block> ListEvaluator(Match match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            string list = match.Groups[1].Value;
-            string listType = Regex.IsMatch(match.Groups[3].Value, _markerUL) ? "ul" : "ol";
+            // Check text marker style.
+            var tpl = GetTextMarkerStyle(match.Groups[3].Value);
+            TextMarkerStyle textMarker = tpl.Item1;
+            string markerPattern = tpl.Item2;
 
-            // Set text marker style.
-            TextMarkerStyle textMarker = GetTextMarkerStyle(listType, match);
+            // count indent from first marker with indent
+            int countIndent = IndentUtil.CountIndent(match.Groups[2].Value);
+
+            // whole list
+            string[] whileListLins = match.Groups[1].Value.Split('\n');
+
+            // cllect detendentable line
+            var listBulder = new StringBuilder();
+            var outerListBuildre = new StringBuilder();
+            var isInOuterList = false;
+            foreach (var line in whileListLins)
+            {
+                if (!isInOuterList)
+                {
+                    if (String.IsNullOrEmpty(line))
+                    {
+                        listBulder.Append("").Append("\n");
+                    }
+                    else if (IndentUtil.TryDetendLine(line, countIndent, out var stripedLine))
+                    {
+                        // is it had list marker?
+                        var someMarkerMch = Regex.Match(stripedLine, $"{_markerUL}|{_markerOL}");
+                        if (someMarkerMch.Success && someMarkerMch.Index == 0)
+                        {
+                            var targetMarkerMch = Regex.Match(stripedLine, markerPattern);
+                            if (targetMarkerMch.Success && targetMarkerMch.Index == 0)
+                            {
+                                listBulder.Append(stripedLine).Append("\n");
+                            }
+                            else isInOuterList = true;
+                        }
+                        else listBulder.Append(stripedLine).Append("\n");
+                    }
+                    else isInOuterList = true;
+                }
+
+                if (isInOuterList)
+                {
+                    outerListBuildre.Append(line).Append("\n");
+                }
+            }
+
+            string list = listBulder.ToString();
 
             // Turn double returns into triple returns, so that we can make a
             // paragraph for the last item in a list, if necessary:
             list = Regex.Replace(list, @"\n{2,}", "\n\n\n");
 
-            var resultList = Create<List, ListItem>(ProcessListItems(list, listType == "ul" ? _markerUL : _markerOL));
+            var resultList = Create<List, ListItem>(ProcessListItems(list, markerPattern));
 
             resultList.MarkerStyle = textMarker;
 
-            return resultList;
+            yield return resultList;
+
+            if (outerListBuildre.Length != 0)
+            {
+                foreach (var ctrl in RunBlockGamut(outerListBuildre.ToString(), true))
+                    yield return ctrl;
+            }
         }
 
         /// <summary>
@@ -1063,53 +1112,50 @@ namespace MdXaml
         /// <summary>
         /// Get the text marker style based on a specific regex.
         /// </summary>
-        /// <param name="listType">Specify what kind of list: ul, ol.</param>
-        private static TextMarkerStyle GetTextMarkerStyle(string listType, Match match)
+        /// <returns>
+        ///     1; return Type. 
+        ///     2: match regex pattern
+        /// </returns>
+        private static Tuple<TextMarkerStyle, string> GetTextMarkerStyle(string markerText)
         {
-            switch (listType)
+            if (Regex.IsMatch(markerText, _markerUL_Disc))
             {
-                case "ul":
-                    if (Regex.IsMatch(match.Groups[3].Value, _markerUL_Disc))
-                    {
-                        return TextMarkerStyle.Disc;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerUL_Box))
-                    {
-                        return TextMarkerStyle.Box;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerUL_Circle))
-                    {
-                        return TextMarkerStyle.Circle;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerUL_Square))
-                    {
-                        return TextMarkerStyle.Square;
-                    }
-                    break;
-                case "ol":
-                    if (Regex.IsMatch(match.Groups[3].Value, _markerOL_Number))
-                    {
-                        return TextMarkerStyle.Decimal;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerOL_LetterLower))
-                    {
-                        return TextMarkerStyle.LowerLatin;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerOL_LetterUpper))
-                    {
-                        return TextMarkerStyle.UpperLatin;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerOL_RomanLower))
-                    {
-                        return TextMarkerStyle.LowerRoman;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerOL_RomanUpper))
-                    {
-                        return TextMarkerStyle.UpperRoman;
-                    }
-                    break;
+                return Tuple.Create(TextMarkerStyle.Disc, _markerUL_Disc);
             }
-            return TextMarkerStyle.None;
+            else if (Regex.IsMatch(markerText, _markerUL_Box))
+            {
+                return Tuple.Create(TextMarkerStyle.Box, _markerUL_Box);
+            }
+            else if (Regex.IsMatch(markerText, _markerUL_Circle))
+            {
+                return Tuple.Create(TextMarkerStyle.Circle, _markerUL_Circle);
+            }
+            else if (Regex.IsMatch(markerText, _markerUL_Square))
+            {
+                return Tuple.Create(TextMarkerStyle.Square, _markerUL_Square);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_Number))
+            {
+                return Tuple.Create(TextMarkerStyle.Decimal, _markerOL_Number);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_LetterLower))
+            {
+                return Tuple.Create(TextMarkerStyle.LowerLatin, _markerOL_LetterLower);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_LetterUpper))
+            {
+                return Tuple.Create(TextMarkerStyle.UpperLatin, _markerOL_LetterUpper);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_RomanLower))
+            {
+                return Tuple.Create(TextMarkerStyle.LowerRoman, _markerOL_RomanLower);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_RomanUpper))
+            {
+                return Tuple.Create(TextMarkerStyle.UpperRoman, _markerOL_RomanUpper);
+            }
+
+            throw new InvalidOperationException("sorry library manager forget to modify about listmerker.");
         }
 
         #endregion
@@ -2027,6 +2073,41 @@ namespace MdXaml
             }
 
             return result;
+        }
+
+        private IEnumerable<T> Evaluate<T>(string text, Regex expression, Func<Match, IEnumerable<T>> build, Func<string, IEnumerable<T>> rest)
+        {
+            if (text is null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            var matches = expression.Matches(text);
+            var index = 0;
+            foreach (Match m in matches)
+            {
+                if (m.Index > index)
+                {
+                    var prefix = text.Substring(index, m.Index - index);
+                    foreach (var t in rest(prefix))
+                    {
+                        yield return t;
+                    }
+                }
+
+                foreach (var part in build(m)) yield return part;
+
+                index = m.Index + m.Length;
+            }
+
+            if (index < text.Length)
+            {
+                var suffix = text.Substring(index, text.Length - index);
+                foreach (var t in rest(suffix))
+                {
+                    yield return t;
+                }
+            }
         }
 
         private IEnumerable<T> Evaluate<T>(string text, Regex expression, Func<Match, T> build, Func<string, IEnumerable<T>> rest)
