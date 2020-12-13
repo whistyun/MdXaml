@@ -42,6 +42,8 @@ namespace MdXaml
         private const string TagHeading2 = "Heading2";
         private const string TagHeading3 = "Heading3";
         private const string TagHeading4 = "Heading4";
+        private const string TagHeading5 = "Heading5";
+        private const string TagHeading6 = "Heading6";
         private const string TagCode = "CodeSpan";
         private const string TagCodeBlock = "CodeBlock";
         private const string TagBlockquote = "Blockquote";
@@ -100,6 +102,8 @@ namespace MdXaml
         public Style Heading2Style { get; set; }
         public Style Heading3Style { get; set; }
         public Style Heading4Style { get; set; }
+        public Style Heading5Style { get; set; }
+        public Style Heading6Style { get; set; }
         public Style NormalParagraphStyle { get; set; }
         public Style CodeStyle { get; set; }
         public Style CodeBlockStyle { get; set; }
@@ -248,10 +252,9 @@ namespace MdXaml
             }
 
             return DoCodeSpans(text,
-                s0 => DoImages(s0,
-                s1 => DoAnchors(s1,
-                s2 => DoTextDecorations(s2,
-                s3 => DoText(s3)))));
+                s0 => DoImagesOrHrefs(s0,
+                s1 => DoTextDecorations(s1,
+                s2 => DoText(s2))));
 
             //text = EscapeSpecialCharsWithinTagAttributes(text);
             //text = EscapeBackslashes(text);
@@ -334,65 +337,91 @@ namespace MdXaml
 
         #endregion
 
+        #region grammer - image or href
 
-        #region grammer - image
-
-        private static readonly Regex _imageInline = new Regex(string.Format(@"
+        private static readonly Regex _imageOrHrefInline = new Regex(string.Format(@"
                 (                           # wrap whole match in $1
-                    !\[
-                        ({0})               # link text = $2
+                    (!)?                    # image maker = $2
+                    \[
+                        ({0})               # link text = $3
                     \]
                     \(                      # literal paren
                         [ ]*
-                        ({1})               # href(with title) = $3
+                        ({1})               # href = $4
                         [ ]*
+                        (                   # $5
+                        (['""])             # quote char = $6
+                        (.*?)               # title = $7
+                        \6                  # matching quote
+                        [ ]*                # ignore any spaces between closing quote and )
+                        )?                  # title is optional
                     \)
-                )", GetNestedBracketsPattern(), GetNestedParensPatternWithWhiteSpace()),
+                )", GetNestedBracketsPattern(), GetNestedParensPattern()),
                   RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex _imageHrefWithTitle = new Regex(@"^
-                (                           # wrap whole match in $1
-                    (.+?)                   # url = $2
-                    [ ]+
-                    (['""])                 # quote char = $3
-                    (.*?)                   # title = $4
-                    \3
-                )$", RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        /// <summary>
-        /// Turn Markdown images into images
-        /// </summary>
-        /// <remarks>
-        /// ![image alt](url) 
-        /// </remarks>
-        private IEnumerable<Inline> DoImages(string text, Func<string, IEnumerable<Inline>> defaultHandler)
+        private IEnumerable<Inline> DoImagesOrHrefs(string text, Func<string, IEnumerable<Inline>> defaultHandler)
         {
             if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
 
-            return Evaluate(text, _imageInline, ImageInlineEvaluator, defaultHandler);
+            return Evaluate(text, _imageOrHrefInline, ImageOrHrefInlineEvaluator, defaultHandler);
         }
 
-
-        private Inline ImageInlineEvaluator(Match match)
+        private Inline ImageOrHrefInlineEvaluator(Match match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            string linkText = match.Groups[2].Value;
-            string url = match.Groups[3].Value;
-            string title = null;
-
-            var titleMatch = _imageHrefWithTitle.Match(url);
-            if (titleMatch.Success)
+            if (String.IsNullOrEmpty(match.Groups[2].Value))
             {
-                url = titleMatch.Groups[2].Value;
-                title = titleMatch.Groups[4].Value;
+                return TreatsAsHref(match);
             }
+            else
+            {
+                return TreatsAsImage(match);
+            }
+        }
+
+        private Inline TreatsAsHref(Match match)
+        {
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            string linkText = match.Groups[3].Value;
+            string url = match.Groups[4].Value;
+            string title = match.Groups[7].Value;
+
+            var result = Create<Hyperlink, Inline>(RunSpanGamut(linkText));
+            result.Command = HyperlinkCommand;
+            result.CommandParameter = url;
+
+            if (!DisabledTootip)
+            {
+                result.ToolTip = string.IsNullOrWhiteSpace(title) ?
+                    url :
+                    String.Format("\"{0}\"\r\n{1}", title, url);
+            }
+
+            if (LinkStyle != null)
+            {
+                result.Style = LinkStyle;
+            }
+
+            return result;
+        }
+
+        private Inline TreatsAsImage(Match match)
+        {
+            string linkText = match.Groups[3].Value;
+            string url = match.Groups[4].Value;
+            string title = match.Groups[7].Value;
 
             BitmapImage imgSource = null;
 
@@ -493,77 +522,6 @@ namespace MdXaml
 
                 return imgSource;
             }
-        }
-
-        #endregion
-
-
-        #region grammer - anchor
-
-        private static readonly Regex _anchorInline = new Regex(string.Format(@"
-                (                           # wrap whole match in $1
-                    \[
-                        ({0})               # link text = $2
-                    \]
-                    \(                      # literal paren
-                        [ ]*
-                        ({1})               # href = $3
-                        [ ]*
-                        (                   # $4
-                        (['""])             # quote char = $5
-                        (.*?)               # title = $6
-                        \5                  # matching quote
-                        [ ]*                # ignore any spaces between closing quote and )
-                        )?                  # title is optional
-                    \)
-                )", GetNestedBracketsPattern(), GetNestedParensPattern()),
-                  RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-
-        /// <summary>
-        /// Turn Markdown link shortcuts into hyperlinks
-        /// </summary>
-        /// <remarks>
-        /// [link text](url "title") 
-        /// </remarks>
-        private IEnumerable<Inline> DoAnchors(string text, Func<string, IEnumerable<Inline>> defaultHandler)
-        {
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            // Next, inline-style links: [link text](url "optional title") or [link text](url "optional title")
-            return Evaluate(text, _anchorInline, AnchorInlineEvaluator, defaultHandler);
-        }
-
-        private Inline AnchorInlineEvaluator(Match match)
-        {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
-            string linkText = match.Groups[2].Value;
-            string url = match.Groups[3].Value;
-            string title = match.Groups[6].Value;
-
-            var result = Create<Hyperlink, Inline>(RunSpanGamut(linkText));
-            result.Command = HyperlinkCommand;
-            result.CommandParameter = url;
-
-            if (!DisabledTootip)
-            {
-                result.ToolTip = string.IsNullOrWhiteSpace(title) ?
-                    url :
-                    String.Format("\"{0}\"\r\n{1}", title, url);
-            }
-
-            if (LinkStyle != null)
-            {
-                result.Style = LinkStyle;
-            }
-
-            return result;
         }
 
         #endregion
@@ -694,6 +652,28 @@ namespace MdXaml
                     if (!DisabledTag)
                     {
                         block.Tag = TagHeading4;
+                    }
+                    break;
+
+                case 5:
+                    if (Heading5Style != null)
+                    {
+                        block.Style = Heading5Style;
+                    }
+                    if (!DisabledTag)
+                    {
+                        block.Tag = TagHeading5;
+                    }
+                    break;
+
+                case 6:
+                    if (Heading6Style != null)
+                    {
+                        block.Style = Heading6Style;
+                    }
+                    if (!DisabledTag)
+                    {
+                        block.Tag = TagHeading6;
                     }
                     break;
             }
@@ -966,7 +946,7 @@ namespace MdXaml
 
         private static readonly string _wholeList = string.Format(@"
             (                               # $1 = whole list
-              (                             # $2
+              (                             # $2 = list marker with indent
                 [ ]{{0,{1}}}
                 ({0})                       # $3 = first list item marker
                 [ ]+
@@ -1008,28 +988,77 @@ namespace MdXaml
                 return Evaluate(text, _listTopLevel, ListEvaluator, defaultHandler);
         }
 
-        private Block ListEvaluator(Match match)
+        private IEnumerable<Block> ListEvaluator(Match match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            string list = match.Groups[1].Value;
-            string listType = Regex.IsMatch(match.Groups[3].Value, _markerUL) ? "ul" : "ol";
+            // Check text marker style.
+            var tpl = GetTextMarkerStyle(match.Groups[3].Value);
+            TextMarkerStyle textMarker = tpl.Item1;
+            string markerPattern = tpl.Item2;
 
-            // Set text marker style.
-            TextMarkerStyle textMarker = GetTextMarkerStyle(listType, match);
+            // count indent from first marker with indent
+            int countIndent = IndentUtil.CountIndent(match.Groups[2].Value);
+
+            // whole list
+            string[] whileListLins = match.Groups[1].Value.Split('\n');
+
+            // cllect detendentable line
+            var listBulder = new StringBuilder();
+            var outerListBuildre = new StringBuilder();
+            var isInOuterList = false;
+            foreach (var line in whileListLins)
+            {
+                if (!isInOuterList)
+                {
+                    if (String.IsNullOrEmpty(line))
+                    {
+                        listBulder.Append("").Append("\n");
+                    }
+                    else if (IndentUtil.TryDetendLine(line, countIndent, out var stripedLine))
+                    {
+                        // is it had list marker?
+                        var someMarkerMch = Regex.Match(stripedLine, $"{_markerUL}|{_markerOL}");
+                        if (someMarkerMch.Success && someMarkerMch.Index == 0)
+                        {
+                            var targetMarkerMch = Regex.Match(stripedLine, markerPattern);
+                            if (targetMarkerMch.Success && targetMarkerMch.Index == 0)
+                            {
+                                listBulder.Append(stripedLine).Append("\n");
+                            }
+                            else isInOuterList = true;
+                        }
+                        else listBulder.Append(stripedLine).Append("\n");
+                    }
+                    else isInOuterList = true;
+                }
+
+                if (isInOuterList)
+                {
+                    outerListBuildre.Append(line).Append("\n");
+                }
+            }
+
+            string list = listBulder.ToString();
 
             // Turn double returns into triple returns, so that we can make a
             // paragraph for the last item in a list, if necessary:
             list = Regex.Replace(list, @"\n{2,}", "\n\n\n");
 
-            var resultList = Create<List, ListItem>(ProcessListItems(list, listType == "ul" ? _markerUL : _markerOL));
+            var resultList = Create<List, ListItem>(ProcessListItems(list, markerPattern));
 
             resultList.MarkerStyle = textMarker;
 
-            return resultList;
+            yield return resultList;
+
+            if (outerListBuildre.Length != 0)
+            {
+                foreach (var ctrl in RunBlockGamut(outerListBuildre.ToString(), true))
+                    yield return ctrl;
+            }
         }
 
         /// <summary>
@@ -1109,53 +1138,50 @@ namespace MdXaml
         /// <summary>
         /// Get the text marker style based on a specific regex.
         /// </summary>
-        /// <param name="listType">Specify what kind of list: ul, ol.</param>
-        private static TextMarkerStyle GetTextMarkerStyle(string listType, Match match)
+        /// <returns>
+        ///     1; return Type. 
+        ///     2: match regex pattern
+        /// </returns>
+        private static Tuple<TextMarkerStyle, string> GetTextMarkerStyle(string markerText)
         {
-            switch (listType)
+            if (Regex.IsMatch(markerText, _markerUL_Disc))
             {
-                case "ul":
-                    if (Regex.IsMatch(match.Groups[3].Value, _markerUL_Disc))
-                    {
-                        return TextMarkerStyle.Disc;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerUL_Box))
-                    {
-                        return TextMarkerStyle.Box;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerUL_Circle))
-                    {
-                        return TextMarkerStyle.Circle;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerUL_Square))
-                    {
-                        return TextMarkerStyle.Square;
-                    }
-                    break;
-                case "ol":
-                    if (Regex.IsMatch(match.Groups[3].Value, _markerOL_Number))
-                    {
-                        return TextMarkerStyle.Decimal;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerOL_LetterLower))
-                    {
-                        return TextMarkerStyle.LowerLatin;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerOL_LetterUpper))
-                    {
-                        return TextMarkerStyle.UpperLatin;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerOL_RomanLower))
-                    {
-                        return TextMarkerStyle.LowerRoman;
-                    }
-                    else if (Regex.IsMatch(match.Groups[3].Value, _markerOL_RomanUpper))
-                    {
-                        return TextMarkerStyle.UpperRoman;
-                    }
-                    break;
+                return Tuple.Create(TextMarkerStyle.Disc, _markerUL_Disc);
             }
-            return TextMarkerStyle.None;
+            else if (Regex.IsMatch(markerText, _markerUL_Box))
+            {
+                return Tuple.Create(TextMarkerStyle.Box, _markerUL_Box);
+            }
+            else if (Regex.IsMatch(markerText, _markerUL_Circle))
+            {
+                return Tuple.Create(TextMarkerStyle.Circle, _markerUL_Circle);
+            }
+            else if (Regex.IsMatch(markerText, _markerUL_Square))
+            {
+                return Tuple.Create(TextMarkerStyle.Square, _markerUL_Square);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_Number))
+            {
+                return Tuple.Create(TextMarkerStyle.Decimal, _markerOL_Number);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_LetterLower))
+            {
+                return Tuple.Create(TextMarkerStyle.LowerLatin, _markerOL_LetterLower);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_LetterUpper))
+            {
+                return Tuple.Create(TextMarkerStyle.UpperLatin, _markerOL_LetterUpper);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_RomanLower))
+            {
+                return Tuple.Create(TextMarkerStyle.LowerRoman, _markerOL_RomanLower);
+            }
+            else if (Regex.IsMatch(markerText, _markerOL_RomanUpper))
+            {
+                return Tuple.Create(TextMarkerStyle.UpperRoman, _markerOL_RomanUpper);
+            }
+
+            throw new InvalidOperationException("sorry library manager forget to modify about listmerker.");
         }
 
         #endregion
@@ -2042,30 +2068,6 @@ namespace MdXaml
             return _nestedParensPattern;
         }
 
-        private static string _nestedParensPatternWithWhiteSpace;
-
-        /// <summary>
-        /// Reusable pattern to match balanced (parens), including whitespace. See Friedl's 
-        /// "Mastering Regular Expressions", 2nd Ed., pp. 328-331.
-        /// </summary>
-        private static string GetNestedParensPatternWithWhiteSpace()
-        {
-            // in other words (this) and (this(also)) and (this(also(too)))
-            // up to _nestDepth
-            if (_nestedParensPatternWithWhiteSpace is null)
-                _nestedParensPatternWithWhiteSpace =
-                    RepeatString(@"
-                    (?>              # Atomic matching
-                       [^()]+      # Anything other than parens
-                     |
-                       \(
-                           ", _nestDepth) + RepeatString(
-                    @" \)
-                    )*"
-                    , _nestDepth);
-            return _nestedParensPatternWithWhiteSpace;
-        }
-
         /// <summary>
         /// this is to emulate what's evailable in PHP
         /// </summary>
@@ -2097,6 +2099,41 @@ namespace MdXaml
             }
 
             return result;
+        }
+
+        private IEnumerable<T> Evaluate<T>(string text, Regex expression, Func<Match, IEnumerable<T>> build, Func<string, IEnumerable<T>> rest)
+        {
+            if (text is null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            var matches = expression.Matches(text);
+            var index = 0;
+            foreach (Match m in matches)
+            {
+                if (m.Index > index)
+                {
+                    var prefix = text.Substring(index, m.Index - index);
+                    foreach (var t in rest(prefix))
+                    {
+                        yield return t;
+                    }
+                }
+
+                foreach (var part in build(m)) yield return part;
+
+                index = m.Index + m.Length;
+            }
+
+            if (index < text.Length)
+            {
+                var suffix = text.Substring(index, text.Length - index);
+                foreach (var t in rest(suffix))
+                {
+                    yield return t;
+                }
+            }
         }
 
         private IEnumerable<T> Evaluate<T>(string text, Regex expression, Func<Match, T> build, Func<string, IEnumerable<T>> rest)

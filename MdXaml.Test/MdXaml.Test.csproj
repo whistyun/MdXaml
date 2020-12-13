@@ -37,10 +37,10 @@
     <EmbeddedResource Include="Md\Emoji.md" />
     <EmbeddedResource Include="Md\Test1.md" />
     <EmbeddedResource Include="Md\Text_style.md" />
-    <None Include="IndentTest.xaml">
+    <EmbeddedResource Include="Md\IndentTest.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Resource Include="RscImg.png" />
   </ItemGroup>
 

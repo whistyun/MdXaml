@@ -15,8 +15,8 @@ WPF window or usercontrol.
 
 ### Link ###
 Links [Go to Google!](https://www.google.com)  
-Links with title [Go to Google!](https://www.google.com "google.")
-
+Links with title [Go to Google!](https://www.google.com "google.")  
+Links with image [![faviicon](https://www.google.com/favicon.ico)](https://www.google.com "google favicon")
 ### Image ###
 #### Remote images ####
 ![image1](http://placehold.it/300x25)  
