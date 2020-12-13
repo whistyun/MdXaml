@@ -95,8 +95,11 @@ namespace MdXaml
             {
                 _engine = value;
 
-                _engine.BaseUri = BaseUri;
-                _engine.AssetPathRoot = AssetPathRoot;
+                if (BaseUri != null)
+                    _engine.BaseUri = BaseUri;
+
+                if (AssetPathRoot != null)
+                    _engine.AssetPathRoot = AssetPathRoot;
 
                 if (MarkdownStyle != null)
                     _engine.DocumentStyle = MarkdownStyle;
