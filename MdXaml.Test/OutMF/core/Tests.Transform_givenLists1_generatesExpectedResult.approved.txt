@@ -183,7 +183,12 @@
       <Paragraph>Tab</Paragraph>
       <List MarkerStyle="Disc">
         <ListItem>
-          <Paragraph>Tab * Tab</Paragraph>
+          <Paragraph>Tab</Paragraph>
+          <List MarkerStyle="Disc">
+            <ListItem>
+              <Paragraph>Tab</Paragraph>
+            </ListItem>
+          </List>
         </ListItem>
       </List>
     </ListItem>
@@ -241,7 +246,7 @@
       <List MarkerStyle="Disc">
         <ListItem>
           <Paragraph>sub</Paragraph>
-          <Paragraph xml:space="preserve"> that</Paragraph>
+          <Paragraph>that</Paragraph>
         </ListItem>
       </List>
     </ListItem>

@@ -4,7 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+#if MIG_FREE
+namespace Markdown.Xaml
+#else
 namespace MdXaml
+#endif
 {
     static class IndentUtil
     {
