@@ -137,73 +137,12 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
-            text = Normalize(text);
+            text = TextUtil.Normalize(text);
             var document = Create<FlowDocument, Block>(RunBlockGamut(text, true));
 
             document.SetBinding(FlowDocument.StyleProperty, new Binding(DocumentStyleProperty.Name) { Source = this });
 
             return document;
-        }
-
-        /// <summary>
-        /// convert all tabs to _tabWidth spaces; 
-        /// standardizes line endings from DOS (CR LF) or Mac (CR) to UNIX (LF); 
-        /// makes sure text ends with a couple of newlines; 
-        /// removes any blank lines (only spaces) in the text
-        /// </summary>
-        private string Normalize(string text)
-        {
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            var output = new StringBuilder(text.Length);
-            var line = new StringBuilder();
-            bool valid = false;
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                switch (text[i])
-                {
-                    case '\n':
-                        if (valid)
-                            output.Append(line);
-                        output.Append('\n');
-                        line.Length = 0;
-                        valid = false;
-                        break;
-                    case '\r':
-                        if ((i < text.Length - 1) && (text[i + 1] != '\n'))
-                        {
-                            if (valid)
-                                output.Append(line);
-                            output.Append('\n');
-                            line.Length = 0;
-                            valid = false;
-                        }
-                        break;
-                    case '\t':
-                        int width = (_tabWidth - line.Length % _tabWidth);
-                        for (int k = 0; k < width; k++)
-                            line.Append(' ');
-                        break;
-                    case '\x1A':
-                        break;
-                    default:
-                        if (!valid && text[i] != ' ')
-                            valid = true;
-                        line.Append(text[i]);
-                        break;
-                }
-            }
-
-            if (valid)
-                output.Append(line);
-            output.Append('\n');
-
-            // add two newlines to the end before return
-            return output.Append("\n\n").ToString();
         }
 
         /// <summary>
@@ -216,29 +155,18 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
-            return
-                DoCodeBlocks(text,
-                    s1 => DoBlockquotes(s1,
-                    s2 => DoHeaders(s2,
-                    s3 => DoHorizontalRules(s3,
-                    s4 => DoLists(s4,
-                    s5 => DoTable(s5,
-                    s6 => DoNote(s6, supportTextAlignment,
-                    sn => FormParagraphs(sn, supportTextAlignment
-                    ))))))));
-
-            //text = DoCodeBlocks(text);
-            //text = DoBlockQuotes(text);
-
-            //// We already ran HashHTMLBlocks() before, in Markdown(), but that
-            //// was to escape raw HTML in the original Markdown source. This time,
-            //// we're escaping the markup we've just created, so that we don't wrap
-            //// <p> tags around block-level tags.
-            //text = HashHTMLBlocks(text);
-
-            //text = FormParagraphs(text);
-
-            //return text;
+            return Evaluate2(
+                text,
+                _codeBlockFirst, CodeBlocksWithLangEvaluator,
+                _listLevel > 0 ? _listNested : _listTopLevel, ListEvaluator,
+                s1 => DoBlockquotes(s1,
+                s2 => DoHeaders(s2,
+                s3 => DoHorizontalRules(s3,
+                s4 => DoTable(s4,
+                s5 => DoNote(s5, supportTextAlignment,
+                s6 => DoIndentCodeBlock(s6,
+                sn => FormParagraphs(sn, supportTextAlignment)))))))
+            );
         }
 
         /// <summary>
@@ -255,23 +183,6 @@ namespace MdXaml
                 s0 => DoImagesOrHrefs(s0,
                 s1 => DoTextDecorations(s1,
                 s2 => DoText(s2))));
-
-            //text = EscapeSpecialCharsWithinTagAttributes(text);
-            //text = EscapeBackslashes(text);
-
-            //// Images must come first, because ![foo][f] looks like an anchor.
-            //text = DoImages(text);
-            //text = DoAnchors(text);
-
-            //// Must come after DoAnchors(), because you can use < and >
-            //// delimiters in inline links like [this](<url>).
-            //text = DoAutoLinks(text);
-
-            //text = EncodeAmpsAndAngles(text);
-            //text = DoItalicsAndBold(text);
-            //text = DoHardBreaks(text);
-
-            //return text;
         }
 
 
@@ -291,8 +202,11 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
-            // split on two or more newlines
-            string[] grafs = _newlinesMultiple.Split(_newlinesLeadingTrailing.Replace(text, ""));
+            var trimemdText = _newlinesLeadingTrailing.Replace(text, "");
+
+            string[] grafs = trimemdText == "" ?
+                new string[0] :
+                _newlinesMultiple.Split(trimemdText);
 
             foreach (var g in grafs)
             {
@@ -773,23 +687,16 @@ namespace MdXaml
 
         #region grammer - horizontal rules
 
-        private static readonly Regex _horizontalRules = HorizontalRulesRegex("-");
-        private static readonly Regex _horizontalTwoLinesRules = HorizontalRulesRegex("=");
-        private static readonly Regex _horizontalBoldRules = HorizontalRulesRegex("*");
-        private static readonly Regex _horizontalBoldWithSingleRules = HorizontalRulesRegex("_");
-        private static Regex HorizontalRulesRegex(string markers)
-        {
-            return new Regex(@"
+        private static readonly Regex _horizontalRules = new Regex(@"
                 ^[ ]{0,3}                   # Leading space
-                    ([" + markers + @"])    # $1: First marker ([markers])
+                    ([-=*_])                # $1: First marker ([markers])
                     (?>                     # Repeated marker group
                         [ ]{0,2}            # Zero, one, or two spaces.
                         \1                  # Marker character
                     ){2,}                   # Group repeated at least twice
                     [ ]*                    # Trailing spaces
-                    $                       # End of line.
+                    \n                      # End of line.
                 ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-        }
 
         /// <summary>
         /// Turn Markdown horizontal rules into HTML hr tags
@@ -807,10 +714,7 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
-            return Evaluate(text, _horizontalRules, RuleEvaluator,
-                s1 => Evaluate(s1, _horizontalTwoLinesRules, TwoLinesRuleEvaluator,
-                s2 => Evaluate(s2, _horizontalBoldRules, BoldRuleEvaluator,
-                s3 => Evaluate(s3, _horizontalBoldWithSingleRules, BoldWithSingleRuleEvaluator, defaultHandler))));
+            return Evaluate(text, _horizontalRules, RuleEvaluator, defaultHandler);
         }
 
         /// <summary>
@@ -823,105 +727,94 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(match));
             }
 
-            var sep = new Separator();
-            if (SeparatorStyle != null)
-                sep.Style = SeparatorStyle;
-
-            return new BlockUIContainer(sep);
-        }
-
-        /// <summary>
-        /// Two lines separator.
-        /// </summary>
-        private Block TwoLinesRuleEvaluator(Match match)
-        {
-            if (match is null)
+            switch (match.Groups[1].Value)
             {
-                throw new ArgumentNullException(nameof(match));
+                default:
+                case "-":
+                    {
+                        var sep = new Separator();
+                        if (SeparatorStyle != null)
+                            sep.Style = SeparatorStyle;
+
+                        return new BlockUIContainer(sep);
+                    }
+
+                case "=":
+                    {
+                        var stackPanel = new StackPanel();
+                        for (int i = 0; i < 2; i++)
+                        {
+                            var sep = new Separator();
+                            if (SeparatorStyle != null)
+                                sep.Style = SeparatorStyle;
+
+                            stackPanel.Children.Add(sep);
+                        }
+
+                        var container = new BlockUIContainer(stackPanel);
+                        return container;
+                    }
+
+                case "*":
+                    {
+                        var stackPanel = new StackPanel();
+                        for (int i = 0; i < 2; i++)
+                        {
+                            var sep = new Separator()
+                            {
+                                Margin = new Thickness(0)
+                            };
+
+                            if (SeparatorStyle != null)
+                                sep.Style = SeparatorStyle;
+
+                            stackPanel.Children.Add(sep);
+                        }
+
+                        var container = new BlockUIContainer(stackPanel);
+                        return container;
+                    }
+
+                case "_":
+                    {
+                        var stackPanel = new StackPanel();
+                        for (int i = 0; i < 2; i++)
+                        {
+                            var sep = new Separator()
+                            {
+                                Margin = new Thickness(0)
+                            };
+
+                            if (SeparatorStyle != null)
+                                sep.Style = SeparatorStyle;
+
+                            stackPanel.Children.Add(sep);
+                        }
+
+                        var sepLst = new Separator();
+                        if (SeparatorStyle != null)
+                            sepLst.Style = SeparatorStyle;
+
+                        stackPanel.Children.Add(sepLst);
+
+                        var container = new BlockUIContainer(stackPanel);
+                        return container;
+                    }
             }
-
-            var stackPanel = new StackPanel();
-            for (int i = 0; i < 2; i++)
-            {
-                var sep = new Separator();
-                if (SeparatorStyle != null)
-                    sep.Style = SeparatorStyle;
-
-                stackPanel.Children.Add(sep);
-            }
-
-            var container = new BlockUIContainer(stackPanel);
-            return container;
-        }
-
-        /// <summary>
-        /// Double line separator.
-        /// </summary>
-        private Block BoldRuleEvaluator(Match match)
-        {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
-            var stackPanel = new StackPanel();
-            for (int i = 0; i < 2; i++)
-            {
-                var sep = new Separator()
-                {
-                    Margin = new Thickness(0)
-                };
-
-                if (SeparatorStyle != null)
-                    sep.Style = SeparatorStyle;
-
-                stackPanel.Children.Add(sep);
-            }
-
-            var container = new BlockUIContainer(stackPanel);
-            return container;
-        }
-
-        /// <summary>
-        /// Two lines separator consisting of a double line and a single line.
-        /// </summary>
-        private Block BoldWithSingleRuleEvaluator(Match match)
-        {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
-            var stackPanel = new StackPanel();
-            for (int i = 0; i < 2; i++)
-            {
-                var sep = new Separator()
-                {
-                    Margin = new Thickness(0)
-                };
-
-                if (SeparatorStyle != null)
-                    sep.Style = SeparatorStyle;
-
-                stackPanel.Children.Add(sep);
-            }
-
-            var sepLst = new Separator();
-            if (SeparatorStyle != null)
-                sepLst.Style = SeparatorStyle;
-
-            stackPanel.Children.Add(sepLst);
-
-            var container = new BlockUIContainer(stackPanel);
-            return container;
         }
 
         #endregion
 
 
         #region grammer - list
-        private const string _markerUL = @"[*+=-]";
-        private const string _markerOL = @"\d+[.]|\p{L}+[.,]";
+
+        // `alphabet order` and `roman number` must start 'a.'～'c.' and 'i,'～'iii,'.
+        // This restrict is avoid to treat "Yes," as list marker.
+        private const string _firstListMaker = @"(?:[*+=-]|\d+[.]|[a-c][.]|[i]{1,3}[,]|[A-C][.]|[I]{1,3}[,])";
+        private const string _subseqListMaker = @"(?:[*+=-]|\d+[.]|[a-c][.]|[cdilmvx]+[,]|[A-C][.]|[CDILMVX]+[,])";
+
+        //private const string _markerUL = @"[*+=-]";
+        //private const string _markerOL = @"\d+[.]|\p{L}+[.,]";
 
         // Unordered List
         private const string _markerUL_Disc = @"[*]";
@@ -931,10 +824,10 @@ namespace MdXaml
 
         // Ordered List
         private const string _markerOL_Number = @"\d+[.]";
-        private const string _markerOL_LetterLower = @"\p{Ll}+[.]";
-        private const string _markerOL_LetterUpper = @"\p{Lu}+[.]";
-        private const string _markerOL_RomanLower = @"\p{Ll}+[,]";
-        private const string _markerOL_RomanUpper = @"\p{Lu}+[,]";
+        private const string _markerOL_LetterLower = @"[a-c][.]";
+        private const string _markerOL_LetterUpper = @"[A-C][.]";
+        private const string _markerOL_RomanLower = @"[cdilmvx]+[,]";
+        private const string _markerOL_RomanUpper = @"[CDILMVX]+[,]";
 
         private int _listLevel;
 
@@ -942,13 +835,14 @@ namespace MdXaml
         /// Maximum number of levels a single list can have.
         /// In other words, _listDepth - 1 is the maximum number of nested lists.
         /// </summary>
-        private const int _listDepth = 6;
+        private const int _listDepth = 4;
 
         private static readonly string _wholeList = string.Format(@"
-            (                               # $1 = whole list
-              (                             # $2 = list marker with indent
-                [ ]{{0,{1}}}
-                ({0})                       # $3 = first list item marker
+            (?<whltxt>                      # whole list
+              (?<mkr_i>                     # list marker with indent
+                (?![ ]{{0,3}}(?<hrm>[-=*_])([ ]{{0,2}}\k<hrm>){{2,}})
+                (?<idt>[ ]{{0,{2}}})
+                (?<mkr>{0})                 # first list item marker
                 [ ]+
               )
               (?s:.+?)
@@ -959,34 +853,23 @@ namespace MdXaml
                   (?=\S)
                   (?!                       # Negative lookahead for another list item marker
                     [ ]*
-                    {0}[ ]+
+                    {1}[ ]+
                   )
               )
-            )", string.Format("(?:{0}|{1})", _markerUL, _markerOL), _listDepth - 1);
+            )", _firstListMaker, _subseqListMaker, _listDepth - 1);
+
+        private static readonly Regex _startNoIndentRule = new Regex(@"\A[ ]{0,2}(?<hrm>[-=*_])([ ]{0,2}\k<hrm>){2,}",
+            RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+
+        private static readonly Regex _startNoIndentSublistMarker = new Regex(@"\A" + _subseqListMaker, RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+
+        private static readonly Regex _startQuoteOrHeader = new Regex(@"\A(\#{1,6}[ ]|>|```)", RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private static readonly Regex _listNested = new Regex(@"^" + _wholeList,
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private static readonly Regex _listTopLevel = new Regex(@"(?:(?<=\n)|\A\n?)" + _wholeList,
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-
-        /// <summary>
-        /// Turn Markdown lists into HTML ul and ol and li tags
-        /// </summary>
-        private IEnumerable<Block> DoLists(string text, Func<string, IEnumerable<Block>> defaultHandler)
-        {
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            // We use a different prefix before nested lists than top-level lists.
-            // See extended comment in _ProcessListItems().
-            if (_listLevel > 0)
-                return Evaluate(text, _listNested, ListEvaluator, defaultHandler);
-            else
-                return Evaluate(text, _listTopLevel, ListEvaluator, defaultHandler);
-        }
 
         private IEnumerable<Block> ListEvaluator(Match match)
         {
@@ -996,17 +879,21 @@ namespace MdXaml
             }
 
             // Check text marker style.
-            var tpl = GetTextMarkerStyle(match.Groups[3].Value);
-            TextMarkerStyle textMarker = tpl.Item1;
-            string markerPattern = tpl.Item2;
+            var markerDetect = GetTextMarkerStyle(match.Groups["mkr"].Value);
+            TextMarkerStyle textMarker = markerDetect.Item1;
+            string markerPattern = markerDetect.Item2;
+            int indentAppending = markerDetect.Item3;
+
+
+            Regex markerRegex = new Regex(@"\A" + markerPattern, RegexOptions.Compiled);
 
             // count indent from first marker with indent
-            int countIndent = IndentUtil.CountIndent(match.Groups[2].Value);
+            int countIndent = TextUtil.CountIndent(match.Groups["mkr_i"].Value);
 
             // whole list
-            string[] whileListLins = match.Groups[1].Value.Split('\n');
+            string[] whileListLins = match.Groups["whltxt"].Value.Split('\n');
 
-            // cllect detendentable line
+            // collect detendentable line
             var listBulder = new StringBuilder();
             var outerListBuildre = new StringBuilder();
             var isInOuterList = false;
@@ -1018,20 +905,34 @@ namespace MdXaml
                     {
                         listBulder.Append("").Append("\n");
                     }
-                    else if (IndentUtil.TryDetendLine(line, countIndent, out var stripedLine))
+                    else if (TextUtil.TryDetendLine(line, countIndent, out var stripedLine))
                     {
-                        // is it had list marker?
-                        var someMarkerMch = Regex.Match(stripedLine, $"{_markerUL}|{_markerOL}");
-                        if (someMarkerMch.Success && someMarkerMch.Index == 0)
+                        // is it horizontal line?
+                        if (_startNoIndentRule.IsMatch(stripedLine))
                         {
-                            var targetMarkerMch = Regex.Match(stripedLine, markerPattern);
-                            if (targetMarkerMch.Success && targetMarkerMch.Index == 0)
+                            isInOuterList = true;
+                        }
+                        // is it header or blockquote?
+                        else if (_startQuoteOrHeader.IsMatch(stripedLine))
+                        {
+                            isInOuterList = true;
+                        }
+                        // is it had list marker?
+                        else if (_startNoIndentSublistMarker.IsMatch(stripedLine))
+                        {
+                            // is it same marker as now processed?
+                            var targetMarkerMch = markerRegex.Match(stripedLine);
+                            if (targetMarkerMch.Success)
                             {
                                 listBulder.Append(stripedLine).Append("\n");
                             }
                             else isInOuterList = true;
                         }
-                        else listBulder.Append(stripedLine).Append("\n");
+                        else
+                        {
+                            var detentedline = TextUtil.DetentLineBestEffort(stripedLine, indentAppending);
+                            listBulder.Append(detentedline).Append("\n");
+                        }
                     }
                     else isInOuterList = true;
                 }
@@ -1138,47 +1039,49 @@ namespace MdXaml
         /// <summary>
         /// Get the text marker style based on a specific regex.
         /// </summary>
+        /// <param name="markerText">list maker (eg. * + 1. a. </param>
         /// <returns>
         ///     1; return Type. 
         ///     2: match regex pattern
+        ///     3: char length of listmaker
         /// </returns>
-        private static Tuple<TextMarkerStyle, string> GetTextMarkerStyle(string markerText)
+        private static Tuple<TextMarkerStyle, string, int> GetTextMarkerStyle(string markerText)
         {
             if (Regex.IsMatch(markerText, _markerUL_Disc))
             {
-                return Tuple.Create(TextMarkerStyle.Disc, _markerUL_Disc);
+                return Tuple.Create(TextMarkerStyle.Disc, _markerUL_Disc, 2);
             }
             else if (Regex.IsMatch(markerText, _markerUL_Box))
             {
-                return Tuple.Create(TextMarkerStyle.Box, _markerUL_Box);
+                return Tuple.Create(TextMarkerStyle.Box, _markerUL_Box, 2);
             }
             else if (Regex.IsMatch(markerText, _markerUL_Circle))
             {
-                return Tuple.Create(TextMarkerStyle.Circle, _markerUL_Circle);
+                return Tuple.Create(TextMarkerStyle.Circle, _markerUL_Circle, 2);
             }
             else if (Regex.IsMatch(markerText, _markerUL_Square))
             {
-                return Tuple.Create(TextMarkerStyle.Square, _markerUL_Square);
+                return Tuple.Create(TextMarkerStyle.Square, _markerUL_Square, 2);
             }
             else if (Regex.IsMatch(markerText, _markerOL_Number))
             {
-                return Tuple.Create(TextMarkerStyle.Decimal, _markerOL_Number);
+                return Tuple.Create(TextMarkerStyle.Decimal, _markerOL_Number, 3);
             }
             else if (Regex.IsMatch(markerText, _markerOL_LetterLower))
             {
-                return Tuple.Create(TextMarkerStyle.LowerLatin, _markerOL_LetterLower);
+                return Tuple.Create(TextMarkerStyle.LowerLatin, _markerOL_LetterLower, 3);
             }
             else if (Regex.IsMatch(markerText, _markerOL_LetterUpper))
             {
-                return Tuple.Create(TextMarkerStyle.UpperLatin, _markerOL_LetterUpper);
+                return Tuple.Create(TextMarkerStyle.UpperLatin, _markerOL_LetterUpper, 3);
             }
             else if (Regex.IsMatch(markerText, _markerOL_RomanLower))
             {
-                return Tuple.Create(TextMarkerStyle.LowerRoman, _markerOL_RomanLower);
+                return Tuple.Create(TextMarkerStyle.LowerRoman, _markerOL_RomanLower, 3);
             }
             else if (Regex.IsMatch(markerText, _markerOL_RomanUpper))
             {
-                return Tuple.Create(TextMarkerStyle.UpperRoman, _markerOL_RomanUpper);
+                return Tuple.Create(TextMarkerStyle.UpperRoman, _markerOL_RomanUpper, 3);
             }
 
             throw new InvalidOperationException("sorry library manager forget to modify about listmerker.");
@@ -1191,18 +1094,18 @@ namespace MdXaml
 
         private static readonly Regex _table = new Regex(@"
             (                               # whole table
-                [ \r\n]*
+                [ \n]*
                 (?<hdr>                     # table header
-                    ([^\r\n\|]*\|[^\r\n]+)
+                    ([^\n\|]*\|[^\n]+)
                 )
-                [ ]*\r?\n[ ]*
+                [ ]*\n[ ]*
                 (?<col>                     # column style
                     \|?([ ]*:?-+:?[ ]*(\||$))+
                 )
                 (?<row>                     # table row
                     (
-                        [ ]*\r?\n[ ]*
-                        ([^\r\n\|]*\|[^\r\n]+)
+                        [ ]*\n[ ]*
+                        ([^\n\|]*\|[^\n]+)
                     )+
                 )
             )",
@@ -1334,51 +1237,50 @@ namespace MdXaml
 
         #region grammer - code block
 
-        private static Regex _codeBlock = new Regex(@"
-                    (?<=\n)          # Character before opening
-                    [ \r\n]*
-                    (`+)             # $1 = Opening run of `
-                    ([^\r\n`]*)      # $2 = The code lang
-                    \r?\n
-                    ((.|\n)+?)       # $3 = The code block
-                    \n[ ]*
-                    \1
-                    (?!`)[\r\n]+", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled);
-
         private static Regex _codeBlockFirst = new Regex(@"
                     ^          # Character before opening
-                    (`+)             # $1 = Opening run of `
-                    ([^\r\n`]*)      # $2 = The code lang
-                    \r?\n
+                    [ ]{0,3}
+                    (`{3,})          # $1 = Opening run of `
+                    ([^\n`]*)        # $2 = The code lang
+                    \n
                     ((.|\n)+?)       # $3 = The code block
                     \n[ ]*
                     \1
-                    (?!`)[\r\n]+", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled);
+                    (?!`)[\n]+", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled);
 
-        private IEnumerable<Block> DoCodeBlocks(string text, Func<string, IEnumerable<Block>> defaultHandler)
+        private static Regex _indentCodeBlock = new Regex(@"
+                    (?:\A|^[ ]*\n)
+                    (
+                    [ ]{4}.+
+                    (\n([ ]{4}.+|[ ]*))*
+                    \n?
+                    )
+                    ", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled);
+
+
+        private IEnumerable<Block> DoIndentCodeBlock(string text, Func<string, IEnumerable<Block>> defaultHandler)
         {
             if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
 
-            return Evaluate(
-                text, _codeBlockFirst, CodeBlocksEvaluator,
-                sn => Evaluate(sn, _codeBlock, CodeBlocksEvaluator, defaultHandler)
-            );
+            return Evaluate(text, _indentCodeBlock, CodeBlocksWithoutLangEvaluator, defaultHandler);
+        }
+
+        private Block CodeBlocksWithLangEvaluator(Match match)
+            => CodeBlocksEvaluator(match.Groups[2].Value, match.Groups[3].Value);
+
+
+        private Block CodeBlocksWithoutLangEvaluator(Match match)
+        {
+            var detentTxt = String.Join("\n", match.Groups[1].Value.Split('\n').Select(line => TextUtil.DetentLineBestEffort(line, 4)));
+            return CodeBlocksEvaluator(null, _newlinesLeadingTrailing.Replace(detentTxt, ""));
         }
 
 #if MIG_FREE
-        private Block CodeBlocksEvaluator(Match match)
+        private Block CodeBlocksWithLangEvaluator(string lang, string code)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
-            string lang = match.Groups[2].Value;
-            string code = match.Groups[3].Value;
-
             var text = new Run(code);
             var result = new Paragraph(text);
             if (CodeBlockStyle != null)
@@ -1393,19 +1295,15 @@ namespace MdXaml
             return result;
         }
 #else
-        private Block CodeBlocksEvaluator(Match match)
+        private Block CodeBlocksEvaluator(string lang, string code)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
-            string lang = match.Groups[2].Value;
-            string code = match.Groups[3].Value;
-
             var txtEdit = new TextEditor();
-            var highlight = HighlightingManager.Instance.GetDefinitionByExtension("." + lang);
-            txtEdit.SyntaxHighlighting = highlight;
+
+            if (!String.IsNullOrEmpty(lang))
+            {
+                var highlight = HighlightingManager.Instance.GetDefinitionByExtension("." + lang);
+                txtEdit.SyntaxHighlighting = highlight;
+            }
 
             txtEdit.Text = code;
             txtEdit.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -1423,6 +1321,7 @@ namespace MdXaml
 
             return result;
         }
+
 #endif
 
         #endregion
@@ -1538,6 +1437,15 @@ namespace MdXaml
 
                 var buff = new StringBuilder();
 
+                void HandleBefore()
+                {
+                    if (buff.Length > 0)
+                    {
+                        rtn.AddRange(defaultHandler(buff.ToString()));
+                        buff.Clear();
+                    }
+                }
+
                 for (var i = 0; i < text.Length; ++i)
                 {
                     var ch = text[i];
@@ -1593,9 +1501,8 @@ namespace MdXaml
                                 }
                                 else
                                 {
-                                    rtn.AddRange(defaultHandler(buff.ToString()));
+                                    HandleBefore();
                                     rtn.Add(inline);
-                                    buff.Clear();
                                 }
                                 break;
                             }
@@ -1610,9 +1517,8 @@ namespace MdXaml
                                 }
                                 else
                                 {
-                                    rtn.AddRange(defaultHandler(buff.ToString()));
+                                    HandleBefore();
                                     rtn.Add(inline);
-                                    buff.Clear();
                                 }
                                 break;
                             }
@@ -1627,9 +1533,8 @@ namespace MdXaml
                                 }
                                 else
                                 {
-                                    rtn.AddRange(defaultHandler(buff.ToString()));
+                                    HandleBefore();
                                     rtn.Add(inline);
-                                    buff.Clear();
                                 }
                                 break;
                             }
@@ -1644,9 +1549,8 @@ namespace MdXaml
                                 }
                                 else
                                 {
-                                    rtn.AddRange(defaultHandler(buff.ToString()));
+                                    HandleBefore();
                                     rtn.Add(inline);
-                                    buff.Clear();
                                 }
                                 break;
                             }
@@ -1953,17 +1857,17 @@ namespace MdXaml
 
         private static Regex _blockquote = new Regex(@"
             (?<=\n)
-            [\r\n]*
+            [\n]*
             ([>].*)
-            (\r?\n[>].*)*
-            [\r\n]*
+            (\n[>].*)*
+            [\n]*
             ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private static Regex _blockquoteFirst = new Regex(@"
             ^
             ([>].*)
-            (\r?\n[>].*)*
-            [\r\n]*
+            (\n[>].*)*
+            [\n]*
             ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private IEnumerable<Block> DoBlockquotes(string text, Func<string, IEnumerable<Block>> defaultHandler)
@@ -1987,10 +1891,9 @@ namespace MdXaml
             }
 
             // trim '>'
-            var ln = new Regex("\r?\n");
             var trimmedTxt = string.Join(
                     "\n",
-                    ln.Split(match.Value.Trim())
+                    match.Value.Trim().Split('\n')
                         .Select(txt =>
                         {
                             if (txt.Length <= 1) return string.Empty;
@@ -2001,7 +1904,7 @@ namespace MdXaml
                         .ToArray()
             );
 
-            var blocks = RunBlockGamut(Normalize(trimmedTxt), true);
+            var blocks = RunBlockGamut(TextUtil.Normalize(trimmedTxt), true);
             var result = Create<Section, Block>(blocks);
             if (BlockquoteStyle != null)
             {
@@ -2034,7 +1937,7 @@ namespace MdXaml
                 _nestedBracketsPattern =
                     RepeatString(@"
                     (?>              # Atomic matching
-                       [^\[\]]+      # Anything other than brackets
+                       [^()\n\t]+? # Anything other than parens or whitespace
                      |
                        \[
                            ", _nestDepth) + RepeatString(
@@ -2101,39 +2004,84 @@ namespace MdXaml
             return result;
         }
 
-        private IEnumerable<T> Evaluate<T>(string text, Regex expression, Func<Match, IEnumerable<T>> build, Func<string, IEnumerable<T>> rest)
+        private IEnumerable<T> Evaluate2<T>(
+                string text,
+                Regex expression1, Func<Match, T> build1,
+                Regex expression2, Func<Match, IEnumerable<T>> build2,
+                Func<string, IEnumerable<T>> rest)
         {
             if (text is null)
             {
                 throw new ArgumentNullException(nameof(text));
             }
 
-            var matches = expression.Matches(text);
             var index = 0;
-            foreach (Match m in matches)
+
+            var rtn = new List<T>();
+
+            var match1 = expression1.Match(text, index);
+            var match2 = expression2.Match(text, index);
+
+            IEnumerable<T> ProcPre(Match m)
             {
-                if (m.Index > index)
+                var prefix = text.Substring(index, m.Index - index);
+                return rest(prefix);
+            }
+
+            void ProcessMatch1()
+            {
+                if (match1.Index > index)
                 {
-                    var prefix = text.Substring(index, m.Index - index);
-                    foreach (var t in rest(prefix))
-                    {
-                        yield return t;
-                    }
+                    rtn.AddRange(ProcPre(match1));
                 }
+                rtn.Add(build1(match1));
+                index = match1.Index + match1.Length;
+            }
 
-                foreach (var part in build(m)) yield return part;
+            void ProcessMatch2()
+            {
+                if (match2.Index > index)
+                {
+                    rtn.AddRange(ProcPre(match2));
+                }
+                rtn.AddRange(build2(match2));
+                index = match2.Index + match2.Length;
+            }
 
-                index = m.Index + m.Length;
+            // match1 vs match2
+            while (match1.Success && match2.Success)
+            {
+                if (match1.Index < match2.Index)
+                {
+                    ProcessMatch1();
+                }
+                else
+                {
+                    ProcessMatch2();
+                }
+                match1 = expression1.Match(text, index);
+                match2 = expression2.Match(text, index);
+            }
+
+            while (match1.Success)
+            {
+                ProcessMatch1();
+                match1 = expression1.Match(text, index);
+            }
+
+            while (match2.Success)
+            {
+                ProcessMatch2();
+                match2 = expression2.Match(text, index);
             }
 
             if (index < text.Length)
             {
                 var suffix = text.Substring(index, text.Length - index);
-                foreach (var t in rest(suffix))
-                {
-                    yield return t;
-                }
+                rtn.AddRange(rest(suffix));
             }
+
+            return rtn;
         }
 
         private IEnumerable<T> Evaluate<T>(string text, Regex expression, Func<Match, T> build, Func<string, IEnumerable<T>> rest)
