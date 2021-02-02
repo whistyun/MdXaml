@@ -45,5 +45,4 @@
       </TableRow>
     </TableRowGroup>
   </Table>
-  <Paragraph />
 </FlowDocument>

@@ -58,6 +58,11 @@ namespace MdXaml
         private const string TagStrikethroughSpan = "Strikethrough";
         private const string TagUnderlineSpan = "Underline";
 
+        private const string TagRuleSingle = "RuleSingle";
+        private const string TagRuleDouble = "RuleDouble";
+        private const string TagRuleBold = "RuleBold";
+        private const string TagRuleBoldWithSingle = "RuleBoldWithSingle";
+
         #endregion
 
         /// <summary>
@@ -736,7 +741,12 @@ namespace MdXaml
                         if (SeparatorStyle != null)
                             sep.Style = SeparatorStyle;
 
-                        return new BlockUIContainer(sep);
+                        var container = new BlockUIContainer(sep);
+                        if (!DisabledTag)
+                        {
+                            container.Tag = TagRuleSingle;
+                        }
+                        return container;
                     }
 
                 case "=":
@@ -752,6 +762,10 @@ namespace MdXaml
                         }
 
                         var container = new BlockUIContainer(stackPanel);
+                        if (!DisabledTag)
+                        {
+                            container.Tag = TagRuleDouble;
+                        }
                         return container;
                     }
 
@@ -772,6 +786,10 @@ namespace MdXaml
                         }
 
                         var container = new BlockUIContainer(stackPanel);
+                        if (!DisabledTag)
+                        {
+                            container.Tag = TagRuleBold;
+                        }
                         return container;
                     }
 
@@ -798,6 +816,10 @@ namespace MdXaml
                         stackPanel.Children.Add(sepLst);
 
                         var container = new BlockUIContainer(stackPanel);
+                        if (!DisabledTag)
+                        {
+                            container.Tag = TagRuleBoldWithSingle;
+                        }
                         return container;
                     }
             }
@@ -944,10 +966,6 @@ namespace MdXaml
             }
 
             string list = listBulder.ToString();
-
-            // Turn double returns into triple returns, so that we can make a
-            // paragraph for the last item in a list, if necessary:
-            list = Regex.Replace(list, @"\n{2,}", "\n\n\n");
 
             var resultList = Create<List, ListItem>(ProcessListItems(list, markerPattern));
 

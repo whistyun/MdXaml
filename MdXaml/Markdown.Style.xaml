@@ -162,6 +162,26 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
+            <Style TargetType="BlockUIContainer">
+                <Style.Triggers>
+                    <Trigger Property="Tag"  Value="RuleSingle">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleDouble">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleBold">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleBoldWithSingle">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
         </Style.Resources>
     </Style>
 
@@ -170,7 +190,7 @@
         <Setter Property="TextAlignment" Value="Left" />
         <Setter Property="PagePadding"   Value="0"/>
         <Setter Property="FontSize"      Value="12"/>
-       
+
         <Style.Resources>
             <Style TargetType="Section">
                 <Setter Property="Padding"     Value="10, 5"/>
@@ -310,6 +330,26 @@
                                      Value="EvenTableRow">
                         <Setter Property="Background" Value="#F5F5F5"/>
                     </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="BlockUIContainer">
+                <Style.Triggers>
+                    <Trigger Property="Tag"  Value="RuleSingle">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleDouble">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleBold">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleBoldWithSingle">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
                 </Style.Triggers>
             </Style>
         </Style.Resources>
@@ -455,6 +495,26 @@
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="EvenTableRow">
                         <Setter Property="Background" Value="#F6F8FA"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="BlockUIContainer">
+                <Style.Triggers>
+                    <Trigger Property="Tag"  Value="RuleSingle">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleDouble">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleBold">
+                        <Setter Property="Margin" Value="0,3"/>
+                    </Trigger>
+
+                    <Trigger Property="Tag"  Value="RuleBoldWithSingle">
+                        <Setter Property="Margin" Value="0,3"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>

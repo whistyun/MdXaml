@@ -144,3 +144,86 @@ This was an error in Markdown 1.0.1:
 	*	sub
 
 	that
+
+
+Mixing list
+
+1. one
+    1. one-one
+    1. one-two
+       inlist 1
+        inlist 2
+         inline 3
+          inline 4
+
+           as code
+2. two
+* three
+* four
++ five
++ six
+    + seven
++ eight
+- eight
+- nine
+
+Enhanced syntax alphabet order.
+
+ab. foo
+a. bar
+ab. foo2
+a. bar2
+a. foo3
+a. bar3
+
+Enhanced syntax roman order.
+
+yes, we can.
+no, i can.
+i, one
+
+===
+
+ii, one
+
+===
+
+iii, one
+yes, we can
+
+===
+
+iiii, one
+
+
+* * *
+* one
+* * *
+* one
+ * * *
+* one
+  * * *
+* two
+```
+code
+```
+* three
+> quote
+* four
+# head
+* four
+## head
+
+* * *
+* one
+   * * *
+* two
+ ```
+ code
+ ```
+* three
+ > quote
+* four
+ # head
+* four
+ ## head

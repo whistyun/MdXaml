@@ -236,6 +236,18 @@ namespace Markdown.Xaml.Test
 
         [Test]
         [Apartment(ApartmentState.STA)]
+        public void Transform_givenCodes_generatesExpectedResult()
+        {
+            var text = Utils.LoadText("Codes.md");
+            var markdown = new Markdown();
+            markdown.AssetPathRoot = assetPath;
+
+            var result = markdown.Transform(text);
+            Approvals.Verify(Utils.AsXaml(result));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
         public void Transform_givenEmoji()
         {
             var text = Utils.LoadText("Emoji.md");
