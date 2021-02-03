@@ -844,12 +844,23 @@ namespace MdXaml
         private const string _markerUL_Circle = @"[-]";
         private const string _markerUL_Square = @"[=]";
 
+        private static readonly Regex _startsWith_markerUL_Disc = new Regex("\\A" + _markerUL_Disc, RegexOptions.Compiled);
+        private static readonly Regex _startsWith_markerUL_Box = new Regex("\\A" + _markerUL_Box, RegexOptions.Compiled);
+        private static readonly Regex _startsWith_markerUL_Circle = new Regex("\\A" + _markerUL_Circle, RegexOptions.Compiled);
+        private static readonly Regex _startsWith_markerUL_Square = new Regex("\\A" + _markerUL_Square, RegexOptions.Compiled);
+
         // Ordered List
         private const string _markerOL_Number = @"\d+[.]";
         private const string _markerOL_LetterLower = @"[a-c][.]";
         private const string _markerOL_LetterUpper = @"[A-C][.]";
         private const string _markerOL_RomanLower = @"[cdilmvx]+[,]";
         private const string _markerOL_RomanUpper = @"[CDILMVX]+[,]";
+
+        private static readonly Regex _startsWith_markerOL_Number = new Regex("\\A" + _markerOL_Number, RegexOptions.Compiled);
+        private static readonly Regex _startsWith_markerOL_LetterLower = new Regex("\\A" + _markerOL_LetterLower, RegexOptions.Compiled);
+        private static readonly Regex _startsWith_markerOL_LetterUpper = new Regex("\\A" + _markerOL_LetterUpper, RegexOptions.Compiled);
+        private static readonly Regex _startsWith_markerOL_RomanLower = new Regex("\\A" + _markerOL_RomanLower, RegexOptions.Compiled);
+        private static readonly Regex _startsWith_markerOL_RomanUpper = new Regex("\\A" + _markerOL_RomanUpper, RegexOptions.Compiled);
 
         private int _listLevel;
 
@@ -904,10 +915,8 @@ namespace MdXaml
             var markerDetect = GetTextMarkerStyle(match.Groups["mkr"].Value);
             TextMarkerStyle textMarker = markerDetect.Item1;
             string markerPattern = markerDetect.Item2;
-            int indentAppending = markerDetect.Item3;
-
-
-            Regex markerRegex = new Regex(@"\A" + markerPattern, RegexOptions.Compiled);
+            Regex markerRegex = markerDetect.Item3;
+            int indentAppending = markerDetect.Item4;
 
             // count indent from first marker with indent
             int countIndent = TextUtil.CountIndent(match.Groups["mkr_i"].Value);
@@ -943,8 +952,7 @@ namespace MdXaml
                         else if (_startNoIndentSublistMarker.IsMatch(stripedLine))
                         {
                             // is it same marker as now processed?
-                            var targetMarkerMch = markerRegex.Match(stripedLine);
-                            if (targetMarkerMch.Success)
+                            if (markerRegex.IsMatch(stripedLine))
                             {
                                 listBulder.Append(stripedLine).Append("\n");
                             }
@@ -1063,43 +1071,43 @@ namespace MdXaml
         ///     2: match regex pattern
         ///     3: char length of listmaker
         /// </returns>
-        private static Tuple<TextMarkerStyle, string, int> GetTextMarkerStyle(string markerText)
+        private static Tuple<TextMarkerStyle, string, Regex, int> GetTextMarkerStyle(string markerText)
         {
             if (Regex.IsMatch(markerText, _markerUL_Disc))
             {
-                return Tuple.Create(TextMarkerStyle.Disc, _markerUL_Disc, 2);
+                return Tuple.Create(TextMarkerStyle.Disc, _markerUL_Disc, _startsWith_markerUL_Disc, 2);
             }
             else if (Regex.IsMatch(markerText, _markerUL_Box))
             {
-                return Tuple.Create(TextMarkerStyle.Box, _markerUL_Box, 2);
+                return Tuple.Create(TextMarkerStyle.Box, _markerUL_Box, _startsWith_markerUL_Box, 2);
             }
             else if (Regex.IsMatch(markerText, _markerUL_Circle))
             {
-                return Tuple.Create(TextMarkerStyle.Circle, _markerUL_Circle, 2);
+                return Tuple.Create(TextMarkerStyle.Circle, _markerUL_Circle, _startsWith_markerUL_Circle, 2);
             }
             else if (Regex.IsMatch(markerText, _markerUL_Square))
             {
-                return Tuple.Create(TextMarkerStyle.Square, _markerUL_Square, 2);
+                return Tuple.Create(TextMarkerStyle.Square, _markerUL_Square, _startsWith_markerUL_Square, 2);
             }
             else if (Regex.IsMatch(markerText, _markerOL_Number))
             {
-                return Tuple.Create(TextMarkerStyle.Decimal, _markerOL_Number, 3);
+                return Tuple.Create(TextMarkerStyle.Decimal, _markerOL_Number, _startsWith_markerOL_Number, 3);
             }
             else if (Regex.IsMatch(markerText, _markerOL_LetterLower))
             {
-                return Tuple.Create(TextMarkerStyle.LowerLatin, _markerOL_LetterLower, 3);
+                return Tuple.Create(TextMarkerStyle.LowerLatin, _markerOL_LetterLower, _startsWith_markerOL_LetterLower, 3);
             }
             else if (Regex.IsMatch(markerText, _markerOL_LetterUpper))
             {
-                return Tuple.Create(TextMarkerStyle.UpperLatin, _markerOL_LetterUpper, 3);
+                return Tuple.Create(TextMarkerStyle.UpperLatin, _markerOL_LetterUpper, _startsWith_markerOL_LetterUpper, 3);
             }
             else if (Regex.IsMatch(markerText, _markerOL_RomanLower))
             {
-                return Tuple.Create(TextMarkerStyle.LowerRoman, _markerOL_RomanLower, 3);
+                return Tuple.Create(TextMarkerStyle.LowerRoman, _markerOL_RomanLower, _startsWith_markerOL_RomanLower, 3);
             }
             else if (Regex.IsMatch(markerText, _markerOL_RomanUpper))
             {
-                return Tuple.Create(TextMarkerStyle.UpperRoman, _markerOL_RomanUpper, 3);
+                return Tuple.Create(TextMarkerStyle.UpperRoman, _markerOL_RomanUpper, _startsWith_markerOL_RomanUpper, 3);
             }
 
             throw new InvalidOperationException("sorry library manager forget to modify about listmerker.");
