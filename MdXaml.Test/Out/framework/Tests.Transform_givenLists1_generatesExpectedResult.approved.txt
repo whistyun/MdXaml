@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-16"?>
-<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:icscaed="clr-namespace:ICSharpCode.AvalonEdit.Document;assembly=ICSharpCode.AvalonEdit" xmlns:scmd="clr-namespace:System.ComponentModel.Design;assembly=System" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Paragraph>First we have a simple numeric list</Paragraph>
   <List MarkerStyle="Decimal">
     <ListItem>
@@ -55,7 +55,7 @@
       <Paragraph>asterisk 3</Paragraph>
     </ListItem>
   </List>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
@@ -85,7 +85,7 @@
       <Paragraph>Plus 3</Paragraph>
     </ListItem>
   </List>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
@@ -249,6 +249,253 @@
           <Paragraph>that</Paragraph>
         </ListItem>
       </List>
+    </ListItem>
+  </List>
+  <Paragraph>Mixing list</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+      <List MarkerStyle="Decimal">
+        <ListItem>
+          <Paragraph>one-one</Paragraph>
+        </ListItem>
+        <ListItem>
+          <Paragraph>one-two inlist 1 inlist 2 inline 3 inline 4</Paragraph>
+          <BlockUIContainer Tag="CodeBlock">
+            <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+              <avalonedit:TextEditor.Document>
+                <icscaed:TextDocument Text="as code" FileName="{x:Null}">
+                  <icscaed:TextDocument.UndoStack>
+                    <icscaed:UndoStack SizeLimit="2147483647" />
+                  </icscaed:TextDocument.UndoStack>
+                  <icscaed:TextDocument.ServiceProvider>
+                    <scmd:ServiceContainer />
+                  </icscaed:TextDocument.ServiceProvider>
+                </icscaed:TextDocument>
+              </avalonedit:TextEditor.Document>
+              <avalonedit:TextEditor.Options>
+                <avalonedit:TextEditorOptions />
+              </avalonedit:TextEditor.Options>as code</avalonedit:TextEditor>
+          </BlockUIContainer>
+        </ListItem>
+      </List>
+    </ListItem>
+    <ListItem>
+      <Paragraph>two</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>three</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>four</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="Box">
+    <ListItem>
+      <Paragraph>five</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>six</Paragraph>
+      <List MarkerStyle="Box">
+        <ListItem>
+          <Paragraph>seven</Paragraph>
+        </ListItem>
+      </List>
+    </ListItem>
+    <ListItem>
+      <Paragraph>eight</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="Circle">
+    <ListItem>
+      <Paragraph>eight</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>nine</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Enhanced syntax alphabet order.</Paragraph>
+  <Paragraph>ab. foo</Paragraph>
+  <List MarkerStyle="LowerLatin">
+    <ListItem>
+      <Paragraph>bar ab. foo2</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>bar2</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>foo3</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>bar3</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Enhanced syntax roman order.</Paragraph>
+  <Paragraph>yes, we can. no, i can.</Paragraph>
+  <List MarkerStyle="LowerRoman">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleDouble">
+    <StackPanel>
+      <Separator />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="LowerRoman">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleDouble">
+    <StackPanel>
+      <Separator />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="LowerRoman">
+    <ListItem>
+      <Paragraph>one yes, we can</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleDouble">
+    <StackPanel>
+      <Separator />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <Paragraph>iiii, one</Paragraph>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>two</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+      <avalonedit:TextEditor.Document>
+        <icscaed:TextDocument Text="code" FileName="{x:Null}">
+          <icscaed:TextDocument.UndoStack>
+            <icscaed:UndoStack SizeLimit="2147483647" />
+          </icscaed:TextDocument.UndoStack>
+          <icscaed:TextDocument.ServiceProvider>
+            <scmd:ServiceContainer />
+          </icscaed:TextDocument.ServiceProvider>
+        </icscaed:TextDocument>
+      </avalonedit:TextEditor.Document>
+      <avalonedit:TextEditor.Options>
+        <avalonedit:TextEditorOptions />
+      </avalonedit:TextEditor.Options>code</avalonedit:TextEditor>
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>three</Paragraph>
+    </ListItem>
+  </List>
+  <Section Tag="Blockquote">
+    <Paragraph>quote</Paragraph>
+  </Section>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>four</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading1">head</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>four</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading2">head</Paragraph>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+      <BlockUIContainer Tag="RuleBold">
+        <StackPanel>
+          <Separator Margin="0,0,0,0" />
+          <Separator Margin="0,0,0,0" />
+        </StackPanel>
+      </BlockUIContainer>
+    </ListItem>
+    <ListItem>
+      <Paragraph>two</Paragraph>
+      <BlockUIContainer Tag="CodeBlock">
+        <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+          <avalonedit:TextEditor.Document>
+            <icscaed:TextDocument Text="code" FileName="{x:Null}">
+              <icscaed:TextDocument.UndoStack>
+                <icscaed:UndoStack SizeLimit="2147483647" />
+              </icscaed:TextDocument.UndoStack>
+              <icscaed:TextDocument.ServiceProvider>
+                <scmd:ServiceContainer />
+              </icscaed:TextDocument.ServiceProvider>
+            </icscaed:TextDocument>
+          </avalonedit:TextEditor.Document>
+          <avalonedit:TextEditor.Options>
+            <avalonedit:TextEditorOptions />
+          </avalonedit:TextEditor.Options>code</avalonedit:TextEditor>
+      </BlockUIContainer>
+    </ListItem>
+    <ListItem>
+      <Paragraph>three</Paragraph>
+      <Section Tag="Blockquote">
+        <Paragraph>quote</Paragraph>
+      </Section>
+    </ListItem>
+    <ListItem>
+      <Paragraph>four</Paragraph>
+      <Paragraph Tag="Heading1">head</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>four</Paragraph>
+      <Paragraph Tag="Heading2">head</Paragraph>
     </ListItem>
   </List>
 </FlowDocument>

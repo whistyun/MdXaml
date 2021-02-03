@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Md\Codes.md" />
     <EmbeddedResource Include="Md\Blockquite.md" />
     <EmbeddedResource Include="Md\HorizontalRules.md" />
     <EmbeddedResource Include="Md\Images.md" />

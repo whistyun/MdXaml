@@ -165,7 +165,7 @@
   </List>
   <Paragraph>Markdown.Xaml support <Run Tag="CodeSpan">inline code</Run></Paragraph>
   <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor SyntaxHighlighting="{x:Null}" IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="#include &lt;stdio.h&gt;&#xA;int main()&#xA;{&#xA;   // printf() displays the string inside quotation&#xA;   printf(&quot;Hello, World!&quot;);&#xA;   return 0;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>#include &lt;stdio.h&gt;
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="#include &lt;stdio.h&gt;&#xA;int main()&#xA;{&#xA;   // printf() displays the string inside quotation&#xA;   printf(&quot;Hello, World!&quot;);&#xA;   return 0;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>#include &lt;stdio.h&gt;
 int main()
 {
    // printf() displays the string inside quotation
@@ -178,13 +178,12 @@ int main()
       <Paragraph>Separator</Paragraph>
     </ListItem>
   </List>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
   <List MarkerStyle="Disc">
     <ListItem>
       <Paragraph>Blockquote</Paragraph>

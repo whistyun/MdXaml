@@ -1,176 +1,230 @@
 <?xml version="1.0" encoding="utf-16"?>
-<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:icscaed="clr-namespace:ICSharpCode.AvalonEdit.Document;assembly=ICSharpCode.AvalonEdit" xmlns:scmd="clr-namespace:System.ComponentModel.Design;assembly=System.ComponentModel.TypeConverter" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Paragraph>Dashes:</Paragraph>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <Paragraph xml:space="preserve"> ---</Paragraph>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+      <avalonedit:TextEditor.Document>
+        <icscaed:TextDocument Text="---" FileName="{x:Null}">
+          <icscaed:TextDocument.UndoStack>
+            <icscaed:UndoStack SizeLimit="2147483647" />
+          </icscaed:TextDocument.UndoStack>
+          <icscaed:TextDocument.ServiceProvider>
+            <scmd:ServiceContainer />
+          </icscaed:TextDocument.ServiceProvider>
+        </icscaed:TextDocument>
+      </avalonedit:TextEditor.Document>
+      <avalonedit:TextEditor.Options>
+        <avalonedit:TextEditorOptions />
+      </avalonedit:TextEditor.Options>---</avalonedit:TextEditor>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <Paragraph />
-  <List MarkerStyle="Circle">
-    <ListItem>
-      <List MarkerStyle="Circle">
-        <ListItem>
-          <Paragraph>-</Paragraph>
-        </ListItem>
-      </List>
-    </ListItem>
-  </List>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+      <avalonedit:TextEditor.Document>
+        <icscaed:TextDocument Text="- - -" FileName="{x:Null}">
+          <icscaed:TextDocument.UndoStack>
+            <icscaed:UndoStack SizeLimit="2147483647" />
+          </icscaed:TextDocument.UndoStack>
+          <icscaed:TextDocument.ServiceProvider>
+            <scmd:ServiceContainer />
+          </icscaed:TextDocument.ServiceProvider>
+        </icscaed:TextDocument>
+      </avalonedit:TextEditor.Document>
+      <avalonedit:TextEditor.Options>
+        <avalonedit:TextEditorOptions />
+      </avalonedit:TextEditor.Options>- - -</avalonedit:TextEditor>
+  </BlockUIContainer>
   <Paragraph>Asterisks:</Paragraph>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph xml:space="preserve"> ***</Paragraph>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+      <avalonedit:TextEditor.Document>
+        <icscaed:TextDocument Text="***" FileName="{x:Null}">
+          <icscaed:TextDocument.UndoStack>
+            <icscaed:UndoStack SizeLimit="2147483647" />
+          </icscaed:TextDocument.UndoStack>
+          <icscaed:TextDocument.ServiceProvider>
+            <scmd:ServiceContainer />
+          </icscaed:TextDocument.ServiceProvider>
+        </icscaed:TextDocument>
+      </avalonedit:TextEditor.Document>
+      <avalonedit:TextEditor.Options>
+        <avalonedit:TextEditorOptions />
+      </avalonedit:TextEditor.Options>***</avalonedit:TextEditor>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <List MarkerStyle="Disc">
-    <ListItem>
-      <List MarkerStyle="Disc">
-        <ListItem>
-          <Paragraph>*</Paragraph>
-        </ListItem>
-      </List>
-    </ListItem>
-  </List>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+      <avalonedit:TextEditor.Document>
+        <icscaed:TextDocument Text="* * *" FileName="{x:Null}">
+          <icscaed:TextDocument.UndoStack>
+            <icscaed:UndoStack SizeLimit="2147483647" />
+          </icscaed:TextDocument.UndoStack>
+          <icscaed:TextDocument.ServiceProvider>
+            <scmd:ServiceContainer />
+          </icscaed:TextDocument.ServiceProvider>
+        </icscaed:TextDocument>
+      </avalonedit:TextEditor.Document>
+      <avalonedit:TextEditor.Options>
+        <avalonedit:TextEditorOptions />
+      </avalonedit:TextEditor.Options>* * *</avalonedit:TextEditor>
+  </BlockUIContainer>
   <Paragraph>Underscores:</Paragraph>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
       <Separator />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
       <Separator />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
       <Separator />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
       <Separator />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph xml:space="preserve"> ___</Paragraph>
-  <BlockUIContainer>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+      <avalonedit:TextEditor.Document>
+        <icscaed:TextDocument Text="___" FileName="{x:Null}">
+          <icscaed:TextDocument.UndoStack>
+            <icscaed:UndoStack SizeLimit="2147483647" />
+          </icscaed:TextDocument.UndoStack>
+          <icscaed:TextDocument.ServiceProvider>
+            <scmd:ServiceContainer />
+          </icscaed:TextDocument.ServiceProvider>
+        </icscaed:TextDocument>
+      </avalonedit:TextEditor.Document>
+      <avalonedit:TextEditor.Options>
+        <avalonedit:TextEditorOptions />
+      </avalonedit:TextEditor.Options>___</avalonedit:TextEditor>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
       <Separator />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
       <Separator />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
       <Separator />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>
       <Separator Margin="0,0,0,0" />
       <Separator Margin="0,0,0,0" />
       <Separator />
     </StackPanel>
   </BlockUIContainer>
-  <Paragraph xml:space="preserve"> _ _ _</Paragraph>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+      <avalonedit:TextEditor.Document>
+        <icscaed:TextDocument Text="_ _ _" FileName="{x:Null}">
+          <icscaed:TextDocument.UndoStack>
+            <icscaed:UndoStack SizeLimit="2147483647" />
+          </icscaed:TextDocument.UndoStack>
+          <icscaed:TextDocument.ServiceProvider>
+            <scmd:ServiceContainer />
+          </icscaed:TextDocument.ServiceProvider>
+        </icscaed:TextDocument>
+      </avalonedit:TextEditor.Document>
+      <avalonedit:TextEditor.Options>
+        <avalonedit:TextEditorOptions />
+      </avalonedit:TextEditor.Options>_ _ _</avalonedit:TextEditor>
+  </BlockUIContainer>
 </FlowDocument>

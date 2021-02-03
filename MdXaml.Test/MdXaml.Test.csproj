@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Md\Blockquite.md" />
+    <None Remove="Md\Codes.md" />
     <None Remove="Md\Emoji.md" />
     <None Remove="Md\HorizontalRules.md" />
     <None Remove="Md\Images.md" />
@@ -27,6 +28,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Md\Blockquite.md" />
+    <EmbeddedResource Include="Md\Codes.md" />
     <EmbeddedResource Include="Md\HorizontalRules.md" />
     <EmbeddedResource Include="Md\Images.md" />
     <EmbeddedResource Include="Md\Links_inline_style.md" />
@@ -58,6 +60,31 @@
   <ItemGroup>
     <None Update="ExtImg.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Out\core\Tests.Transform_givenTextStyles_generatesExpectedResult.approved.txt">
+      <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+      <ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+      <DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+    </None>
+    <None Update="Out\framework\Tests.Transform_givenCodes_generatesExpectedResult.approved.txt">
+      <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+      <ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+      <DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+    </None>
+    <None Update="Out\framework\Tests.Transform_givenCodes_generatesExpectedResult.approved.txt.bak">
+      <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+      <ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+      <DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+    </None>
+    <None Update="Out\framework\Tests.Transform_givenLists1_generatesExpectedResult.approved.txt">
+      <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+      <ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+      <DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+    </None>
+    <None Update="Out\framework\Tests.Transform_givenLists1_generatesExpectedResult.approved.txt.bak">
+      <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+      <ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+      <DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
     </None>
   </ItemGroup>
 

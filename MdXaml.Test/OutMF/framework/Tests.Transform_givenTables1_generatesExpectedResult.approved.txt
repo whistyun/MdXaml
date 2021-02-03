@@ -433,8 +433,7 @@
       </TableRow>
     </TableRowGroup>
   </Table>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
   <Table>
@@ -569,8 +568,7 @@
       </TableRow>
     </TableRowGroup>
   </Table>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
   <Table>
@@ -611,8 +609,7 @@
       </TableRow>
     </TableRowGroup>
   </Table>
-  <Paragraph />
-  <BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
   <Table>
@@ -775,5 +772,4 @@
       </TableRow>
     </TableRowGroup>
   </Table>
-  <Paragraph />
 </FlowDocument>
