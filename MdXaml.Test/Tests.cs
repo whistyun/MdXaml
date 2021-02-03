@@ -160,7 +160,12 @@ namespace Markdown.Xaml.Test
             markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
-            Approvals.Verify(Utils.AsXaml(result));
+            var resultXaml = Utils.AsXaml(result);
+
+            // change absolute filepath to relative-like
+            resultXaml = resultXaml.Replace("UriSource=\"" + assetPath, "UriSource=\"<assetpathroot>");
+
+            Approvals.Verify(resultXaml);
         }
 
         [Test]
@@ -174,7 +179,12 @@ namespace Markdown.Xaml.Test
             markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
-            Approvals.Verify(Utils.AsXaml(result));
+            var resultXaml = Utils.AsXaml(result);
+
+            // change absolute filepath to relative-like
+            resultXaml = resultXaml.Replace("UriSource=\"" + assetPath, "UriSource=\"<assetpathroot>");
+
+            Approvals.Verify(resultXaml);
         }
 
         [Test]
@@ -188,7 +198,12 @@ namespace Markdown.Xaml.Test
             markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
-            Approvals.Verify(Utils.AsXaml(result));
+            var resultXaml = Utils.AsXaml(result);
+
+            // change absolute filepath to relative-like
+            resultXaml = resultXaml.Replace("UriSource=\"" + assetPath, "UriSource=\"<assetpathroot>");
+
+            Approvals.Verify(resultXaml);
         }
 
         [Test]
@@ -212,7 +227,12 @@ namespace Markdown.Xaml.Test
             markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
-            Approvals.Verify(Utils.AsXaml(result));
+            var resultXaml = Utils.AsXaml(result);
+
+            // change absolute filepath to relative-like
+            resultXaml = resultXaml.Replace("UriSource=\"" + assetPath, "UriSource=\"<assetpathroot>");
+
+            Approvals.Verify(resultXaml);
         }
 
 
