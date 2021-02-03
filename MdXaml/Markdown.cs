@@ -1305,7 +1305,7 @@ namespace MdXaml
         }
 
 #if MIG_FREE
-        private Block CodeBlocksWithLangEvaluator(string lang, string code)
+        private Block CodeBlocksEvaluator(string lang, string code)
         {
             var text = new Run(code);
             var result = new Paragraph(text);

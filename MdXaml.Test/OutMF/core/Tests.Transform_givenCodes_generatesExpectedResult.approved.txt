@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph Tag="Heading1">
+    <Run Tag="CodeSpan">```</Run>
+  </Paragraph>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">```cs
+public void Main(){
+    Console.WriteLine("`Hello World`");
+}
+```</Paragraph>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
+    Console.WriteLine("`Hello World`");
+}</Paragraph>
+  <Section Tag="Blockquote">
+    <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
+    Console.WriteLine("`Hello World`");
+}</Paragraph>
+  </Section>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">   public void Main(){
+       Console.WriteLine("`Hello World`");
+   }</Paragraph>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">```cs
+public void Main(){
+    Console.WriteLine("`Hello World`");
+}
+```</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
+
+
+
+
+
+
+
+
+
+}</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Box">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
+
+
+
+
+
+
+
+
+
+}</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleDouble">
+    <StackPanel>
+      <Separator />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Box">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
+
+
+
+
+
+
+
+
+
+}</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading1">Indent</Paragraph>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">abcd
+efgh</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock" xml:space="preserve"> abcd
+efgh</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">abcd
+ efgh
+
+ ijkl
+
+opqr</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Section Tag="Blockquote">
+    <Paragraph Tag="CodeBlock" xml:space="preserve">asdf
+ ghij</Paragraph>
+  </Section>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
+
+
+
+
+
+
+
+
+
+}</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Box">
+    <ListItem>
+      <Paragraph>one public void Main(){</Paragraph>
+      <Paragraph Tag="CodeBlock">}</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <List MarkerStyle="Box">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
+
+
+
+
+
+
+
+
+
+}</Paragraph>
+    </ListItem>
+  </List>
+</FlowDocument>
