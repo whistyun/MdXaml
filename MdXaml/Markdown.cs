@@ -366,12 +366,23 @@ namespace MdXaml
             {
                 try
                 {
-                    if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !System.IO.Path.IsPathRooted(url))
-                    {
-                        url = System.IO.Path.Combine(AssetPathRoot ?? string.Empty, url);
-                    }
+                    Uri imgUri;
 
-                    imgSource = MakeImage(new Uri(url, UriKind.RelativeOrAbsolute));
+                    if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !System.IO.Path.IsPathRooted(url) && AssetPathRoot != null)
+                    {
+                        if (Uri.IsWellFormedUriString(AssetPathRoot, UriKind.Absolute))
+                        {
+                            imgUri = new Uri(new Uri(AssetPathRoot), url);
+                        }
+                        else
+                        {
+                            url = System.IO.Path.Combine(AssetPathRoot ?? string.Empty, url);
+                            imgUri = new Uri(url, UriKind.RelativeOrAbsolute);
+                        }
+                    }
+                    else imgUri = new Uri(url, UriKind.RelativeOrAbsolute);
+
+                    imgSource = MakeImage(imgUri);
                 }
                 catch { }
             }
@@ -1963,7 +1974,7 @@ namespace MdXaml
                 _nestedBracketsPattern =
                     RepeatString(@"
                     (?>              # Atomic matching
-                       [^()\n\t]+? # Anything other than parens or whitespace
+                       [^\[\]]+      # Anything other than brackets
                      |
                        \[
                            ", _nestDepth) + RepeatString(
@@ -1987,7 +1998,7 @@ namespace MdXaml
                 _nestedParensPattern =
                     RepeatString(@"
                     (?>              # Atomic matching
-                       [^()\r\n\t]+?      # Anything other than parens or linebreak
+                       [^()\n\t]+? # Anything other than parens or whitespace
                      |
                        \(
                            ", _nestDepth) + RepeatString(
@@ -2004,7 +2015,7 @@ namespace MdXaml
         {
             if (text is null)
             {
-                throw new ArgumentNullException(nameof(text));
+                throw new NullReferenceException(nameof(text));
             }
 
             var sb = new StringBuilder(text.Length * count);
