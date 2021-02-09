@@ -244,7 +244,7 @@ namespace MdXaml
         public MarkdownScrollViewer()
         {
             Engine = new Markdown();
-            MarkdownStyleName = nameof(MdStyle.Standard);
+            SetCurrentValue(MarkdownStyleNameProperty, nameof(MdStyle.Standard));
         }
 
         private void UpdateClickAction()
