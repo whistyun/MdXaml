@@ -15,7 +15,8 @@
 
     <DockPanel LastChildFill="True">
         <DockPanel LastChildFill="True" DockPanel.Dock="Top">
-            <TextBlock Text="Url" DockPanel.Dock="Left"/>
+            <Button Content="👈" Command="{Binding Prev}"  DockPanel.Dock="Left"/>
+            <Button Content="👉"  Command="{Binding Next}"  DockPanel.Dock="Left"/>
             <TextBox Text="{Binding MdSource}"/>
         </DockPanel>
 
@@ -25,6 +26,5 @@
             ClickAction="DisplayWithRelativePath"
             Source="{Binding MdSource,Mode=TwoWay}"
             />
-
     </DockPanel>
 </Window>
