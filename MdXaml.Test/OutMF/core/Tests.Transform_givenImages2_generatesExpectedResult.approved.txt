@@ -5,5 +5,5 @@
   <Paragraph>
     <Image Source="http://placehold.it/100x150/00FFFF" Tag="imageright" Width="1" Margin="0,0,0,0" ToolTip="cyan" />
   </Paragraph>
-  <Paragraph>A resource image <Image Source="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" Tag="image" Width="701.6608276367188" Margin="0,0,0,0" />. A local image <Image Source="file:///D:/MdXaml/MdXaml.Test/bin/Debug/netcoreapp3.1/ExtImg.png" Tag="image" Width="384.1552734375" Margin="0,0,0,0" />.</Paragraph>
+  <Paragraph>A resource image <Image Source="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" Tag="image" Width="701.6608276367188" Margin="0,0,0,0" />. A local image <Image Source="<assetpathrooturi>/ExtImg.png" Tag="image" Width="384.1552734375" Margin="0,0,0,0" />.</Paragraph>
 </FlowDocument>

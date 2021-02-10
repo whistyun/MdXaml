@@ -1,0 +1,39 @@
+name: .NET
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          submodules: 'true'
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Clean (MdXaml)
+      run: dotnet clean MdXaml.sln
+    - name: Clean (MdXaml_migfree)
+      run: dotnet clean MdXamlMigfree.sln
+    - name: Clean package cache as a temporary workaround for actions/setup-dotnet#155
+      run: dotnet nuget locals all --clear
+    - name: Restore (MdXaml)
+      run: dotnet restore MdXaml.sln
+    - name: Build (MdXaml)
+      run: dotnet build --no-restore MdXaml.sln
+    - name: Test (MdXaml)
+      run: dotnet test --no-build --verbosity normal  MdXaml.sln
+    - name: Restore (MdXaml_migfree)
+      run: dotnet restore MdXamlMigfree.sln
+    - name: Build (MdXaml_migfree)
+      run: dotnet build --no-restore MdXamlMigfree.sln
+    - name: Test (MdXaml_migfree)
+      run: dotnet test --no-build --verbosity normal  MdXamlMigfree.sln

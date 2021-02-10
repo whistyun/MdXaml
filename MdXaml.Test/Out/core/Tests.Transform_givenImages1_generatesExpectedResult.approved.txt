@@ -9,5 +9,5 @@
       </Image.Source>
     </Image>
   </Paragraph>
-  <Paragraph>A resource image <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image>. A local image <Image Tag="image" Width="384.1552734375" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="D:\MdXaml\MdXaml.Test\bin\Debug\netcoreapp3.1\ExtImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image>.</Paragraph>
+  <Paragraph>A resource image <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image>. A local image <Image Tag="image" Width="384.1552734375" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="<assetpathroot>\ExtImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image>.</Paragraph>
 </FlowDocument>

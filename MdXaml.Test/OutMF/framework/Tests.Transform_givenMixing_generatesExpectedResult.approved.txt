@@ -56,7 +56,7 @@
       <Image.Source>
         <BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" />
       </Image.Source>
-    </Image> <Image Tag="image" Width="384.155275164404" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="D:\MdXaml\MdXaml.Test\bin\Debug\net462\ExtImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image></Paragraph>
+    </Image> <Image Tag="image" Width="384.155275164404" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="<assetpathroot>\ExtImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image></Paragraph>
   <List MarkerStyle="Disc">
     <ListItem>
       <Paragraph>Table</Paragraph>
