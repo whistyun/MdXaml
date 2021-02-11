@@ -22,3 +22,17 @@ Just a [URL](/url/).
 [With parens in the URL](/foo(bar) "and a title")
 
 (With outer parens and [parens in url](/foo(bar) "and a title"))
+
+[![image](RscImg.png)](/foo(bar) "and a title")
+
+[text![image](RscImg.png)](/foo(bar) "and a title")
+
+[![image](RscImg.png)text](/foo(bar) "and a title")
+
+[text![image](RscImg.png)text](/foo(bar) "and a title")
+
+[text ![image](RscImg.png)](/foo(bar) "and a title")
+
+[![image](RscImg.png) text](/foo(bar) "and a title")
+
+[text ![image](RscImg.png) text](/foo(bar) "and a title")

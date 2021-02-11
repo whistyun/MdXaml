@@ -125,6 +125,7 @@ namespace Markdown.Xaml.Test
         {
             var text = Utils.LoadText("Links_inline_style.md");
             var markdown = new Markdown();
+            markdown.BaseUri = baseUri;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -135,6 +136,7 @@ namespace Markdown.Xaml.Test
         {
             var text = Utils.LoadText("Links_inline_style.md");
             var markdown = new Markdown();
+            markdown.BaseUri = baseUri;
             markdown.DisabledTootip = true;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
