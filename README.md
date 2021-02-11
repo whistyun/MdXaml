@@ -78,6 +78,26 @@ We can use MarkdownScrollViewer with code-behind and with binding.
 * text alignment
 * text decoration(bold, italic, strikethrough, underline, color)
 
+## Development
+
+IDE: Visual Studio 2019
+Framework: .NET Framework 4.6.2, .NET Core 3
+
+### Build
+
+1. Clone the repository
+   ```cmd
+   git clone https://github.com/whistyun/MdXaml.git
+   ```
+
+2. MdXaml repo has two .sln files; MdXaml.sln and MdXamlMigfree.sln.
+   If you want develop for MdXaml.x.x.x.nupkg, open MdXaml.sln.
+
+   If you use dotnet CLI, you should indicate solution name.
+   ```cmd
+   dotnet build MdXaml.sln
+   ```
+
 ## License
 
 MdXaml is licensed under the MIT license.
