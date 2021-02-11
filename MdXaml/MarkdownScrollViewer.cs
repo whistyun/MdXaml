@@ -103,8 +103,12 @@ namespace MdXaml
         {
             if (d is MarkdownScrollViewer owner)
             {
+                var newPath = (string)e.NewValue;
+                var shouldUpdateMd = newPath != owner.Engine.AssetPathRoot;
+
                 owner.Engine.AssetPathRoot = (string)e.NewValue;
-                UpdateMarkdown(d, e);
+
+                if (shouldUpdateMd) UpdateMarkdown(d, e);
             }
         }
 
@@ -271,6 +275,8 @@ namespace MdXaml
             {
                 try
                 {
+                    string newMdTxt;
+
                     switch (path.Scheme)
                     {
                         case "http":
@@ -278,27 +284,31 @@ namespace MdXaml
                             using (var wc = new WebClient())
                             using (var strm = new MemoryStream(wc.DownloadData(path)))
                             using (var reader = new StreamReader(strm, true))
-                                SetCurrentValue(MarkdownProperty, reader.ReadToEnd());
+                                newMdTxt = reader.ReadToEnd();
                             break;
 
                         case "file":
                             using (var strm = File.OpenRead(path.LocalPath))
                             using (var reader = new StreamReader(strm, true))
-                                SetCurrentValue(MarkdownProperty, reader.ReadToEnd());
+                                newMdTxt = reader.ReadToEnd();
                             break;
 
                         case "pack":
                             using (var strm = Application.GetResourceStream(path).Stream)
                             using (var reader = new StreamReader(strm, true))
-                                SetCurrentValue(MarkdownProperty, reader.ReadToEnd());
+                                newMdTxt = reader.ReadToEnd();
                             break;
 
                         default:
                             throw new ArgumentException($"unsupport schema {path.Scheme}");
                     }
 
-                    SetCurrentValue(AssetPathRootProperty,
-                        path.Scheme == "file" ? path.LocalPath : path.AbsoluteUri);
+                    var assetPathRoot = path.Scheme == "file" ? path.LocalPath : path.AbsoluteUri;
+
+                    Engine.AssetPathRoot = assetPathRoot;
+
+                    SetCurrentValue(AssetPathRootProperty, assetPathRoot);
+                    SetCurrentValue(MarkdownProperty, newMdTxt);
 
                     if (updateSourceProperty)
                         SetCurrentValue(SourceProperty, path);
