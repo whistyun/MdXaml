@@ -80,7 +80,7 @@ We can use MarkdownScrollViewer with code-behind and with binding.
 
 ## Development
 
-IDE: Visual Studio 2019
+IDE: Visual Studio 2019  
 Framework: .NET Framework 4.6.2, .NET Core 3
 
 ### Build
@@ -90,12 +90,11 @@ Framework: .NET Framework 4.6.2, .NET Core 3
    git clone https://github.com/whistyun/MdXaml.git
    ```
 
-2. MdXaml repo has two .sln files; MdXaml.sln and MdXamlMigfree.sln.
-   If you want develop for MdXaml.x.x.x.nupkg, open MdXaml.sln.
+2. If you use VisualStudio, open MdXaml.sln.
 
-   If you use dotnet CLI, you should indicate solution name.
+   If you use dotnet CLI.
    ```cmd
-   dotnet build MdXaml.sln
+   dotnet build
    ```
 
 ## License

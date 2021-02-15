@@ -54,7 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
+    <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
   </ItemGroup>
 
   <ItemGroup>

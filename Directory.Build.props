@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <BasePath>$(MSBuildThisFileDirectory)</BasePath>
+    <SourceDir Condition="$(SourceDir) == ''">$(BasePath)\src\</SourceDir>
+    <ArtifactsDir>$(BasePath)\artifacts\</ArtifactsDir>
+
+    <BaseIntermediateOutputPath>$(ArtifactsDir)obj\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+ 	<BaseOutputPath>$(ArtifactsDir)bin\$(MSBuildProjectName)\</BaseOutputPath>
+    <PackageOutputPath>$(ArtifactsDir)nuget\$(Configuration)\</PackageOutputPath>
+    <!-- RestoreProjectStyle will be supported in VS for Mac 7.4 -->
+    <RestoreProjectStyle Condition="'$(RestoreProjectStyle)' == '' AND $(UsePackagesConfig) != 'True'">PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+</Project>

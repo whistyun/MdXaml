@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
+    <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
   </ItemGroup>
 
   <ItemGroup>

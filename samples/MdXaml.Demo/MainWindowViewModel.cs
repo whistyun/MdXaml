@@ -22,6 +22,7 @@ namespace MdXaml.Demo
             Styles.Add(new StyleInfo("Standard", MarkdownStyle.Standard));
             Styles.Add(new StyleInfo("Compact", MarkdownStyle.Compact));
             Styles.Add(new StyleInfo("GithubLike", MarkdownStyle.GithubLike));
+            Styles.Add(new StyleInfo("SasabuneCompact", MarkdownStyle.SasabuneCompact));
 
             SelectedStyleInfo = Styles[1];
 
@@ -118,7 +119,7 @@ namespace MdXaml.Demo
         /// <see cref="INotifyPropertyChanged"/>のイベント発火用
         /// </summary>
         /// <param name="propertyName"></param>
-        protected void FirePropertyChanged([CallerMemberName]string propertyName = null)
+        protected void FirePropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged != null && propertyName != null)
             {

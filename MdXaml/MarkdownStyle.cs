@@ -43,13 +43,14 @@ namespace MdXaml
                 _standard = (Style)resources["DocumentStyleStandard"];
                 _compact = (Style)resources["DocumentStyleCompact"];
                 _githublike = (Style)resources["DocumentStyleGithubLike"];
+                _sasabuneCompact = (Style)resources["DocumentStyleSasabuneCompact"];
             }
         }
-
 
         private static Style _standard;
         private static Style _compact;
         private static Style _githublike;
+        private static Style _sasabuneCompact;
 
         public static Style Standard
         {
@@ -78,5 +79,13 @@ namespace MdXaml
             }
         }
 
+        public static Style SasabuneCompact
+        {
+            get
+            {
+                if (_sasabuneCompact == null) LoadXaml();
+                return _sasabuneCompact;
+            }
+        }
     }
 }
