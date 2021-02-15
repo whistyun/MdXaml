@@ -48,7 +48,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MdXaml\MdXamlMigfree.csproj" />
+    <ProjectReference Include="..\..\MdXaml\MdXamlMigfree.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

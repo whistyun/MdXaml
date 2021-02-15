@@ -5,6 +5,7 @@
     <TargetFrameworks>netcoreapp3.0;net45</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Configurations>Debug;Release</Configurations>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
+    <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
   </ItemGroup>
 
   <ItemGroup>
