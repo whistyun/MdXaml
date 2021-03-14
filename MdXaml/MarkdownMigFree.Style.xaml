@@ -5,82 +5,58 @@
                     >
 
     <Style TargetType="FlowDocument" x:Key="DocumentStyleStandard">
-        <Setter Property="FontFamily"
-                Value="Calibri" />
-        <Setter Property="TextAlignment"
-                Value="Left" />
-        <Setter Property="PagePadding" 
-                Value="0"></Setter>
+        <Setter Property="FontFamily"    Value="Calibri" />
+        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="PagePadding"   Value="0"/>
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"     Value="10, 5"/>
-                <Setter Property="BorderBrush"
-                                Value="#DEDEDE"/>
-                <Setter Property="BorderThickness"
-                                Value="5,0,0,0"/>
+                <Setter Property="Padding"         Value="10, 5"/>
+                <Setter Property="BorderBrush"     Value="#DEDEDE"/>
+                <Setter Property="BorderThickness" Value="5,0,0,0"/>
             </Style>
 
             <Style TargetType="Paragraph">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Heading1">
-                        <Setter Property="FontSize"
-                                Value="42" />
-                        <Setter Property="Foreground"
-                                Value="#ff000000" />
-                        <Setter Property="FontWeight"
-                                Value="Light" />
+                        <Setter Property="FontSize"   Value="42" />
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="FontWeight" Value="Light" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading2">
-                        <Setter Property="FontSize"
-                                Value="20" />
-                        <Setter Property="Foreground"
-                                Value="#ff000000" />
-                        <Setter Property="FontWeight"
-                                Value="Light" />
+                        <Setter Property="FontSize"   Value="20" />
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="FontWeight" Value="Light" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading3">
-                        <Setter Property="FontSize"
-                                Value="20" />
-                        <Setter Property="Foreground"
-                                Value="#99000000" />
-                        <Setter Property="FontWeight"
-                                Value="Light" />
+                        <Setter Property="FontSize"   Value="20" />
+                        <Setter Property="Foreground" Value="#99000000" />
+                        <Setter Property="FontWeight" Value="Light" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading4">
-                        <Setter Property="FontSize"
-                                Value="14" />
-                        <Setter Property="Foreground"
-                                Value="#99000000" />
-                        <Setter Property="FontWeight"
-                                Value="Light" />
+                        <Setter Property="FontSize"   Value="14" />
+                        <Setter Property="Foreground" Value="#99000000" />
+                        <Setter Property="FontWeight" Value="Light" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="CodeBlock">
-                        <Setter Property="FontFamily"
-                                Value="Courier New"/>
-                        <Setter Property="Foreground"
-                                Value="DarkBlue"/>
-                        <Setter Property="Background"
-                                Value="#EEEEEE"/>
-                        <Setter Property="BorderBrush"
-                                Value="#DEDEDE"/>
-                        <Setter Property="BorderThickness"
-                                Value="0,5,0,5"/>
-
-                        <Setter Property="Margin"
-                                Value="5,0,5,0"/>
+                        <Setter Property="FontFamily"      Value="Courier New"/>
+                        <Setter Property="Foreground"      Value="DarkBlue"/>
+                        <Setter Property="Background"      Value="#EEEEEE"/>
+                        <Setter Property="BorderBrush"     Value="#DEDEDE"/>
+                        <Setter Property="BorderThickness" Value="0,5,0,5"/>
+                        <Setter Property="Margin"          Value="5,0,5,0"/>
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Note">
-                        <Setter Property="Margin"      Value="5,0,5,0"/>
-                        <Setter Property="Padding"     Value="10, 5"/>
-                        <Setter Property="BorderBrush" Value="#DEDEDE"/>
+                        <Setter Property="Margin"          Value="5,0,5,0"/>
+                        <Setter Property="Padding"         Value="10, 5"/>
+                        <Setter Property="BorderBrush"     Value="#DEDEDE"/>
                         <Setter Property="BorderThickness" Value="3,3,3,3"/>
-                        <Setter Property="Background"  Value="#FAFAFA"/>
+                        <Setter Property="Background"      Value="#FAFAFA"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -88,37 +64,31 @@
             <Style TargetType="Run">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily"
-                                Value="Courier New"/>
-                        <Setter Property="Foreground"
-                                Value="DarkBlue"/>
-                        <Setter Property="Background"
-                                Value="#E0E0E0"/>
+                        <Setter Property="FontFamily" Value="Courier New"/>
+                        <Setter Property="Foreground" Value="DarkBlue"/>
+                        <Setter Property="Background" Value="#E0E0E0"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="Hyperlink">
-                <Setter Property="TextDecorations"
-                    Value="None" />
+                <Setter Property="TextDecorations" Value="None" />
             </Style>
 
             <Style TargetType="Image">
                 <Setter Property="RenderOptions.BitmapScalingMode"
                   Value="NearestNeighbor" />
                 <Style.Triggers>
-                    <Trigger Property="Tag"
-                       Value="imageright">
-                        <Setter Property="Margin" 
-                          Value="20,0,0,0" />
+                    <Trigger Property="Tag" Value="imageright">
+                        <Setter Property="Margin"  Value="20,0,0,0" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <!--
-                The Table's style don't seem to support border-collapse.
-                By making the ruled line width 0.5 and applying it to cell and table,
-                it looks like the ruled lines are not doubled.
+            The Table's style don't seem to support border-collapse.
+            By making the ruled line width 0.5 and applying it to cell and table,
+            it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
                 <Setter Property="CellSpacing" Value="0"/>
@@ -140,8 +110,7 @@
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="Padding" Value="2"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}"
-                                     Value="EvenTableRow">
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
                         <Setter Property="Background" Value="#F5F5F5"/>
                     </DataTrigger>
                 </Style.Triggers>
@@ -157,11 +126,9 @@
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"     Value="10, 5"/>
-                <Setter Property="BorderBrush"
-                                    Value="#DEDEDE"/>
-                <Setter Property="BorderThickness"
-                                    Value="5,0,0,0"/>
+                <Setter Property="Padding"         Value="10, 5"/>
+                <Setter Property="BorderBrush"     Value="#DEDEDE"/>
+                <Setter Property="BorderThickness" Value="5,0,0,0"/>
             </Style>
 
             <Style TargetType="Paragraph">
@@ -231,7 +198,7 @@
             </Style>
 
             <Style TargetType="Hyperlink">
-                <Setter Property="TextDecorations"    Value="None" />
+                <Setter Property="TextDecorations" Value="None" />
             </Style>
 
             <Style TargetType="Image">
@@ -248,9 +215,9 @@
             </Style>
 
             <!--
-                The Table's style don't seem to support border-collapse.
-                By making the ruled line width 0.5 and applying it to cell and table,
-                it looks like the ruled lines are not doubled.
+            The Table's style don't seem to support border-collapse.
+            By making the ruled line width 0.5 and applying it to cell and table,
+            it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
                 <Setter Property="CellSpacing" Value="0"/>
@@ -272,8 +239,7 @@
                 <Setter Property="BorderBrush" Value="Gray"/>
                 <Setter Property="Padding" Value="1"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}"
-                                     Value="EvenTableRow">
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
                         <Setter Property="Background" Value="#F5F5F5"/>
                     </DataTrigger>
                 </Style.Triggers>
@@ -289,11 +255,9 @@
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"     Value="10, 5"/>
-                <Setter Property="BorderBrush"
-                                Value="#DEDEDE"/>
-                <Setter Property="BorderThickness"
-                                Value="5,0,0,0"/>
+                <Setter Property="Padding"         Value="10, 5"/>
+                <Setter Property="BorderBrush"     Value="#DEDEDE"/>
+                <Setter Property="BorderThickness" Value="5,0,0,0"/>
             </Style>
 
             <Style TargetType="Paragraph">
@@ -481,7 +445,7 @@
             </Style>
 
             <Style TargetType="Hyperlink">
-                <Setter Property="TextDecorations"         Value="None" />
+                <Setter Property="TextDecorations" Value="None" />
             </Style>
 
             <Style TargetType="Image">
@@ -495,9 +459,9 @@
             </Style>
 
             <!--
-                The Table's style don't seem to support border-collapse.
-                By making the ruled line width 0.5 and applying it to cell and table,
-                it looks like the ruled lines are not doubled.
+            The Table's style don't seem to support border-collapse.
+            By making the ruled line width 0.5 and applying it to cell and table,
+            it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
                 <Setter Property="CellSpacing" Value="0"/>
@@ -519,8 +483,7 @@
                 <Setter Property="BorderBrush"     Value="{mde:Alpha Foreground, 0.4980, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                 <Setter Property="Padding" Value="2"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}"
-                                     Value="EvenTableRow">
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0392, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                     </DataTrigger>
                 </Style.Triggers>
@@ -623,8 +586,8 @@
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
                         <Setter Property="FontFamily" Value="Courier New"/>
-                        <Setter Property="Foreground"      Value="{mde:Mix   Foreground, Blue, 0.5, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
-                        <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="Foreground" Value="{mde:Mix   Foreground, Blue, 0.5, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -647,9 +610,9 @@
             </Style>
 
             <!--
-                The Table's style don't seem to support border-collapse.
-                By making the ruled line width 0.5 and applying it to cell and table,
-                it looks like the ruled lines are not doubled.
+            The Table's style don't seem to support border-collapse.
+            By making the ruled line width 0.5 and applying it to cell and table,
+            it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
                 <Setter Property="CellSpacing" Value="0"/>
@@ -671,8 +634,7 @@
                 <Setter Property="BorderBrush"        Value="{mde:Alpha Foreground, 0.4980, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                 <Setter Property="Padding" Value="1"/>
                 <Style.Triggers>
-                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}"
-                                     Value="EvenTableRow">
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0392, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                     </DataTrigger>
                 </Style.Triggers>
