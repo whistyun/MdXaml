@@ -64,7 +64,7 @@ namespace MdXaml.Ext
                     => (byte)(@base + (adding - @base) * balance);
 
                 var newColor = Color.FromArgb(
-                    255,
+                    BalanceColor(baseColor.A, Adding.A, Balance),
                     BalanceColor(baseColor.R, Adding.R, Balance),
                     BalanceColor(baseColor.G, Adding.G, Balance),
                     BalanceColor(baseColor.B, Adding.B, Balance));
