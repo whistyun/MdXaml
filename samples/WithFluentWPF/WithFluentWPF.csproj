@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Asset\ResourceImage.png" />
+    <None Remove="MainWindow.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MainWindow.md">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentWPF" Version="0.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Asset\ResourceImage.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LocalPath.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
