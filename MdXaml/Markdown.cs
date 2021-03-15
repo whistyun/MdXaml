@@ -1339,7 +1339,8 @@ namespace MdXaml
             if (!String.IsNullOrEmpty(lang))
             {
                 var highlight = HighlightingManager.Instance.GetDefinitionByExtension("." + lang);
-                txtEdit.SyntaxHighlighting = highlight;
+                txtEdit.SetCurrentValue(TextEditor.SyntaxHighlightingProperty, highlight);
+                txtEdit.Tag = lang;
             }
 
             txtEdit.Text = code;

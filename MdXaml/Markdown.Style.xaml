@@ -480,9 +480,11 @@
             </Style>
 
             <Style TargetType="avalonEdit:TextEditor" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
-                <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.1123, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                <Setter Property="Foreground"      Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                 <Setter Property="BorderBrush"     Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                 <Setter Property="BorderThickness" Value="0,5,0,5"/>
+                <Setter Property="SyntaxHighlighting" Value="{mde:SyntaxHighlightWrapper TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
 
                 <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
                 <Setter Property="VerticalScrollBarVisibility"   Value="Auto"/>
@@ -628,9 +630,11 @@
             </Style>
 
             <Style TargetType="avalonEdit:TextEditor" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
-                <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.1123, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                <Setter Property="Foreground"      Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                 <Setter Property="BorderBrush"     Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                 <Setter Property="BorderThickness" Value="0,5,0,5"/>
+                <Setter Property="SyntaxHighlighting" Value="{mde:SyntaxHighlightWrapper TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
 
                 <Setter Property="HorizontalScrollBarVisibility"  Value="Auto"/>
                 <Setter Property="VerticalScrollBarVisibility"    Value="Auto"/>
