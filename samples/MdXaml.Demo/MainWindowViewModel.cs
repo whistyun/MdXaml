@@ -45,6 +45,13 @@ namespace MdXaml.Demo
                 }
             }
 
+            ForegroundRed = 0x00;
+            ForegroundGreen = 0x00;
+            ForegroundBlue = 0x00;
+
+            BackgroundRed = 0xFF;
+            BackgroundGreen = 0xFF;
+            BackgroundBlue = 0xFF;
         }
 
 
@@ -112,6 +119,77 @@ namespace MdXaml.Demo
             }
         }
 
+        private byte _ForegroundRed;
+        public byte ForegroundRed
+        {
+            get => _ForegroundRed;
+            set
+            {
+                if (_ForegroundRed == value) return;
+                _ForegroundRed = value;
+                FirePropertyChanged();
+            }
+        }
+
+        private byte _ForegroundGreen;
+        public byte ForegroundGreen
+        {
+            get => _ForegroundGreen;
+            set
+            {
+                if (_ForegroundGreen == value) return;
+                _ForegroundGreen = value;
+                FirePropertyChanged();
+            }
+        }
+
+        private byte _ForegroundBlue;
+        public byte ForegroundBlue
+        {
+            get => _ForegroundBlue;
+            set
+            {
+                if (_ForegroundBlue == value) return;
+                _ForegroundBlue = value;
+                FirePropertyChanged();
+            }
+        }
+
+        private byte _BackgroundRed;
+        public byte BackgroundRed
+        {
+            get => _BackgroundRed;
+            set
+            {
+                if (_BackgroundRed == value) return;
+                _BackgroundRed = value;
+                FirePropertyChanged();
+            }
+        }
+
+        private byte _BackgroundGreen;
+        public byte BackgroundGreen
+        {
+            get => _BackgroundGreen;
+            set
+            {
+                if (_BackgroundGreen == value) return;
+                _BackgroundGreen = value;
+                FirePropertyChanged();
+            }
+        }
+
+        private byte _BackgroundBlue;
+        public byte BackgroundBlue
+        {
+            get => _BackgroundBlue;
+            set
+            {
+                if (_BackgroundBlue == value) return;
+                _BackgroundBlue = value;
+                FirePropertyChanged();
+            }
+        }
 
         /// <summary> <see cref="INotifyPropertyChanged"/> </summary>
         public event PropertyChangedEventHandler PropertyChanged;
