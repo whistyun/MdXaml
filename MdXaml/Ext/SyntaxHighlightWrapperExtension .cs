@@ -184,27 +184,92 @@ namespace MdXaml.Ext
 
                 if (color.A == 0) return colorN;
 
-                var reverseR = 0x7F < fore.R;
-                var reverseG = 0x7F < fore.G;
-                var reverseB = 0x7F < fore.B;
+                var foreMax = Math.Max(fore.R, Math.Max(fore.G, fore.B));
+                var tgtHsv = new HSV(color);
 
-                byte BalanceColor(bool reverse, byte @base, byte adding)
-                    => reverse ?
-                            (byte)(@base - adding * @base / 255) :
-                            (byte)(@base + adding * (255 - @base) / 255);
-
-                if (colorN.HasValue)
+                int newValue = tgtHsv.Value + foreMax;
+                int newSaturation = tgtHsv.Saturation;
+                if (newValue > 255)
                 {
-                    return (colorN.Value.A == 0) ? colorN :
-                        Color.FromArgb(
-                            colorN.Value.A,
-                            BalanceColor(reverseR, fore.R, colorN.Value.R),
-                            BalanceColor(reverseG, fore.G, colorN.Value.G),
-                            BalanceColor(reverseB, fore.B, colorN.Value.B));
+                    var newSaturation2 = newSaturation - (newValue - 255);
+                    newValue = 255;
+
+                    var sChRtLm = (color.R >= color.G && color.R >= color.B) ? 0.95f * 0.7f :
+                                  (color.G >= color.R && color.G >= color.B) ? 0.95f :
+                                                                               0.95f * 0.5f;
+
+                    var sChRt = Math.Max(sChRtLm, newSaturation2 / (float)newSaturation);
+                    newSaturation = (int)(newSaturation * sChRt);
                 }
-                else return fore;
+
+                tgtHsv.Value = (byte)newValue;
+                tgtHsv.Saturation = (byte)newSaturation;
+
+                var newColor = tgtHsv.ToColor();
+                return newColor;
             }
         }
+
+        struct HSV
+        {
+            public int Hue;
+            public byte Saturation;
+            public byte Value;
+
+            public HSV(Color color)
+            {
+                int max = Math.Max(color.R, Math.Max(color.G, color.B));
+                int min = Math.Min(color.R, Math.Min(color.G, color.B));
+                int div = max - min;
+
+                if (div == 0)
+                {
+                    Hue = 0;
+                    Saturation = 0;
+                }
+                else
+                {
+                    Hue =
+                            (min == color.B) ? 60 * (color.G - color.R) / div + 60 :
+                            (min == color.R) ? 60 * (color.B - color.G) / div + 180 :
+                                               60 * (color.R - color.B) / div + 300;
+                    Saturation = (byte)div;
+                }
+
+                Value = (byte)max;
+            }
+
+            public Color ToColor()
+            {
+                if (Hue == 0 && Saturation == 0)
+                {
+                    return Color.FromRgb(Value, Value, Value);
+                }
+
+                //byte c = Saturation;
+
+                int HueInt = Hue / 60;
+
+                int x = (int)(Saturation * (1 - Math.Abs((Hue / 60f) % 2 - 1)));
+
+                Color FromRgb(int r, int g, int b)
+                    => Color.FromRgb((byte)r, (byte)g, (byte)b);
+
+
+                switch (Hue / 60)
+                {
+                    default:
+                    case 0: return FromRgb(Value, Value - Saturation + x, Value - Saturation);
+                    case 1: return FromRgb(Value - Saturation + x, Value, Value - Saturation);
+                    case 2: return FromRgb(Value - Saturation, Value, Value - Saturation + x);
+                    case 3: return FromRgb(Value - Saturation, Value - Saturation + x, Value);
+                    case 4: return FromRgb(Value - Saturation + x, Value - Saturation, Value);
+                    case 5:
+                    case 6: return FromRgb(Value, Value - Saturation, Value - Saturation + x);
+                }
+            }
+        }
+
     }
 }
 #endif
