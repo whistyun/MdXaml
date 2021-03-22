@@ -167,7 +167,6 @@
                             <Binding Path="BackgroundBlue" />
                         </MultiBinding>
                     </mdxam:MarkdownScrollViewer.Background>
-
                 </mdxam:MarkdownScrollViewer>
 
             </Grid>
