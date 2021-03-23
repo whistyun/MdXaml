@@ -16,6 +16,7 @@ namespace WithFluentWPF
         {
             Styles = new List<StyleInfo>();
 
+            Styles.Add(new StyleInfo("Sasabune", MarkdownStyle.Sasabune));
             Styles.Add(new StyleInfo("SasabuneStandard", MarkdownStyle.SasabuneStandard));
             Styles.Add(new StyleInfo("SasabuneCompact", MarkdownStyle.SasabuneCompact));
 

@@ -52,6 +52,7 @@
                     Grid.Row="1" Grid.Column="1"
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
+                    Background="{DynamicResource SystemAltHighColorBrush}"
                     Margin="5"
                     MarkdownStyle="{Binding SelectedStyleInfo.Style}"
                     ClickAction="OpenBrowser"

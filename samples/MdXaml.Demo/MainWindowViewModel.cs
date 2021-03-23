@@ -22,6 +22,7 @@ namespace MdXaml.Demo
             Styles.Add(new StyleInfo("Standard", MarkdownStyle.Standard));
             Styles.Add(new StyleInfo("Compact", MarkdownStyle.Compact));
             Styles.Add(new StyleInfo("GithubLike", MarkdownStyle.GithubLike));
+            Styles.Add(new StyleInfo("Sasabune", MarkdownStyle.Sasabune));
             Styles.Add(new StyleInfo("SasabuneStandard", MarkdownStyle.SasabuneStandard));
             Styles.Add(new StyleInfo("SasabuneCompact", MarkdownStyle.SasabuneCompact));
 
