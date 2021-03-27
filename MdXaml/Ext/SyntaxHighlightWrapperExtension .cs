@@ -6,6 +6,7 @@ using ICSharpCode.AvalonEdit.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -15,8 +16,21 @@ using System.Windows.Media;
 
 namespace MdXaml.Ext
 {
+    /// <summary>
+    /// Change syntax color according to the Foreground color.
+    /// </summary>
+    /// <remarks>
+    /// This class change hue and saturation of the syntax color according to Foreground.
+    /// This class assume that Foreground is the complementary color of Background.
+    /// 
+    /// You may think It's better to change it according to Bachground,
+    /// But Background may be declared as absolutly transparent.
+    /// </remarks>
     public class SyntaxHighlightWrapperExtension : MarkupExtension
     {
+        /// <summary>
+        /// The source of Foreground.
+        /// </summary>
         public Type TargetType { set; get; }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
@@ -43,34 +57,25 @@ namespace MdXaml.Ext
         {
             public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
             {
-                Color foreColor;
-                if (values[0] is SolidColorBrush cBrush)
-                {
-                    foreColor = cBrush.Color;
-                }
-                else
-                {
-                    foreColor = Colors.Black;
-                }
+                string codeLang = values[1] is string l ? l : null;
 
-                string language;
-                if (values[1] is string l)
-                {
-                    language = l;
-                }
-                else
-                {
-                    language = null;
-                }
+                if (String.IsNullOrEmpty(codeLang))
+                    return null;
 
-                if (!String.IsNullOrEmpty(language))
-                {
-                    var highlight = HighlightingManager.Instance.GetDefinitionByExtension("." + language);
-                    if (highlight is null) return null;
+                var highlight = HighlightingManager.Instance.GetDefinitionByExtension("." + codeLang);
+                if (highlight is null) return null;
 
+                Color foreColor = values[0] is SolidColorBrush cBrush ? cBrush.Color : Colors.Black;
+
+                try
+                {
                     return new HighlightWrapper(highlight, foreColor);
                 }
-                else return null;
+                catch (Exception e)
+                {
+                    Trace.Fail(e.ToString());
+                    return highlight;
+                }
             }
 
             public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
@@ -84,78 +89,104 @@ namespace MdXaml.Ext
             IHighlightingDefinition baseDef;
             Color foreColor;
 
+            Dictionary<string, HighlightingRuleSet> NamedRuleSet;
+            Dictionary<string, HighlightingColor> NamedColors;
+
+
             public HighlightWrapper(IHighlightingDefinition baseDef, Color foreColor)
             {
                 this.baseDef = baseDef;
                 this.foreColor = foreColor;
 
-                MainRuleSet = Mix(baseDef.MainRuleSet, foreColor);
-                NamedHighlightingColors = baseDef.NamedHighlightingColors.Select(s => Mix(s, foreColor));
+                NamedRuleSet = new Dictionary<string, HighlightingRuleSet>();
+                NamedColors = new Dictionary<string, HighlightingColor>();
+
+                foreach (var color in baseDef.NamedHighlightingColors)
+                {
+                    var name = color.Name;
+
+                    var newCol = color.Clone();
+                    newCol.Foreground = new MixHighlightingBrush(color.Foreground, foreColor);
+                    NamedColors[name] = newCol;
+                }
+
+                MainRuleSet = Wrap(baseDef.MainRuleSet);
             }
 
-            public string Name => baseDef.Name + ":Re";
-
+            public string Name => "Re:" + baseDef.Name;
             public HighlightingRuleSet MainRuleSet { get; }
-
-            public IEnumerable<HighlightingColor> NamedHighlightingColors { get; }
-
+            public IEnumerable<HighlightingColor> NamedHighlightingColors => NamedColors.Values;
             public IDictionary<string, string> Properties => baseDef.Properties;
 
-            public HighlightingColor GetNamedColor(string name) => Mix(baseDef.GetNamedColor(name), foreColor);
+            public HighlightingColor GetNamedColor(string name)
+            {
+                return NamedColors.TryGetValue(name, out var color) ? color : null;
+            }
 
-            public HighlightingRuleSet GetNamedRuleSet(string name) => Mix(baseDef.GetNamedRuleSet(name), foreColor);
-        }
+            public HighlightingRuleSet GetNamedRuleSet(string name)
+            {
+                return NamedRuleSet.TryGetValue(name, out var rset) ? rset : null;
+            }
 
-        static HighlightingRule Mix(HighlightingRule baseRule, Color foreColor)
-        {
-            if (baseRule is null) return null;
+            private HighlightingRuleSet Wrap(HighlightingRuleSet ruleSet)
+            {
+                if (ruleSet is null) return null;
 
-            var copy = new HighlightingRule();
-            copy.Regex = baseRule.Regex;
-            copy.Color = Mix(baseRule.Color, foreColor);
-            return copy;
-        }
+                if (!String.IsNullOrEmpty(ruleSet.Name)
+                    && NamedRuleSet.TryGetValue(ruleSet.Name, out var cachedRule))
+                    return cachedRule;
 
-        static HighlightingSpan Mix(HighlightingSpan baseSpan, Color foreColor)
-        {
-            if (baseSpan is null) return null;
+                var copySet = new HighlightingRuleSet();
+                copySet.Name = ruleSet.Name;
 
-            var copy = new HighlightingSpan();
-            copy.StartExpression = baseSpan.StartExpression;
-            copy.EndExpression = baseSpan.EndExpression;
-            copy.RuleSet = Mix(baseSpan.RuleSet, foreColor);
-            copy.StartColor = Mix(baseSpan.StartColor, foreColor);
-            copy.SpanColor = Mix(baseSpan.SpanColor, foreColor);
-            copy.EndColor = Mix(baseSpan.EndColor, foreColor);
-            copy.SpanColorIncludesStart = baseSpan.SpanColorIncludesStart;
-            copy.SpanColorIncludesEnd = baseSpan.SpanColorIncludesEnd;
+                foreach (var baseSpan in ruleSet.Spans)
+                {
+                    if (baseSpan is null) continue;
 
-            return copy;
-        }
+                    var copySpan = new HighlightingSpan();
+                    copySpan.StartExpression = baseSpan.StartExpression;
+                    copySpan.EndExpression = baseSpan.EndExpression;
+                    copySpan.RuleSet = Wrap(baseSpan.RuleSet);
+                    copySpan.StartColor = Wrap(baseSpan.StartColor);
+                    copySpan.SpanColor = Wrap(baseSpan.SpanColor);
+                    copySpan.EndColor = Wrap(baseSpan.EndColor);
+                    copySpan.SpanColorIncludesStart = baseSpan.SpanColorIncludesStart;
+                    copySpan.SpanColorIncludesEnd = baseSpan.SpanColorIncludesEnd;
 
-        static HighlightingRuleSet Mix(HighlightingRuleSet ruleSet, Color fore)
-        {
-            if (ruleSet is null) return null;
+                    copySet.Spans.Add(copySpan);
+                }
 
-            var copy = new HighlightingRuleSet();
-            copy.Name = ruleSet.Name;
+                foreach (var baseRule in ruleSet.Rules)
+                {
+                    var copyRule = new HighlightingRule();
+                    copyRule.Regex = baseRule.Regex;
+                    copyRule.Color = Wrap(baseRule.Color);
 
-            foreach (var nspn in ruleSet.Spans.Select(spn => Mix(spn, fore)).ToArray())
-                copy.Spans.Add(nspn);
+                    copySet.Rules.Add(copyRule);
+                }
 
-            foreach (var nrule in ruleSet.Rules.Select(rule => Mix(rule, fore)).ToArray())
-                copy.Rules.Add(nrule);
+                if (!String.IsNullOrEmpty(copySet.Name))
+                    NamedRuleSet[copySet.Name] = copySet;
 
-            return copy;
-        }
+                return copySet;
+            }
 
-        static HighlightingColor Mix(HighlightingColor color, Color fore)
-        {
-            if (color is null) return null;
+            private HighlightingColor Wrap(HighlightingColor color)
+            {
+                if (color is null) return null;
 
-            var copy = color.Clone();
-            copy.Foreground = new MixHighlightingBrush(color.Foreground, fore);
-            return copy;
+                if (!String.IsNullOrEmpty(color.Name)
+                    && NamedColors.TryGetValue(color.Name, out var cachedColor))
+                    return cachedColor;
+
+                var copyColor = color.Clone();
+                copyColor.Foreground = new MixHighlightingBrush(color.Foreground, foreColor);
+
+                if (!String.IsNullOrEmpty(copyColor.Name))
+                    NamedColors[copyColor.Name] = copyColor;
+
+                return copyColor;
+            }
         }
 
         class MixHighlightingBrush : HighlightingBrush
@@ -199,6 +230,8 @@ namespace MdXaml.Ext
                                                                                0.95f * 0.5f;
 
                     var sChRt = Math.Max(sChRtLm, newSaturation2 / (float)newSaturation);
+                    if (Single.IsInfinity(sChRt)) sChRt = sChRtLm;
+
                     newSaturation = (int)(newSaturation * sChRt);
                 }
 
