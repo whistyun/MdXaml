@@ -89,15 +89,16 @@ namespace MdXaml.Ext
             IHighlightingDefinition baseDef;
             Color foreColor;
 
+            Dictionary<HighlightingRuleSet, HighlightingRuleSet> Converted;
             Dictionary<string, HighlightingRuleSet> NamedRuleSet;
             Dictionary<string, HighlightingColor> NamedColors;
-
 
             public HighlightWrapper(IHighlightingDefinition baseDef, Color foreColor)
             {
                 this.baseDef = baseDef;
                 this.foreColor = foreColor;
 
+                Converted = new Dictionary<HighlightingRuleSet, HighlightingRuleSet>();
                 NamedRuleSet = new Dictionary<string, HighlightingRuleSet>();
                 NamedColors = new Dictionary<string, HighlightingColor>();
 
@@ -106,7 +107,8 @@ namespace MdXaml.Ext
                     var name = color.Name;
 
                     var newCol = color.Clone();
-                    newCol.Foreground = new MixHighlightingBrush(color.Foreground, foreColor);
+                    newCol.Foreground = color.Foreground is null ?
+                        null : new MixHighlightingBrush(color.Foreground, foreColor);
                     NamedColors[name] = newCol;
                 }
 
@@ -136,8 +138,15 @@ namespace MdXaml.Ext
                     && NamedRuleSet.TryGetValue(ruleSet.Name, out var cachedRule))
                     return cachedRule;
 
+                if (Converted.TryGetValue(ruleSet, out var cachedRule2))
+                    return cachedRule2;
+
                 var copySet = new HighlightingRuleSet();
                 copySet.Name = ruleSet.Name;
+
+                Converted[ruleSet] = copySet;
+                if (!String.IsNullOrEmpty(copySet.Name))
+                    NamedRuleSet[copySet.Name] = copySet;
 
                 foreach (var baseSpan in ruleSet.Spans)
                 {
@@ -165,9 +174,6 @@ namespace MdXaml.Ext
                     copySet.Rules.Add(copyRule);
                 }
 
-                if (!String.IsNullOrEmpty(copySet.Name))
-                    NamedRuleSet[copySet.Name] = copySet;
-
                 return copySet;
             }
 
@@ -180,7 +186,8 @@ namespace MdXaml.Ext
                     return cachedColor;
 
                 var copyColor = color.Clone();
-                copyColor.Foreground = new MixHighlightingBrush(color.Foreground, foreColor);
+                copyColor.Foreground = color.Foreground is null ?
+                    null : new MixHighlightingBrush(color.Foreground, foreColor);
 
                 if (!String.IsNullOrEmpty(copyColor.Name))
                     NamedColors[copyColor.Name] = copyColor;
