@@ -11,19 +11,19 @@ public void Main(){
 ```</avalonedit:TextEditor>
   </BlockUIContainer>
   <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;    Console.WriteLine(&quot;`Hello World`&quot;);&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+    <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" Tag="cs" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;    Console.WriteLine(&quot;`Hello World`&quot;);&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
     Console.WriteLine("`Hello World`");
 }</avalonedit:TextEditor>
   </BlockUIContainer>
   <Section Tag="Blockquote">
     <BlockUIContainer Tag="CodeBlock">
-      <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;    Console.WriteLine(&quot;`Hello World`&quot;);&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+      <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" Tag="cs" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;    Console.WriteLine(&quot;`Hello World`&quot;);&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
     Console.WriteLine("`Hello World`");
 }</avalonedit:TextEditor>
     </BlockUIContainer>
   </Section>
   <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="   public void Main(){&#xA;       Console.WriteLine(&quot;`Hello World`&quot;);&#xA;   }" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>   public void Main(){
+    <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" Tag="cs" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="   public void Main(){&#xA;       Console.WriteLine(&quot;`Hello World`&quot;);&#xA;   }" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>   public void Main(){
        Console.WriteLine("`Hello World`");
    }</avalonedit:TextEditor>
   </BlockUIContainer>
@@ -37,7 +37,7 @@ public void Main(){
   <List MarkerStyle="Disc">
     <ListItem>
       <BlockUIContainer Tag="CodeBlock">
-        <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+        <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" Tag="cs" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
 
 
 
