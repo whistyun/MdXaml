@@ -1,28 +1,21 @@
-﻿using Markdown.Xaml;
+﻿using MdXaml;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Markup;
 
-namespace MdXamlMigfree.Demo
+namespace WithFluentWPF
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    class MainWindowViewModel : INotifyPropertyChanged
     {
         public MainWindowViewModel()
         {
             Styles = new List<StyleInfo>();
 
-            Styles.Add(new StyleInfo("Plain", null));
-            Styles.Add(new StyleInfo("Standard", MarkdownStyle.Standard));
-            Styles.Add(new StyleInfo("Compact", MarkdownStyle.Compact));
-            Styles.Add(new StyleInfo("GithubLike", MarkdownStyle.GithubLike));
             Styles.Add(new StyleInfo("Sasabune", MarkdownStyle.Sasabune));
             Styles.Add(new StyleInfo("SasabuneStandard", MarkdownStyle.SasabuneStandard));
             Styles.Add(new StyleInfo("SasabuneCompact", MarkdownStyle.SasabuneCompact));
@@ -36,22 +29,17 @@ namespace MdXamlMigfree.Demo
 
                 if (stream == null)
                 {
-                    Text = String.Format("Could not find sample text *{0}*.md", subjectType.FullName);
+                    TextView =
+                    TextXaml = String.Format("Could not find sample text *{0}*.md", subjectType.FullName);
                 }
 
                 using (StreamReader reader = new StreamReader(stream))
                 {
-                    Text = reader.ReadToEnd();
+                    TextView =
+                    TextXaml = reader.ReadToEnd();
                 }
             }
 
-            ForegroundRed = 0x00;
-            ForegroundGreen = 0x00;
-            ForegroundBlue = 0x00;
-
-            BackgroundRed = 0xFF;
-            BackgroundGreen = 0xFF;
-            BackgroundBlue = 0xFF;
         }
 
 
@@ -79,106 +67,46 @@ namespace MdXamlMigfree.Demo
             }
         }
 
-        public string _text;
-        public string Text
+        public string _textView;
+        public string TextView
         {
-            get { return _text; }
+            get { return _textView; }
             set
             {
-                if (_text == value) return;
-                _text = value;
+                if (_textView == value) return;
+                _textView = value;
+                FirePropertyChanged();
+            }
+        }
 
-                if (TextChangeEvent == null || TextChangeEvent.Status >= TaskStatus.RanToCompletion)
+
+        private Task TextXamlChangeEvent;
+        public string _textXaml;
+        public string TextXaml
+        {
+            get { return _textXaml; }
+            set
+            {
+                if (_textXaml == value) return;
+                _textXaml = value;
+                if (TextXamlChangeEvent == null || TextXamlChangeEvent.Status >= TaskStatus.RanToCompletion)
                 {
-                    TextChangeEvent = Task.Run(() =>
+                    TextXamlChangeEvent = Task.Run(() =>
                     {
                         Task.Delay(100);
                     retry:
-                        var oldVal = _text;
+                        var oldVal = _textXaml;
 
                         Thread.MemoryBarrier();
-                        FirePropertyChanged(nameof(Text));
+                        FirePropertyChanged(nameof(TextXaml));
 
                         Thread.MemoryBarrier();
-                        if (oldVal != _text) goto retry;
+                        if (oldVal != _textXaml) goto retry;
                     });
                 }
             }
         }
 
-        private Task TextChangeEvent;
-
-        private byte _ForegroundRed;
-        public byte ForegroundRed
-        {
-            get => _ForegroundRed;
-            set
-            {
-                if (_ForegroundRed == value) return;
-                _ForegroundRed = value;
-                FirePropertyChanged();
-            }
-        }
-
-        private byte _ForegroundGreen;
-        public byte ForegroundGreen
-        {
-            get => _ForegroundGreen;
-            set
-            {
-                if (_ForegroundGreen == value) return;
-                _ForegroundGreen = value;
-                FirePropertyChanged();
-            }
-        }
-
-        private byte _ForegroundBlue;
-        public byte ForegroundBlue
-        {
-            get => _ForegroundBlue;
-            set
-            {
-                if (_ForegroundBlue == value) return;
-                _ForegroundBlue = value;
-                FirePropertyChanged();
-            }
-        }
-
-        private byte _BackgroundRed;
-        public byte BackgroundRed
-        {
-            get => _BackgroundRed;
-            set
-            {
-                if (_BackgroundRed == value) return;
-                _BackgroundRed = value;
-                FirePropertyChanged();
-            }
-        }
-
-        private byte _BackgroundGreen;
-        public byte BackgroundGreen
-        {
-            get => _BackgroundGreen;
-            set
-            {
-                if (_BackgroundGreen == value) return;
-                _BackgroundGreen = value;
-                FirePropertyChanged();
-            }
-        }
-
-        private byte _BackgroundBlue;
-        public byte BackgroundBlue
-        {
-            get => _BackgroundBlue;
-            set
-            {
-                if (_BackgroundBlue == value) return;
-                _BackgroundBlue = value;
-                FirePropertyChanged();
-            }
-        }
 
         /// <summary> <see cref="INotifyPropertyChanged"/> </summary>
         public event PropertyChangedEventHandler PropertyChanged;

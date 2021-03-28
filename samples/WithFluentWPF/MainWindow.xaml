@@ -1,0 +1,63 @@
+﻿<fw:AcrylicWindow  x:Class="WithFluentWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:fw="clr-namespace:SourceChord.FluentWPF;assembly=FluentWPF"
+        xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
+        xmlns:local="clr-namespace:WithFluentWPF"
+        mc:Ignorable="d"
+        
+        Title="MainWindow" Height="450" Width="800">
+
+    <fw:AcrylicWindow.DataContext>
+        <local:MainWindowViewModel />
+    </fw:AcrylicWindow.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ComboBox
+                    Grid.Row="0" Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    SelectedItem="{Binding SelectedStyleInfo}"
+                    ItemsSource="{Binding Styles}">
+
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+
+        </ComboBox>
+
+        <TextBox
+                    Grid.Row="1" Grid.Column="0"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    TextWrapping="Wrap"
+                    AcceptsReturn="True"
+                    Margin="5" 
+                    Text="{Binding TextView, UpdateSourceTrigger=PropertyChanged}"
+                    VerticalScrollBarVisibility="Auto"/>
+
+        <mdxam:MarkdownScrollViewer
+                    Grid.Row="1" Grid.Column="1"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    Background="{DynamicResource SystemAltHighColorBrush}"
+                    Margin="5"
+                    MarkdownStyle="{Binding SelectedStyleInfo.Style}"
+                    ClickAction="OpenBrowser"
+                    Markdown="{Binding TextView}"
+                     />
+
+    </Grid>
+</fw:AcrylicWindow>

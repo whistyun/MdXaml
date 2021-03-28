@@ -1339,12 +1339,46 @@ namespace MdXaml
             if (!String.IsNullOrEmpty(lang))
             {
                 var highlight = HighlightingManager.Instance.GetDefinitionByExtension("." + lang);
-                txtEdit.SyntaxHighlighting = highlight;
+                txtEdit.SetCurrentValue(TextEditor.SyntaxHighlightingProperty, highlight);
+                txtEdit.Tag = lang;
             }
 
             txtEdit.Text = code;
             txtEdit.HorizontalAlignment = HorizontalAlignment.Stretch;
             txtEdit.IsReadOnly = true;
+            txtEdit.PreviewMouseWheel += (s, e) =>
+            {
+                if (e.Handled) return;
+
+                e.Handled = true;
+
+                var isShiftDown = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+                if (isShiftDown)
+                {
+                    // horizontal scroll
+                    var offset = txtEdit.HorizontalOffset;
+                    offset -= e.Delta;
+                    txtEdit.ScrollToHorizontalOffset(offset);
+                }
+                else
+                {
+                    // event bubbles
+                    var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
+                    eventArg.RoutedEvent = UIElement.MouseWheelEvent;
+                    eventArg.Source = s;
+
+                    var parentObj = ((Control)s).Parent;
+                    if (parentObj is UIElement uielm)
+                    {
+                        uielm.RaiseEvent(eventArg);
+                    }
+                    else if (parentObj is ContentElement celem)
+                    {
+                        celem.RaiseEvent(eventArg);
+                    }
+                }
+            };
+
 
             var result = new BlockUIContainer(txtEdit);
             if (CodeBlockStyle != null)
