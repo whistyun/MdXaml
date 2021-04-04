@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:mde="clr-namespace:Markdown.Xaml.Ext;assembly=Markdown.Xaml"
-                    xmlns:mdx="clr-namespace:Markdown.Xaml;assembly=Markdown.Xaml"
+                    xmlns:mde="clr-namespace:Markdown.Xaml.Ext"
+                    xmlns:mdx="clr-namespace:Markdown.Xaml"
                     >
 
     <Style TargetType="FlowDocument" x:Key="DocumentStyleStandard">
@@ -565,7 +565,7 @@
 
                     <Trigger Property="Tag" Value="CodeBlock">
                         <Setter Property="FontFamily"      Value="Courier New"/>
-                        <Setter Property="Foreground"      Value="{mde:Mix   Foreground, Blue, 0.5, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="Foreground"      Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                         <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.0800  , TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                         <Setter Property="BorderBrush"     Value="{mde:Alpha Foreground, 0.1839  , TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                         <Setter Property="BorderThickness" Value="0,5,0,5"/>
@@ -587,7 +587,7 @@
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
                         <Setter Property="FontFamily"      Value="Courier New"/>
-                        <Setter Property="Foreground"      Value="{mde:Mix   Foreground, Blue, 0.5, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="Foreground"      Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                         <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                     </Trigger>
                 </Style.Triggers>
@@ -714,7 +714,7 @@
 
                     <Trigger Property="Tag" Value="CodeBlock">
                         <Setter Property="FontFamily"      Value="Courier New"/>
-                        <Setter Property="Foreground"      Value="{mde:Mix   Foreground, Blue, 0.5, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="Foreground"      Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                         <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.0800  , TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                         <Setter Property="BorderBrush"     Value="{mde:Alpha Foreground, 0.1839  , TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                         <Setter Property="BorderThickness" Value="0,5,0,5"/>
@@ -735,7 +735,7 @@
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
                         <Setter Property="FontFamily" Value="Courier New"/>
-                        <Setter Property="Foreground" Value="{mde:Mix   Foreground, Blue, 0.5, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
                     </Trigger>
                 </Style.Triggers>
