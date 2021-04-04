@@ -12,7 +12,7 @@ namespace Markdown.Xaml.Ext
 namespace MdXaml.Ext
 #endif
 {
-    public class BrightnessExtension : MarkupExtension
+    class BrightnessExtension : MarkupExtension
     {
         public Color Base { get; }
         public string Foreground { get; }

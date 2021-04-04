@@ -26,7 +26,7 @@ namespace MdXaml.Ext
     /// You may think It's better to change it according to Bachground,
     /// But Background may be declared as absolutly transparent.
     /// </remarks>
-    public class SyntaxHighlightWrapperExtension : MarkupExtension
+    class SyntaxHighlightWrapperExtension : MarkupExtension
     {
         /// <summary>
         /// The source of Foreground.

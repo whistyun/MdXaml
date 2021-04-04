@@ -10,7 +10,7 @@ namespace Markdown.Xaml.Ext
 namespace MdXaml.Ext
 #endif
 {
-    public class AlphaExtension : MarkupExtension
+    class AlphaExtension : MarkupExtension
     {
         private readonly string key;
         private readonly float power;

@@ -12,7 +12,7 @@ namespace Markdown.Xaml.Ext
 namespace MdXaml.Ext
 #endif
 {
-    public class FontSizeScaleExtension : MarkupExtension
+    class FontSizeScaleExtension : MarkupExtension
     {
         private readonly float power;
 
