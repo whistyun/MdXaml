@@ -14,18 +14,14 @@
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
+
   <ItemGroup>
     <None Remove="EmojiTable.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Remove="Markdown.Style.xaml" />
-    <Page Remove="MarkdownMigFree.Style.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="EmojiTable.txt" />
-    <EmbeddedResource Include="Markdown.Style.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="MarkdownMigFree.Style.xaml" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">

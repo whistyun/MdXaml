@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media;
@@ -10,57 +12,51 @@ namespace Markdown.Xaml.Ext
 namespace MdXaml.Ext
 #endif
 {
-    public class AlphaExtension : MarkupExtension
+    public class BrightnessExtension : MarkupExtension
     {
-        private readonly string key;
-        private readonly float power;
-
+        public Color Base { get; }
+        public string Foreground { get; }
         public Type TargetType { set; get; }
 
-        public AlphaExtension(string key) : this(key, 1f) { }
-
-        public AlphaExtension(string key, float power)
+        public BrightnessExtension(Color @base, string foreground)
         {
-            this.key = key;
-            this.power = power;
+            this.Base = @base;
+            this.Foreground = foreground;
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            return new Binding(key)
+            return new Binding(Foreground)
             {
                 RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = TargetType },
-                Converter = new AlphaConverter(power)
+                Converter = new BrightnessConverter(Base)
             };
         }
 
-        class AlphaConverter : IValueConverter
+        class BrightnessConverter : IValueConverter
         {
-            readonly float Power;
+            readonly Color Base;
 
-            public AlphaConverter(float power)
+            public BrightnessConverter(Color @base)
             {
-                this.Power = power;
+                Base = @base;
             }
+
 
             public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
             {
-                Color baseColor;
+                Color foregroundColor;
 
                 if (value is SolidColorBrush cBrush)
                 {
-                    baseColor = cBrush.Color;
+                    foregroundColor = cBrush.Color;
                 }
                 else
                 {
-                    baseColor = Colors.Black;
+                    foregroundColor = Colors.Black;
                 }
 
-                var srcAlpha = baseColor.A / 255f;
-                var newAlpha = srcAlpha * Power;
-
-                var newColor = Color.FromArgb((byte)(255 * newAlpha), baseColor.R, baseColor.G, baseColor.B);
-
+                var newColor = Base.Brightness(foregroundColor);
                 return new SolidColorBrush(newColor);
             }
 

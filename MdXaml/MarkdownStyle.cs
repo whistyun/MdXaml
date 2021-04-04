@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
@@ -24,7 +25,7 @@ namespace MdXaml
         static void LoadXaml()
         {
 #if MIG_FREE
-            var resourceName = "Markdown.Xaml.MarkdownMigFree.Style.xaml";
+            var resourceName = "/Markdown.Xaml;component/MarkdownMigFree.Style.xaml";
 #else
             /*
                 Workaround for XamlParseException.
@@ -34,19 +35,17 @@ namespace MdXaml
             var txtedit = typeof(ICSharpCode.AvalonEdit.TextEditor);
             txtedit.ToString();
 
-            var resourceName = "MdXaml.Markdown.Style.xaml";
+            var resourceName = "/MdXaml;component/Markdown.Style.xaml";
 #endif
-            Assembly asm = Assembly.GetCallingAssembly();
-            using (var stream = asm.GetManifestResourceStream(resourceName))
-            {
-                var resources = (ResourceDictionary)XamlReader.Load(stream);
-                _standard = (Style)resources["DocumentStyleStandard"];
-                _compact = (Style)resources["DocumentStyleCompact"];
-                _githublike = (Style)resources["DocumentStyleGithubLike"];
-                _sasabune = (Style)resources["DocumentStyleSasabune"];
-                _sasabuneStandard = (Style)resources["DocumentStyleSasabuneStandard"];
-                _sasabuneCompact = (Style)resources["DocumentStyleSasabuneCompact"];
-            }
+
+            var resourceUri = new Uri(resourceName, UriKind.RelativeOrAbsolute);
+            ResourceDictionary resources = (ResourceDictionary)Application.LoadComponent(resourceUri);
+            _standard = (Style)resources["DocumentStyleStandard"];
+            _compact = (Style)resources["DocumentStyleCompact"];
+            _githublike = (Style)resources["DocumentStyleGithubLike"];
+            _sasabune = (Style)resources["DocumentStyleSasabune"];
+            _sasabuneStandard = (Style)resources["DocumentStyleSasabuneStandard"];
+            _sasabuneCompact = (Style)resources["DocumentStyleSasabuneCompact"];
         }
 
         private static Style _standard;

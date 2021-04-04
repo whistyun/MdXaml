@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:mde="clr-namespace:Markdown.Xaml.Ext;assembly=Markdown.Xaml"
-                    xmlns:mdx="clr-namespace:Markdown.Xaml;assembly=Markdown.Xaml"
+                    xmlns:mde="clr-namespace:Markdown.Xaml.Ext"
+                    xmlns:mdx="clr-namespace:Markdown.Xaml"
                     >
 
     <Style TargetType="FlowDocument" x:Key="DocumentStyleStandard">
