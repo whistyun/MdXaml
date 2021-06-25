@@ -81,7 +81,7 @@ We can use MarkdownScrollViewer with code-behind and with binding.
 ## Development
 
 IDE: Visual Studio 2019  
-Framework: .NET Framework 4.6.2, .NET Core 3
+Framework: .NET Framework 4.6.2, .NET Core 3, .NET 5
 
 ### Build
 

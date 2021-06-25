@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph>Dashes:</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock">---</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock">- - -</Paragraph>
+  <Paragraph>Asterisks:</Paragraph>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock">***</Paragraph>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock">* * *</Paragraph>
+  <Paragraph>Underscores:</Paragraph>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock">___</Paragraph>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBoldWithSingle">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+      <Separator />
+    </StackPanel>
+  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock">_ _ _</Paragraph>
+</FlowDocument>
