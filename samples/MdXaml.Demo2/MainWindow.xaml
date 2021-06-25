@@ -13,18 +13,38 @@
         <local:MainWindowViewModel/>
     </Window.DataContext>
 
-    <DockPanel LastChildFill="True">
-        <DockPanel LastChildFill="True" DockPanel.Dock="Top">
-            <Button Content="👈" Command="{Binding Prev}"  DockPanel.Dock="Left"/>
-            <Button Content="👉"  Command="{Binding Next}"  DockPanel.Dock="Left"/>
-            <TextBox Text="{Binding MdSource}"/>
-        </DockPanel>
+    <TabControl>
+        <TabItem Header="Go to page">
+            <DockPanel LastChildFill="True">
+                <DockPanel LastChildFill="True" DockPanel.Dock="Top">
+                    <Button Content="👈" Command="{Binding Prev}"  DockPanel.Dock="Left"/>
+                    <Button Content="👉"  Command="{Binding Next}"  DockPanel.Dock="Left"/>
+                    <TextBox Text="{Binding MdSource}"/>
+                </DockPanel>
 
-        <mdxam:MarkdownScrollViewer
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            ClickAction="DisplayWithRelativePath"
-            Source="{Binding MdSource,Mode=TwoWay}"
-            />
-    </DockPanel>
+                <mdxam:MarkdownScrollViewer
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch"
+                    ClickAction="DisplayWithRelativePath"
+                    Source="{Binding MdSource,Mode=TwoWay}"
+                    />
+            </DockPanel>
+        </TabItem>
+
+        <TabItem Header="Data template">
+            <ItemsControl ItemsSource="{Binding Documents}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <mdxam:MarkdownScrollViewer
+                            VerticalAlignment="Stretch"
+                            HorizontalAlignment="Stretch"
+                            ClickAction="DisplayWithRelativePath"
+                            Height="150"
+                            Markdown="{Binding Text}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </TabItem>
+    </TabControl>
+
 </Window>

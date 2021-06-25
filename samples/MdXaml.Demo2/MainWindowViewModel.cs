@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 
 namespace MdXaml.Demo2
@@ -13,6 +15,8 @@ namespace MdXaml.Demo2
         private int ReferenceIdx = 0;
 
         public ObservableCollection<Uri> Histories { get; } = new ObservableCollection<Uri>();
+
+        public ObservableCollection<MinDoc> Documents { get; }
 
         private Uri _MdSource;
         public Uri MdSource
@@ -40,6 +44,17 @@ namespace MdXaml.Demo2
 
             MdSource = new Uri("Assets/Main.md", UriKind.Relative);
 
+            Documents = new ObservableCollection<MinDoc>();
+
+            Documents.Add(new MinDoc(@"
+                # Title
+                [go to google](https://www.google.com)
+                "));
+
+            Documents.Add(new MinDoc(@"
+                # Title
+                [go to yahoo](https://www.yahoo.com/)
+                "));
         }
 
         public void NextPage()
@@ -75,6 +90,16 @@ namespace MdXaml.Demo2
                 var e = new PropertyChangedEventArgs(propertyName);
                 PropertyChanged(this, e);
             }
+        }
+    }
+
+    public class MinDoc
+    {
+        public string Text { get; set; }
+
+        public MinDoc(string heredoc)
+        {
+            Text = String.Join("\r\n", Regex.Split(heredoc, "\r?\n").Select(ln => ln.TrimStart()));
         }
     }
 
