@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 
@@ -267,6 +268,8 @@ namespace MdXaml
                     Engine.HyperlinkCommand = new DiaplayCommand(this, false);
                     break;
             }
+
+            UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
         }
 
         private void Open(Uri source, bool updateSourceProperty)
