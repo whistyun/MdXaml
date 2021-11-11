@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PackageId>MdXaml</PackageId>
-    <Version>1.11.0</Version>
+    <Version>1.12.0</Version>
     <Authors>Bevan Arps(original); whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>
@@ -24,15 +24,7 @@
     <Page Remove="MarkdownMigFree.Style.xaml" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <PackageReference Include="AvalonEdit" Version="5.0.4" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
-    <PackageReference Include="AvalonEdit" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0-windows' ">
+  <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.0.0" />
   </ItemGroup>
 </Project>
