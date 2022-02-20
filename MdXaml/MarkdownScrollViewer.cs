@@ -13,10 +13,14 @@ using System.Windows.Input;
 using System.Windows.Markup;
 
 #if MIG_FREE
+using Markdown.Xaml.LinkActions;
 using MdStyle = Markdown.Xaml.MarkdownStyle;
+
 namespace Markdown.Xaml
 #else
+using MdXaml.LinkActions;
 using MdStyle = MdXaml.MarkdownStyle;
+
 namespace MdXaml
 #endif
 {
@@ -272,7 +276,7 @@ namespace MdXaml
             UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
         }
 
-        private void Open(Uri source, bool updateSourceProperty)
+        internal void Open(Uri source, bool updateSourceProperty)
         {
             bool TryOpen(Uri path)
             {
@@ -341,65 +345,6 @@ namespace MdXaml
                 {
                     var assetPath = Path.Combine(AssetPathRoot, source.LocalPath);
                     sucess = TryOpen(new Uri(assetPath));
-                }
-            }
-        }
-
-        class OpenCommand : ICommand
-        {
-
-            public event EventHandler CanExecuteChanged;
-
-            public bool CanExecute(object parameter) => true;
-
-            public void Execute(object parameter)
-            {
-                var path = parameter.ToString();
-                var isAbs = Uri.IsWellFormedUriString(path, UriKind.Absolute);
-
-                Process.Start(new ProcessStartInfo(path)
-                {
-                    UseShellExecute = true,
-                    Verb = "open"
-                });
-            }
-        }
-
-        class DiaplayCommand : ICommand
-        {
-            MarkdownScrollViewer Owner;
-            bool OpenBrowserWithAbsolutePath;
-
-            public DiaplayCommand(MarkdownScrollViewer owner, bool openBrowserWithAbsolutePath)
-            {
-                Owner = owner;
-                OpenBrowserWithAbsolutePath = openBrowserWithAbsolutePath;
-            }
-
-            public event EventHandler CanExecuteChanged;
-
-            public bool CanExecute(object parameter) => true;
-
-            public void Execute(object parameter)
-            {
-                var path = parameter.ToString();
-                var isAbs = Uri.IsWellFormedUriString(path, UriKind.Absolute);
-
-                if (OpenBrowserWithAbsolutePath & isAbs)
-                {
-                    Process.Start(new ProcessStartInfo(path)
-                    {
-                        UseShellExecute = true,
-                        Verb = "open"
-                    });
-                }
-                else if (isAbs)
-                {
-                    Owner.Open(new Uri(path), true);
-                }
-                else
-                {
-                    Owner.Open(new Uri(path, UriKind.Relative), true);
                 }
             }
         }
