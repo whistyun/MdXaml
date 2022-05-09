@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PackageId>MdXaml</PackageId>
-    <Version>1.13.0</Version>
+    <Version>1.14.0</Version>
     <Authors>Bevan Arps(original); whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>
