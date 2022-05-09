@@ -27,37 +27,37 @@
     <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">
       <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0">
         <Image.Source>
-          <BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" />
+          <BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" />
         </Image.Source>
       </Image>
     </Hyperlink>
   </Paragraph>
   <Paragraph>
-    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text<Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image></Hyperlink>
+    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text<Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image></Hyperlink>
   </Paragraph>
   <Paragraph>
     <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">
       <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0">
         <Image.Source>
-          <BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" />
+          <BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" />
         </Image.Source>
       </Image>text</Hyperlink>
   </Paragraph>
   <Paragraph>
-    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text<Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image>text</Hyperlink>
+    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text<Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image>text</Hyperlink>
   </Paragraph>
   <Paragraph>
-    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image></Hyperlink>
+    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image></Hyperlink>
   </Paragraph>
   <Paragraph>
     <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">
       <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0">
         <Image.Source>
-          <BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" />
+          <BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" />
         </Image.Source>
       </Image> text</Hyperlink>
   </Paragraph>
   <Paragraph>
-    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriCachePolicy="BypassCache" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" /></Image.Source></Image> text</Hyperlink>
+    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image> text</Hyperlink>
   </Paragraph>
 </FlowDocument>

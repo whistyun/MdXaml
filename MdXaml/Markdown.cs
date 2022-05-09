@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Cache;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -430,7 +432,21 @@ namespace MdXaml
                 image.Width = imgSource.Width;
             }
 
-            return new InlineUIContainer(image);
+            var container = new InlineUIContainer() { Child=image };
+            imgSource.DownloadFailed += (s, e) =>
+            {
+                var ext = e.ErrorException;
+
+                var label = new Label()
+                {
+                    Foreground = Brushes.Red,
+                    Content = "!" + url + "\r\n"+ext.GetType().Name + ":" + ext.Message
+                };
+
+                container.Child=label;
+            };
+
+            return container;
         }
 
         private BitmapImage MakeImage(Uri url)
@@ -443,10 +459,8 @@ namespace MdXaml
             {
                 var imgSource = new BitmapImage();
                 imgSource.BeginInit();
-                imgSource.CacheOption = BitmapCacheOption.None;
-                imgSource.UriCachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
                 imgSource.CacheOption = BitmapCacheOption.OnLoad;
-                imgSource.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+                imgSource.CreateOptions = BitmapCreateOptions.None;
                 imgSource.UriSource = url;
                 imgSource.EndInit();
 
