@@ -28,7 +28,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXamlMigfree.Demo2", "samp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXamlMigfree", "MdXaml\MdXamlMigfree.csproj", "{705AEC58-2E1A-4BA4-8A94-A6A14420BFD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WithFluentWPF", "samples\WithFluentWPF\WithFluentWPF.csproj", "{C539C7B4-BBF2-4AC2-A732-0C47E125CCD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WithFluentWPF", "samples\WithFluentWPF\WithFluentWPF.csproj", "{C539C7B4-BBF2-4AC2-A732-0C47E125CCD2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "externals", "externals", "{B37FB22C-258D-49E6-9671-6455A9C92C7C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Html", "MdXaml.Html\MdXaml.Html.csproj", "{67BB50BF-B50A-4EBE-A232-BE8C407B38E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HtmlXaml.Core", "externals\HtmlXaml.Core\HtmlXaml.Core\HtmlXaml.Core.csproj", "{69156EF7-C120-4C0D-AD26-BD1A9421513F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +78,14 @@ Global
 		{C539C7B4-BBF2-4AC2-A732-0C47E125CCD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C539C7B4-BBF2-4AC2-A732-0C47E125CCD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C539C7B4-BBF2-4AC2-A732-0C47E125CCD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67BB50BF-B50A-4EBE-A232-BE8C407B38E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67BB50BF-B50A-4EBE-A232-BE8C407B38E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67BB50BF-B50A-4EBE-A232-BE8C407B38E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67BB50BF-B50A-4EBE-A232-BE8C407B38E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69156EF7-C120-4C0D-AD26-BD1A9421513F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69156EF7-C120-4C0D-AD26-BD1A9421513F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69156EF7-C120-4C0D-AD26-BD1A9421513F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69156EF7-C120-4C0D-AD26-BD1A9421513F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +98,7 @@ Global
 		{3FA0CDA5-C86F-4CF9-AB9E-1A8C02FDD8F4} = {435867FA-EE25-4708-9BBA-8509ABC7E389}
 		{855272D5-AB9E-43FC-801F-F0E7CAEB28E0} = {435867FA-EE25-4708-9BBA-8509ABC7E389}
 		{C539C7B4-BBF2-4AC2-A732-0C47E125CCD2} = {435867FA-EE25-4708-9BBA-8509ABC7E389}
+		{69156EF7-C120-4C0D-AD26-BD1A9421513F} = {B37FB22C-258D-49E6-9671-6455A9C92C7C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23DF7019-3B25-4B82-8955-25F1DDD72D84}

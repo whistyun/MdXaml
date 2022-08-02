@@ -12,9 +12,13 @@
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"         Value="10, 5"/>
-                <Setter Property="BorderBrush"     Value="#DEDEDE"/>
-                <Setter Property="BorderThickness" Value="5,0,0,0"/>
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="Blockquote">
+                        <Setter Property="Padding"         Value="10, 5"/>
+                        <Setter Property="BorderBrush"     Value="#DEDEDE"/>
+                        <Setter Property="BorderThickness" Value="5,0,0,0"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style TargetType="avalonEdit:TextEditor" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
@@ -158,9 +162,13 @@
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"         Value="10, 5"/>
-                <Setter Property="BorderBrush"     Value="#DEDEDE"/>
-                <Setter Property="BorderThickness" Value="5,0,0,0"/>
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="Blockquote">
+                        <Setter Property="Padding"         Value="10, 5"/>
+                        <Setter Property="BorderBrush"     Value="#DEDEDE"/>
+                        <Setter Property="BorderThickness" Value="5,0,0,0"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style TargetType="avalonEdit:TextEditor" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
@@ -317,9 +325,13 @@
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"         Value="10, 5"/>
-                <Setter Property="BorderBrush"     Value="#DEDEDE"/>
-                <Setter Property="BorderThickness" Value="5,0,0,0"/>
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="Blockquote">
+                        <Setter Property="Padding"         Value="10, 5"/>
+                        <Setter Property="BorderBrush"     Value="#DEDEDE"/>
+                        <Setter Property="BorderThickness" Value="5,0,0,0"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style TargetType="avalonEdit:TextEditor" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
@@ -475,9 +487,13 @@
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"          Value="10, 5"/>
-                <Setter Property="BorderBrush"      Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
-                <Setter Property="BorderThickness"  Value="5,0,0,0"/>
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="Blockquote">
+                        <Setter Property="Padding"          Value="10, 5"/>
+                        <Setter Property="BorderBrush"      Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="BorderThickness"  Value="5,0,0,0"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style TargetType="avalonEdit:TextEditor" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
@@ -639,9 +655,13 @@
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"          Value="10, 5"/>
-                <Setter Property="BorderBrush"      Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
-                <Setter Property="BorderThickness"  Value="5,0,0,0"/>
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="Blockquote">
+                        <Setter Property="Padding"          Value="10, 5"/>
+                        <Setter Property="BorderBrush"      Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="BorderThickness"  Value="5,0,0,0"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style TargetType="avalonEdit:TextEditor" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
@@ -795,9 +815,13 @@
 
         <Style.Resources>
             <Style TargetType="Section">
-                <Setter Property="Padding"           Value="10, 5"/>
-                <Setter Property="BorderBrush"       Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
-                <Setter Property="BorderThickness"   Value="5,0,0,0"/>
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="Blockquote">
+                        <Setter Property="Padding"           Value="10, 5"/>
+                        <Setter Property="BorderBrush"       Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="BorderThickness"   Value="5,0,0,0"/>
+                    </Trigger>
+                </Style.Triggers>
             </Style>
 
             <Style TargetType="avalonEdit:TextEditor" xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit">
