@@ -76,6 +76,7 @@ namespace MdXaml
         {
             if (d is MarkdownScrollViewer owner)
             {
+                owner.Engine.Plugins = owner.Plugins;
                 var doc = owner.Engine.Transform(owner.Markdown ?? "");
                 owner.SetCurrentValue(DocumentProperty, doc);
             }
@@ -154,6 +155,28 @@ namespace MdXaml
             set => SetValue(AssetPathRootProperty, value);
             get => (string)GetValue(AssetPathRootProperty);
         }
+
+        private MdXamlPlugins _plugins;
+        public MdXamlPlugins Plugins
+        {
+            set
+            {
+                _plugins = value;
+                UpdatePlugin();
+            }
+            get
+            {
+                if (!(_plugins is null))
+                    return _plugins;
+
+                // load from application.resource
+                var values = Application.Current?.Resources?.Values;
+                if (values is null) return null;
+
+                return _plugins = values.OfType<MdXamlPlugins>().FirstOrDefault();
+            }
+        }
+
 
         public string HereMarkdown
         {
@@ -272,6 +295,11 @@ namespace MdXaml
                     break;
             }
 
+            UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
+        }
+
+        private void UpdatePlugin()
+        {
             UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
         }
 

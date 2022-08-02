@@ -85,6 +85,8 @@ namespace MdXaml
 
         public Uri BaseUri { get; set; }
 
+        public MdXamlPlugins Plugins { get; set; }
+
         #region dependencyobject property
 
         // Using a DependencyProperty as the backing store for DocumentStyle.  This enables animation, styling, binding, etc...
@@ -101,7 +103,6 @@ namespace MdXaml
         }
 
         #endregion
-
 
         #region legacy property
 
@@ -155,7 +156,7 @@ namespace MdXaml
         /// <summary>
         /// Perform transformations that form block-level tags like paragraphs, headers, and list items.
         /// </summary>
-        private IEnumerable<Block> RunBlockGamut(string text, bool supportTextAlignment)
+        public IEnumerable<Block> RunBlockGamut(string text, bool supportTextAlignment)
         {
             if (text is null)
             {
@@ -170,16 +171,17 @@ namespace MdXaml
                 s2 => DoHeaders(s2,
                 s3 => DoHorizontalRules(s3,
                 s4 => DoTable(s4,
+                s0 => DoPluginForBlock(s0,
                 s5 => DoNote(s5, supportTextAlignment,
                 s6 => DoIndentCodeBlock(s6,
-                sn => FormParagraphs(sn, supportTextAlignment)))))))
+                sn => FormParagraphs(sn, supportTextAlignment))))))))
             );
         }
 
         /// <summary>
         /// Perform transformations that occur *within* block-level tags like paragraphs, headers, and list items.
         /// </summary>
-        private IEnumerable<Inline> RunSpanGamut(string text)
+        public IEnumerable<Inline> RunSpanGamut(string text)
         {
             if (text is null)
             {
@@ -187,11 +189,33 @@ namespace MdXaml
             }
 
             return DoCodeSpans(text,
-                s0 => DoImagesOrHrefs(s0,
-                s1 => DoTextDecorations(s1,
-                s2 => DoText(s2))));
+                s1 => DoImagesOrHrefs(s1,
+                s2 => DoTextDecorations(s2,
+                s0 => DoPluginForInline(s0,
+                s3 => DoText(s3)))));
         }
 
+        private IEnumerable<Block> DoPluginForBlock(string text, Func<string, IEnumerable<Block>> defaultHandler)
+        {
+            if (Plugins is null)
+                return defaultHandler(text);
+
+            return Plugins.Block
+                          .Reverse()
+                          .Aggregate(defaultHandler, (handler, plugin) => delegate (string txt) { return plugin.Parse(txt, handler); })
+                          .Invoke(text);
+        }
+
+        private IEnumerable<Inline> DoPluginForInline(string text, Func<string, IEnumerable<Inline>> defaultHandler)
+        {
+            if (Plugins is null)
+                return defaultHandler(text);
+
+            return Plugins.Inline
+                          .Reverse()
+                          .Aggregate(defaultHandler, (handler, plugin) => delegate (string txt) { return plugin.Parse(txt, handler); })
+                          .Invoke(text);
+        }
 
         #region grammer - paragraph
 
@@ -432,7 +456,7 @@ namespace MdXaml
                 image.Width = imgSource.Width;
             }
 
-            var container = new InlineUIContainer() { Child=image };
+            var container = new InlineUIContainer() { Child = image };
             imgSource.DownloadFailed += (s, e) =>
             {
                 var ext = e.ErrorException;
@@ -440,10 +464,10 @@ namespace MdXaml
                 var label = new Label()
                 {
                     Foreground = Brushes.Red,
-                    Content = "!" + url + "\r\n"+ext.GetType().Name + ":" + ext.Message
+                    Content = "!" + url + "\r\n" + ext.GetType().Name + ":" + ext.Message
                 };
 
-                container.Child=label;
+                container.Child = label;
             };
 
             return container;
