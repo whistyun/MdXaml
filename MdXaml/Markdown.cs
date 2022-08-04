@@ -34,12 +34,6 @@ namespace MdXaml
         /// </summary>
         private const int _nestDepth = 6;
 
-        /// <summary>
-        /// Tabs are automatically converted to spaces as part of the transform  
-        /// this constant determines how "wide" those tabs become in spaces  
-        /// </summary>
-        private const int _tabWidth = 4;
-
         private const string TagHeading1 = "Heading1";
         private const string TagHeading2 = "Heading2";
         private const string TagHeading3 = "Heading3";
@@ -166,7 +160,7 @@ namespace MdXaml
             return Evaluate2(
                 text,
                 _codeBlockFirst, CodeBlocksWithLangEvaluator,
-                _listLevel > 0 ? _listNested : _listTopLevel, ListEvaluator,
+                _listNested, ListEvaluator,
                 s1 => DoBlockquotes(s1,
                 s2 => DoHeaders(s2,
                 s3 => DoHorizontalRules(s3,
@@ -911,8 +905,6 @@ namespace MdXaml
         private static readonly Regex _startsWith_markerOL_RomanLower = new Regex("\\A" + _markerOL_RomanLower, RegexOptions.Compiled);
         private static readonly Regex _startsWith_markerOL_RomanUpper = new Regex("\\A" + _markerOL_RomanUpper, RegexOptions.Compiled);
 
-        private int _listLevel;
-
         /// <summary>
         /// Maximum number of levels a single list can have.
         /// In other words, _listDepth - 1 is the maximum number of nested lists.
@@ -950,8 +942,6 @@ namespace MdXaml
         private static readonly Regex _listNested = new Regex(@"^" + _wholeList,
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex _listTopLevel = new Regex(@"(?:(?<=\n)|\A\n?)" + _wholeList,
-            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private IEnumerable<Block> ListEvaluator(Match match)
         {
@@ -1064,30 +1054,23 @@ namespace MdXaml
             // change the syntax rules such that sub-lists must start with a
             // starting cardinal number; e.g. "1." or "a.".
 
-            _listLevel++;
-            try
-            {
-                // Trim trailing blank lines:
-                list = Regex.Replace(list, @"\n{2,}\z", "\n");
 
-                string pattern = string.Format(
-                  @"(\n)?                  # leading line = $1
-                (^[ ]*)                    # leading whitespace = $2
-                ({0}) [ ]+                 # list marker = $3
-                ((?s:.+?)                  # list item text = $4
-                (\n{{1,2}}))      
-                (?= \n* (\z | \2 ({0}) [ ]+))", marker);
+            // Trim trailing blank lines:
+            list = Regex.Replace(list, @"\n{2,}\z", "\n");
 
-                var regex = new Regex(pattern, RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
-                var matches = regex.Matches(list);
-                foreach (Match m in matches)
-                {
-                    yield return ListItemEvaluator(m);
-                }
-            }
-            finally
+            string pattern = string.Format(
+                @"(\n)?                  # leading line = $1
+            (^[ ]*)                    # leading whitespace = $2
+            ({0}) [ ]+                 # list marker = $3
+            ((?s:.+?)                  # list item text = $4
+            (\n{{1,2}}))      
+            (?= \n* (\z | \2 ({0}) [ ]+))", marker);
+
+            var regex = new Regex(pattern, RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+            var matches = regex.Matches(list);
+            foreach (Match m in matches)
             {
-                _listLevel--;
+                yield return ListItemEvaluator(m);
             }
         }
 
