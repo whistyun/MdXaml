@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Cache;
 using System.Text;
@@ -15,9 +16,12 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-#if !MIG_FREE
+#if MIG_FREE
+using Markdown.Xaml.Plugins;
+#else
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
+using MdXaml.Plugins;
 #endif
 
 #if MIG_FREE
@@ -81,6 +85,8 @@ namespace MdXaml
 
         public MdXamlPlugins Plugins { get; set; }
 
+        private ParseParam ParseParam { get; set; }
+
         #region dependencyobject property
 
         // Using a DependencyProperty as the backing store for DocumentStyle.  This enables animation, styling, binding, etc...
@@ -120,16 +126,12 @@ namespace MdXaml
 
         #endregion
 
-
-        #region regex pattern
-
-
-        #endregion
-
         public Markdown()
         {
             HyperlinkCommand = NavigationCommands.GoToPage;
             AssetPathRoot = Environment.CurrentDirectory;
+            Plugins = null;
+            ParseParam = SetupParams(MdXamlPlugins.Default);
         }
 
         public FlowDocument Transform(string text)
@@ -139,12 +141,74 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
+            SetupParams();
+
             text = TextUtil.Normalize(text);
-            var document = Create<FlowDocument, Block>(RunBlockGamut(text, true));
+            var document = Create<FlowDocument, Block>(PrivateRunBlockGamut(text, true));
 
             document.SetBinding(FlowDocument.StyleProperty, new Binding(DocumentStyleProperty.Name) { Source = this });
 
             return document;
+        }
+
+        private ParseParam SetupParams(MdXamlPlugins plugins)
+        {
+            var topBlocks = new List<IBlockParser>();
+            var subBlocks = new List<IBlockParser>();
+            var inlines = new List<IInlineParser>();
+
+            // top-level block parser
+
+            if (plugins.Syntax.EnableListMarkerExt)
+            {
+                topBlocks.Add(SimpleBlockParser.New(_extListNested, ExtListEvaluator));
+            }
+            else
+            {
+                topBlocks.Add(SimpleBlockParser.New(_commonListNested, CommonListEvaluator));
+            }
+
+            topBlocks.Add(SimpleBlockParser.New(_codeBlockFirst, CodeBlocksWithLangEvaluator));
+
+            // sub-level block parser
+
+            subBlocks.Add(SimpleBlockParser.New(_blockquoteFirst, BlockquotesEvaluator));
+            subBlocks.Add(SimpleBlockParser.New(_headerSetext, SetextHeaderEvaluator));
+            subBlocks.Add(SimpleBlockParser.New(_headerAtx, AtxHeaderEvaluator));
+            subBlocks.Add(SimpleBlockParser.New(_horizontalRules, RuleEvaluator));
+            if (plugins.Syntax.EnableTableBlock)
+            {
+                subBlocks.Add(SimpleBlockParser.New(_table, TableEvalutor));
+            }
+            if (plugins.Syntax.EnableNoteBlock)
+            {
+                subBlocks.Add(SimpleBlockParser.New(_note, NoteEvaluator));
+            }
+            subBlocks.Add(SimpleBlockParser.New(_indentCodeBlock, CodeBlocksWithoutLangEvaluator));
+
+            // inline parser
+
+            inlines.Add(SimpleInlineParser.New(_codeSpan, CodeSpanEvaluator));
+            inlines.Add(SimpleInlineParser.New(_imageOrHrefInline, ImageOrHrefInlineEvaluator));
+
+            if (StrictBoldItalic)
+            {
+                inlines.Add(SimpleInlineParser.New(_strictBold, BoldEvaluator));
+                inlines.Add(SimpleInlineParser.New(_strictItalic, ItalicEvaluator));
+                inlines.Add(SimpleInlineParser.New(_strikethrough, StrikethroughEvaluator));
+                inlines.Add(SimpleInlineParser.New(_underline, UnderlineEvaluator));
+            }
+
+            topBlocks.AddRange(plugins.TopBlock);
+            subBlocks.AddRange(plugins.Block);
+            inlines.AddRange(plugins.Inline);
+
+            return new ParseParam(topBlocks, subBlocks, inlines);
+        }
+
+        private void SetupParams()
+        {
+            ParseParam = SetupParams(Plugins ?? MdXamlPlugins.Default);
         }
 
         /// <summary>
@@ -157,21 +221,10 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
-            return Evaluate2(
-                text,
-                _codeBlockFirst, CodeBlocksWithLangEvaluator,
-                _listNested, ListEvaluator,
-                s1 => DoBlockquotes(s1,
-                s2 => DoHeaders(s2,
-                s3 => DoHorizontalRules(s3,
-                s4 => DoTable(s4,
-                s0 => DoPluginForBlock(s0,
-                s5 => DoNote(s5, supportTextAlignment,
-                s6 => DoIndentCodeBlock(s6,
-                sn => FormParagraphs(sn, supportTextAlignment))))))))
-            );
-        }
+            SetupParams();
 
+            return PrivateRunBlockGamut(text, supportTextAlignment);
+        }
         /// <summary>
         /// Perform transformations that occur *within* block-level tags like paragraphs, headers, and list items.
         /// </summary>
@@ -182,34 +235,152 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
-            return DoCodeSpans(text,
-                s1 => DoImagesOrHrefs(s1,
-                s2 => DoTextDecorations(s2,
-                s0 => DoPluginForInline(s0,
-                s3 => DoText(s3)))));
+            SetupParams();
+
+            return PrivateRunSpanGamut(text);
         }
 
-        private IEnumerable<Block> DoPluginForBlock(string text, Func<string, IEnumerable<Block>> defaultHandler)
+        private IEnumerable<Block> PrivateRunBlockGamut(string text, bool supportTextAlignment)
         {
-            if (Plugins is null)
-                return defaultHandler(text);
+            var index = 0;
+            var length = text.Length;
+            var rtn = new List<Block>();
 
-            return Plugins.Block
-                          .Reverse()
-                          .Aggregate(defaultHandler, (handler, plugin) => delegate (string txt) { return plugin.Parse(txt, handler); })
-                          .Invoke(text);
+            var candidates = new List<Candidate>();
+
+            while (true)
+            {
+                candidates.Clear();
+
+                foreach (var parser in ParseParam.PrimaryBlocks)
+                {
+                    var match = parser.FirstMatchPattern.Match(text, index, length);
+                    if (match.Success) candidates.Add(new Candidate(match, parser));
+                }
+
+                if (candidates.Count == 0) break;
+
+                candidates.Sort();
+
+                int bestBegin = 0;
+                int bestEnd = 0;
+                IEnumerable<Block> result = null;
+
+                foreach (var c in candidates)
+                {
+                    result = c.Parser.Parse(text, c.Match, supportTextAlignment, out bestBegin, out bestEnd);
+                    if (result != null) break;
+                }
+
+                if (result is null) break;
+
+                if (bestBegin > index)
+                {
+                    RunBlockRest(text, index, bestBegin - index, supportTextAlignment, ParseParam.SecondlyBlocks, 0, rtn);
+                }
+
+                rtn.AddRange(result);
+
+                length -= bestEnd - index;
+                index = bestEnd;
+            }
+
+            if (index < text.Length)
+            {
+                RunBlockRest(text, index, text.Length - index, supportTextAlignment, ParseParam.SecondlyBlocks, 0, rtn);
+            }
+
+            return rtn;
         }
 
-        private IEnumerable<Inline> DoPluginForInline(string text, Func<string, IEnumerable<Inline>> defaultHandler)
+        private void RunBlockRest(
+            string text, int index, int length,
+            bool supportTextAlignment,
+            IBlockParser[] parsers, int parserStart,
+            List<Block> outto)
         {
-            if (Plugins is null)
-                return defaultHandler(text);
+            for (; parserStart < parsers.Length; ++parserStart)
+            {
+                var parser = parsers[parserStart];
 
-            return Plugins.Inline
-                          .Reverse()
-                          .Aggregate(defaultHandler, (handler, plugin) => delegate (string txt) { return plugin.Parse(txt, handler); })
-                          .Invoke(text);
+                for (; ; )
+                {
+                    var match = parser.FirstMatchPattern.Match(text, index, length);
+                    if (!match.Success) break;
+
+                    var rslt = parser.Parse(text, match, supportTextAlignment, out int parseBegin, out int parserEnd);
+                    if (rslt is null) break;
+
+                    if (parseBegin > index)
+                    {
+                        RunBlockRest(text, index, parseBegin - index, supportTextAlignment, parsers, parserStart + 1, outto);
+                    }
+                    outto.AddRange(rslt);
+
+                    length -= parserEnd - index;
+                    index = parserEnd;
+                }
+
+                if (length == 0) break;
+            }
+
+            if (length != 0)
+            {
+                outto.AddRange(FormParagraphs(text.Substring(index, length), supportTextAlignment));
+            }
         }
+
+        private IEnumerable<Inline> PrivateRunSpanGamut(string text)
+        {
+            var rtn = new List<Inline>();
+            RunSpanRest(text, 0, text.Length, ParseParam.Inlines, 0, rtn);
+            return rtn;
+        }
+
+        /// <summary>
+        /// Perform transformations that occur *within* block-level tags like paragraphs, headers, and list items.
+        /// </summary>
+        private void RunSpanRest(
+            string text, int index, int length,
+            IInlineParser[] parsers, int parserStart,
+            List<Inline> outto)
+        {
+            for (; parserStart < parsers.Length; ++parserStart)
+            {
+                var parser = parsers[parserStart];
+
+                for (; ; )
+                {
+                    var match = parser.FirstMatchPattern.Match(text, index, length);
+                    if (!match.Success) break;
+
+                    var rslt = parser.Parse(text, match, out int parseBegin, out int parserEnd);
+                    if (rslt is null) break;
+
+                    if (parseBegin > index)
+                    {
+                        RunSpanRest(text, index, parseBegin - index, parsers, parserStart + 1, outto);
+                    }
+                    outto.AddRange(rslt);
+
+                    length -= parserEnd - index;
+                    index = parserEnd;
+                }
+
+                if (length == 0) break;
+            }
+
+            if (length != 0)
+            {
+                var subtext = text.Substring(index, length);
+
+                outto.AddRange(
+                    StrictBoldItalic ?
+                        DoText(subtext) :
+                        DoTextDecorations(subtext, s => DoText(s)));
+            }
+        }
+
 
         #region grammer - paragraph
 
@@ -260,7 +431,7 @@ namespace MdXaml
                     }
                 }
 
-                var block = Create<Paragraph, Inline>(RunSpanGamut(chip));
+                var block = Create<Paragraph, Inline>(PrivateRunSpanGamut(chip));
                 if (NormalParagraphStyle != null)
                 {
                     block.Style = NormalParagraphStyle;
@@ -337,7 +508,7 @@ namespace MdXaml
             string url = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
-            var result = Create<Hyperlink, Inline>(RunSpanGamut(linkText));
+            var result = Create<Hyperlink, Inline>(PrivateRunSpanGamut(linkText));
             result.Command = HyperlinkCommand;
             result.CommandParameter = url;
 
@@ -547,7 +718,7 @@ namespace MdXaml
             int level = match.Groups[2].Value.StartsWith("=") ? 1 : 2;
 
             //TODO: Style the paragraph based on the header level
-            return CreateHeader(level, RunSpanGamut(header.Trim()));
+            return CreateHeader(level, PrivateRunSpanGamut(header.Trim()));
         }
 
         private Block AtxHeaderEvaluator(Match match)
@@ -559,7 +730,7 @@ namespace MdXaml
 
             string header = match.Groups[2].Value;
             int level = match.Groups[1].Value.Length;
-            return CreateHeader(level, RunSpanGamut(header));
+            return CreateHeader(level, PrivateRunSpanGamut(header));
         }
 
         public Block CreateHeader(int level, IEnumerable<Inline> content)
@@ -705,7 +876,7 @@ namespace MdXaml
                 }
             }
 
-            return NoteComment(RunSpanGamut(text), indiAlignment);
+            return NoteComment(PrivateRunSpanGamut(text), indiAlignment);
         }
 
         public Block NoteComment(IEnumerable<Inline> content, TextAlignment? indiAlignment)
@@ -875,8 +1046,10 @@ namespace MdXaml
 
         // `alphabet order` and `roman number` must start 'a.'～'c.' and 'i,'～'iii,'.
         // This restrict is avoid to treat "Yes," as list marker.
-        private const string _firstListMaker = @"(?:[*+=-]|\d+[.]|[a-c][.]|[i]{1,3}[,]|[A-C][.]|[I]{1,3}[,])";
-        private const string _subseqListMaker = @"(?:[*+=-]|\d+[.]|[a-c][.]|[cdilmvx]+[,]|[A-C][.]|[CDILMVX]+[,])";
+        private const string _extFirstListMaker = @"(?:[*+=-]|\d+[.]|[a-c][.]|[i]{1,3}[,]|[A-C][.]|[I]{1,3}[,])";
+        private const string _extSubseqListMaker = @"(?:[*+=-]|\d+[.]|[a-c][.]|[cdilmvx]+[,]|[A-C][.]|[CDILMVX]+[,])";
+
+        private const string _commonListMaker = @"(?:[*+=-]|\d+[.]|)";
 
         //private const string _markerUL = @"[*+=-]";
         //private const string _markerOL = @"\d+[.]|\p{L}+[.,]";
@@ -911,7 +1084,8 @@ namespace MdXaml
         /// </summary>
         private const int _listDepth = 4;
 
-        private static readonly string _wholeList = string.Format(@"
+        private static readonly string _wholeListFormat = @"
+            ^
             (?<whltxt>                      # whole list
               (?<mkr_i>                     # list marker with indent
                 (?![ ]{{0,3}}(?<hrm>[-=*_])([ ]{{0,2}}\k<hrm>){{2,}})
@@ -930,20 +1104,35 @@ namespace MdXaml
                     {1}[ ]+
                   )
               )
-            )", _firstListMaker, _subseqListMaker, _listDepth - 1);
+            )";
 
         private static readonly Regex _startNoIndentRule = new Regex(@"\A[ ]{0,2}(?<hrm>[-=*_])([ ]{0,2}\k<hrm>){2,}",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex _startNoIndentSublistMarker = new Regex(@"\A" + _subseqListMaker, RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-
         private static readonly Regex _startQuoteOrHeader = new Regex(@"\A(\#{1,6}[ ]|>|```)", RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex _listNested = new Regex(@"^" + _wholeList,
+
+        private static readonly Regex _startNoIndentCommonSublistMarker = new Regex(@"\A" + _commonListMaker, RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+
+        private static readonly Regex _commonListNested = new Regex(
+            String.Format(_wholeListFormat, _commonListMaker, _commonListMaker, _listDepth - 1),
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
 
-        private IEnumerable<Block> ListEvaluator(Match match)
+        private static readonly Regex _startNoIndentExtSublistMarker = new Regex(@"\A" + _extSubseqListMaker, RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+
+        private static readonly Regex _extListNested = new Regex(
+            String.Format(_wholeListFormat, _extFirstListMaker, _extSubseqListMaker, _listDepth - 1),
+            RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+
+
+        private IEnumerable<Block> ExtListEvaluator(Match match)
+            => ListEvaluator(match, _startNoIndentExtSublistMarker);
+
+        private IEnumerable<Block> CommonListEvaluator(Match match)
+            => ListEvaluator(match, _startNoIndentCommonSublistMarker);
+
+        private IEnumerable<Block> ListEvaluator(Match match, Regex sublistMarker)
         {
             if (match is null)
             {
@@ -988,7 +1177,7 @@ namespace MdXaml
                             isInOuterList = true;
                         }
                         // is it had list marker?
-                        else if (_startNoIndentSublistMarker.IsMatch(stripedLine))
+                        else if (sublistMarker.IsMatch(stripedLine))
                         {
                             // is it same marker as now processed?
                             if (markerRegex.IsMatch(stripedLine))
@@ -1022,7 +1211,7 @@ namespace MdXaml
 
             if (outerListBuildre.Length != 0)
             {
-                foreach (var ctrl in RunBlockGamut(outerListBuildre.ToString(), true))
+                foreach (var ctrl in PrivateRunBlockGamut(outerListBuildre.ToString(), true))
                     yield return ctrl;
             }
         }
@@ -1086,11 +1275,11 @@ namespace MdXaml
 
             if (!String.IsNullOrEmpty(leadingLine) || Regex.IsMatch(item, @"\n{2,}"))
                 // we could correct any bad indentation here..
-                return Create<ListItem, Block>(RunBlockGamut(item, false));
+                return Create<ListItem, Block>(PrivateRunBlockGamut(item, false));
             else
             {
                 // recursion for sub-lists
-                return Create<ListItem, Block>(RunBlockGamut(item, false));
+                return Create<ListItem, Block>(PrivateRunBlockGamut(item, false));
             }
         }
 
@@ -1273,7 +1462,7 @@ namespace MdXaml
             {
                 TableCell cell = mdcell.Text is null ?
                     new TableCell() :
-                    new TableCell(Create<Paragraph, Inline>(RunSpanGamut(mdcell.Text)));
+                    new TableCell(Create<Paragraph, Inline>(PrivateRunSpanGamut(mdcell.Text)));
 
                 if (mdcell.Horizontal.HasValue)
                     cell.TextAlignment = mdcell.Horizontal.Value;
@@ -1328,7 +1517,6 @@ namespace MdXaml
 
         private Block CodeBlocksWithLangEvaluator(Match match)
             => CodeBlocksEvaluator(match.Groups[2].Value, match.Groups[3].Value);
-
 
         private Block CodeBlocksWithoutLangEvaluator(Match match)
         {
@@ -1509,153 +1697,136 @@ namespace MdXaml
         /// </summary>
         private IEnumerable<Inline> DoTextDecorations(string text, Func<string, IEnumerable<Inline>> defaultHandler)
         {
-            if (text is null)
+            var rtn = new List<Inline>();
+
+            var buff = new StringBuilder();
+
+            void HandleBefore()
             {
-                throw new ArgumentNullException(nameof(text));
-            }
-
-            // <strong> must go first, then <em>
-            if (StrictBoldItalic)
-            {
-                return Evaluate<Inline>(text, _strictBold, m => BoldEvaluator(m, 3),
-                    s1 => Evaluate<Inline>(s1, _strictItalic, m => ItalicEvaluator(m, 3),
-                    s2 => Evaluate<Inline>(s2, _strikethrough, m => StrikethroughEvaluator(m, 2),
-                    s3 => Evaluate<Inline>(s3, _underline, m => UnderlineEvaluator(m, 2),
-                    s4 => defaultHandler(s4)))));
-            }
-            else
-            {
-                var rtn = new List<Inline>();
-
-                var buff = new StringBuilder();
-
-                void HandleBefore()
-                {
-                    if (buff.Length > 0)
-                    {
-                        rtn.AddRange(defaultHandler(buff.ToString()));
-                        buff.Clear();
-                    }
-                }
-
-                for (var i = 0; i < text.Length; ++i)
-                {
-                    var ch = text[i];
-                    switch (ch)
-                    {
-                        default:
-                            buff.Append(ch);
-                            break;
-
-                        case '\\': // escape
-                            if (++i < text.Length)
-                            {
-                                switch (text[i])
-                                {
-                                    default:
-                                        buff.Append('\\').Append(text[i]);
-                                        break;
-
-                                    case '\\': // escape
-                                    case ':': // bold? or italic
-                                    case '*': // bold? or italic
-                                    case '~': // strikethrough?
-                                    case '_': // underline?
-                                    case '%': // color?
-                                        buff.Append(text[i]);
-                                        break;
-                                }
-                            }
-                            else
-                                buff.Append('\\');
-
-                            break;
-
-                        case ':': // emoji?
-                            {
-                                var nxtI = text.IndexOf(':', i + 1);
-                                if (nxtI != -1 && EmojiTable.TryGet(text.Substring(i + 1, nxtI - i - 1), out var emoji))
-                                {
-                                    buff.Append(emoji);
-                                    i = nxtI;
-                                }
-                                else buff.Append(':');
-                                break;
-                            }
-
-                        case '*': // bold? or italic
-                            {
-                                var oldI = i;
-                                var inline = ParseAsBoldOrItalic(text, ref i);
-                                if (inline == null)
-                                {
-                                    buff.Append(text, oldI, i - oldI + 1);
-                                }
-                                else
-                                {
-                                    HandleBefore();
-                                    rtn.Add(inline);
-                                }
-                                break;
-                            }
-
-                        case '~': // strikethrough?
-                            {
-                                var oldI = i;
-                                var inline = ParseAsStrikethrough(text, ref i);
-                                if (inline == null)
-                                {
-                                    buff.Append(text, oldI, i - oldI + 1);
-                                }
-                                else
-                                {
-                                    HandleBefore();
-                                    rtn.Add(inline);
-                                }
-                                break;
-                            }
-
-                        case '_': // underline?
-                            {
-                                var oldI = i;
-                                var inline = ParseAsUnderline(text, ref i);
-                                if (inline == null)
-                                {
-                                    buff.Append(text, oldI, i - oldI + 1);
-                                }
-                                else
-                                {
-                                    HandleBefore();
-                                    rtn.Add(inline);
-                                }
-                                break;
-                            }
-
-                        case '%': // color?
-                            {
-                                var oldI = i;
-                                var inline = ParseAsColor(text, ref i);
-                                if (inline == null)
-                                {
-                                    buff.Append(text, oldI, i - oldI + 1);
-                                }
-                                else
-                                {
-                                    HandleBefore();
-                                    rtn.Add(inline);
-                                }
-                                break;
-                            }
-                    }
-                }
-
                 if (buff.Length > 0)
                 {
                     rtn.AddRange(defaultHandler(buff.ToString()));
+                    buff.Clear();
                 }
-
-                return rtn;
             }
+
+            for (var i = 0; i < text.Length; ++i)
+            {
+                var ch = text[i];
+                switch (ch)
+                {
+                    default:
+                        buff.Append(ch);
+                        break;
+
+                    case '\\': // escape
+                        if (++i < text.Length)
+                        {
+                            switch (text[i])
+                            {
+                                default:
+                                    buff.Append('\\').Append(text[i]);
+                                    break;
+
+                                case '\\': // escape
+                                case ':': // bold? or italic
+                                case '*': // bold? or italic
+                                case '~': // strikethrough?
+                                case '_': // underline?
+                                case '%': // color?
+                                    buff.Append(text[i]);
+                                    break;
+                            }
+                        }
+                        else
+                            buff.Append('\\');
+
+                        break;
+
+                    case ':': // emoji?
+                        {
+                            var nxtI = text.IndexOf(':', i + 1);
+                            if (nxtI != -1 && EmojiTable.TryGet(text.Substring(i + 1, nxtI - i - 1), out var emoji))
+                            {
+                                buff.Append(emoji);
+                                i = nxtI;
+                            }
+                            else buff.Append(':');
+                            break;
+                        }
+
+                    case '*': // bold? or italic
+                        {
+                            var oldI = i;
+                            var inline = ParseAsBoldOrItalic(text, ref i);
+                            if (inline == null)
+                            {
+                                buff.Append(text, oldI, i - oldI + 1);
+                            }
+                            else
+                            {
+                                HandleBefore();
+                                rtn.Add(inline);
+                            }
+                            break;
+                        }
+
+                    case '~': // strikethrough?
+                        {
+                            var oldI = i;
+                            var inline = ParseAsStrikethrough(text, ref i);
+                            if (inline == null)
+                            {
+                                buff.Append(text, oldI, i - oldI + 1);
+                            }
+                            else
+                            {
+                                HandleBefore();
+                                rtn.Add(inline);
+                            }
+                            break;
+                        }
+
+                    case '_': // underline?
+                        {
+                            var oldI = i;
+                            var inline = ParseAsUnderline(text, ref i);
+                            if (inline == null)
+                            {
+                                buff.Append(text, oldI, i - oldI + 1);
+                            }
+                            else
+                            {
+                                HandleBefore();
+                                rtn.Add(inline);
+                            }
+                            break;
+                        }
+
+                    case '%': // color?
+                        {
+                            var oldI = i;
+                            var inline = ParseAsColor(text, ref i);
+                            if (inline == null)
+                            {
+                                buff.Append(text, oldI, i - oldI + 1);
+                            }
+                            else
+                            {
+                                HandleBefore();
+                                rtn.Add(inline);
+                            }
+                            break;
+                        }
+                }
+            }
+
+            if (buff.Length > 0)
+            {
+                rtn.AddRange(defaultHandler(buff.ToString()));
+            }
+
+            return rtn;
         }
 
         private Inline ParseAsUnderline(string text, ref int start)
@@ -1673,7 +1844,7 @@ namespace MdXaml
                 int end = last;
 
                 start = end + cnt - 1;
-                var span = Create<Underline, Inline>(RunSpanGamut(text.Substring(bgn, end - bgn)));
+                var span = Create<Underline, Inline>(PrivateRunSpanGamut(text.Substring(bgn, end - bgn)));
                 if (!DisabledTag)
                 {
                     span.Tag = TagUnderlineSpan;
@@ -1702,7 +1873,7 @@ namespace MdXaml
                 int end = last;
 
                 start = end + cnt - 1;
-                var span = Create<Span, Inline>(RunSpanGamut(text.Substring(bgn, end - bgn)));
+                var span = Create<Span, Inline>(PrivateRunSpanGamut(text.Substring(bgn, end - bgn)));
                 span.TextDecorations = TextDecorations.Strikethrough;
 
                 if (!DisabledTag)
@@ -1739,7 +1910,7 @@ namespace MdXaml
                         {
                             start = end + cnt - 1;
 
-                            var span = Create<Italic, Inline>(RunSpanGamut(text.Substring(bgn, end - bgn)));
+                            var span = Create<Italic, Inline>(PrivateRunSpanGamut(text.Substring(bgn, end - bgn)));
                             if (!DisabledTag)
                             {
                                 span.Tag = TagItalicSpan;
@@ -1749,7 +1920,7 @@ namespace MdXaml
                     case 2: // bold
                         {
                             start = end + cnt - 1;
-                            var span = Create<Bold, Inline>(RunSpanGamut(text.Substring(bgn, end - bgn)));
+                            var span = Create<Bold, Inline>(PrivateRunSpanGamut(text.Substring(bgn, end - bgn)));
                             if (!DisabledTag)
                             {
                                 span.Tag = TagBoldSpan;
@@ -1762,7 +1933,7 @@ namespace MdXaml
                             bgn = start + 3;
                             start = end + 3 - 1;
 
-                            var inline = Create<Italic, Inline>(RunSpanGamut(text.Substring(bgn, end - bgn)));
+                            var inline = Create<Italic, Inline>(PrivateRunSpanGamut(text.Substring(bgn, end - bgn)));
                             if (!DisabledTag)
                             {
                                 inline.Tag = TagItalicSpan;
@@ -1798,12 +1969,12 @@ namespace MdXaml
                 {
                     endIdx = text.Length - 1;
                     span = Create<Span, Inline>(
-                        RunSpanGamut(text.Substring(bgnIdx)));
+                        PrivateRunSpanGamut(text.Substring(bgnIdx)));
                 }
                 else
                 {
                     span = Create<Span, Inline>(
-                        RunSpanGamut(text.Substring(bgnIdx, endIdx - bgnIdx)));
+                        PrivateRunSpanGamut(text.Substring(bgnIdx, endIdx - bgnIdx)));
                 }
 
                 var colorLbl = mch.Groups[1].Value;
@@ -1849,15 +2020,15 @@ namespace MdXaml
         }
 
 
-        private Inline ItalicEvaluator(Match match, int contentGroup)
+        private Inline ItalicEvaluator(Match match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            var content = match.Groups[contentGroup].Value;
-            var span = Create<Italic, Inline>(RunSpanGamut(content));
+            var content = match.Groups[3].Value;
+            var span = Create<Italic, Inline>(PrivateRunSpanGamut(content));
             if (!DisabledTag)
             {
                 span.Tag = TagItalicSpan;
@@ -1865,15 +2036,15 @@ namespace MdXaml
             return span;
         }
 
-        private Inline BoldEvaluator(Match match, int contentGroup)
+        private Inline BoldEvaluator(Match match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            var content = match.Groups[contentGroup].Value;
-            var span = Create<Bold, Inline>(RunSpanGamut(content));
+            var content = match.Groups[3].Value;
+            var span = Create<Bold, Inline>(PrivateRunSpanGamut(content));
             if (!DisabledTag)
             {
                 span.Tag = TagBoldSpan;
@@ -1881,16 +2052,16 @@ namespace MdXaml
             return span;
         }
 
-        private Inline StrikethroughEvaluator(Match match, int contentGroup)
+        private Inline StrikethroughEvaluator(Match match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            var content = match.Groups[contentGroup].Value;
+            var content = match.Groups[2].Value;
 
-            var span = Create<Span, Inline>(RunSpanGamut(content));
+            var span = Create<Span, Inline>(PrivateRunSpanGamut(content));
             span.TextDecorations = TextDecorations.Strikethrough;
             if (!DisabledTag)
             {
@@ -1899,15 +2070,15 @@ namespace MdXaml
             return span;
         }
 
-        private Inline UnderlineEvaluator(Match match, int contentGroup)
+        private Inline UnderlineEvaluator(Match match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            var content = match.Groups[contentGroup].Value;
-            var span = Create<Underline, Inline>(RunSpanGamut(content));
+            var content = match.Groups[2].Value;
+            var span = Create<Underline, Inline>(PrivateRunSpanGamut(content));
             if (!DisabledTag)
             {
                 span.Tag = TagUnderlineSpan;
@@ -1996,7 +2167,7 @@ namespace MdXaml
                         .ToArray()
             );
 
-            var blocks = RunBlockGamut(TextUtil.Normalize(trimmedTxt), true);
+            var blocks = PrivateRunBlockGamut(TextUtil.Normalize(trimmedTxt), true);
             var result = Create<Section, Block>(blocks);
             if (BlockquoteStyle != null)
             {
@@ -2213,4 +2384,38 @@ namespace MdXaml
 
         #endregion
     }
+
+    internal class ParseParam
+    {
+        public IBlockParser[] PrimaryBlocks { get; }
+        public IBlockParser[] SecondlyBlocks { get; }
+        public IInlineParser[] Inlines { get; }
+
+        public ParseParam(
+            IEnumerable<IBlockParser> primary,
+            IEnumerable<IBlockParser> secondly,
+            IEnumerable<IInlineParser> inlines)
+        {
+
+            PrimaryBlocks = primary.ToArray();
+            SecondlyBlocks = secondly.ToArray();
+            Inlines = inlines.ToArray();
+        }
+    }
+
+    internal struct Candidate : IComparable<Candidate>
+    {
+        public Match Match { get; }
+        public IBlockParser Parser { get; }
+
+        public Candidate(Match result, IBlockParser parser)
+        {
+            Match = result;
+            Parser = parser;
+        }
+
+        public int CompareTo(Candidate other)
+            => Match.Index.CompareTo(other.Match.Index);
+    }
+
 }

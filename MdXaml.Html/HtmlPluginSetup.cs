@@ -2,18 +2,14 @@
 {
     public class HtmlPluginSetup : IPluginSetup
     {
-        private HtmlPlugin _plugin = new HtmlPlugin();
+        private HtmlBlockParser _block = new HtmlBlockParser();
+        private HtmlInlineParser _inline = new HtmlInlineParser();
 
-        public void Install(MdXamlPlugins plugins)
+        public void Setup(MdXamlPlugins plugins)
         {
-            plugins.Block.Add(_plugin);
-            plugins.Inline.Add(_plugin);
-        }
-
-        public void UnInstall(MdXamlPlugins plugins)
-        {
-            plugins.Block.Remove(_plugin);
-            plugins.Inline.Remove(_plugin);
+            plugins.Syntax.EnableNoteBlock = false;
+            plugins.TopBlock.Add(_block);
+            plugins.Inline.Add(_inline);
         }
     }
 }

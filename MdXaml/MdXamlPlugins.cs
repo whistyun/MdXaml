@@ -6,6 +6,12 @@ using System.Windows.Documents;
 using System.Windows.Markup;
 
 #if MIG_FREE
+using Markdown.Xaml.Plugins;
+#else
+using MdXaml.Plugins;
+#endif
+
+#if MIG_FREE
 namespace Markdown.Xaml
 #else
 namespace MdXaml
@@ -14,44 +20,31 @@ namespace MdXaml
     [ContentProperty(nameof(Setups))]
     public class MdXamlPlugins
     {
+        public static readonly MdXamlPlugins Default = new MdXamlPlugins();
+
+        public SyntaxManager Syntax { get; }
+
         public ObservableCollection<IPluginSetup> Setups { get; }
-        public ObservableCollection<IBlockParserPlugin> Block { get; }
-        public ObservableCollection<IRunParserPlugin> Inline { get; }
+        public ObservableCollection<IBlockParser> TopBlock { get; }
+        public ObservableCollection<IBlockParser> Block { get; }
+        public ObservableCollection<IInlineParser> Inline { get; }
 
         public MdXamlPlugins()
         {
+            Syntax = new SyntaxManager();
             Setups = new ObservableCollection<IPluginSetup>();
-            Block = new ObservableCollection<IBlockParserPlugin>();
-            Inline = new ObservableCollection<IRunParserPlugin>();
+            TopBlock = new ObservableCollection<IBlockParser>();
+            Block = new ObservableCollection<IBlockParser>();
+            Inline = new ObservableCollection<IInlineParser>();
 
             Setups.CollectionChanged += Setups_CollectionChanged;
         }
 
         private void Setups_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (!(e.OldItems is null))
-                foreach (var removedItem in e.OldItems)
-                    ((IPluginSetup)removedItem).UnInstall(this);
-
             if (!(e.NewItems is null))
                 foreach (var addedItem in e.NewItems)
-                    ((IPluginSetup)addedItem).Install(this);
+                    ((IPluginSetup)addedItem).Setup(this);
         }
-    }
-
-    public interface IPluginSetup
-    {
-        void Install(MdXamlPlugins plugins);
-        void UnInstall(MdXamlPlugins plugins);
-    }
-
-    public interface IBlockParserPlugin
-    {
-        IEnumerable<Block> Parse(string text, Func<string, IEnumerable<Block>> defaultHandler);
-    }
-
-    public interface IRunParserPlugin
-    {
-        IEnumerable<Inline> Parse(string text, Func<string, IEnumerable<Inline>> defaultHandler);
     }
 }

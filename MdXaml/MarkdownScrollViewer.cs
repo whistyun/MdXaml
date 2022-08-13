@@ -135,6 +135,7 @@ namespace MdXaml
                     _engine.DocumentStyle = MarkdownStyle;
 
                 UpdateClickAction();
+                UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
             }
             get => _engine;
         }
@@ -162,7 +163,7 @@ namespace MdXaml
             set
             {
                 _plugins = value;
-                UpdatePlugin();
+                UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
             }
             get
             {
@@ -270,6 +271,7 @@ namespace MdXaml
             {
                 _clickAction = value;
                 UpdateClickAction();
+                UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
             }
         }
 
@@ -294,13 +296,6 @@ namespace MdXaml
                     Engine.HyperlinkCommand = new DiaplayCommand(this, false);
                     break;
             }
-
-            UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
-        }
-
-        private void UpdatePlugin()
-        {
-            UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
         }
 
         internal void Open(Uri source, bool updateSourceProperty)

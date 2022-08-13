@@ -1,17 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<LangVersion>9</LangVersion>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\MdXaml\MdXaml\MdXaml.csproj" />
-    <ProjectReference Include="..\externals\HtmlXaml.Core\HtmlXaml.Core\HtmlXaml.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\MdXaml\MdXaml\MdXaml.csproj" />
+		<ProjectReference Include="..\externals\HtmlXaml.Core\HtmlXaml.Core\HtmlXaml.Core.csproj" />
+	</ItemGroup>
 
 </Project>
