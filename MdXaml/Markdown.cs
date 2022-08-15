@@ -273,7 +273,7 @@ namespace MdXaml
                 foreach (var c in candidates)
                 {
                     result = c.Parser.Parse(text, c.Match, supportTextAlignment, out bestBegin, out bestEnd);
-                    if (result != null) break;
+                    if (result is not null) break;
                 }
 
                 if (result is null) break;
@@ -397,11 +397,6 @@ namespace MdXaml
         /// </summary>
         private IEnumerable<Block> FormParagraphs(string text, bool supportTextAlignment)
         {
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
             var trimemdText = _newlinesLeadingTrailing.Replace(text, "");
 
             string[] grafs = trimemdText == "" ?
@@ -436,7 +431,7 @@ namespace MdXaml
                 }
 
                 var block = Create<Paragraph, Inline>(PrivateRunSpanGamut(chip));
-                if (NormalParagraphStyle != null)
+                if (NormalParagraphStyle is not null)
                 {
                     block.Style = NormalParagraphStyle;
                 }
@@ -507,11 +502,6 @@ namespace MdXaml
 
         private Inline ImageOrHrefInlineEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             if (String.IsNullOrEmpty(match.Groups[2].Value))
             {
                 return TreatsAsHref(match);
@@ -524,11 +514,6 @@ namespace MdXaml
 
         private Inline TreatsAsHref(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             string linkText = match.Groups[3].Value;
             string url = match.Groups[4].Value;
             string title = match.Groups[7].Value;
@@ -544,7 +529,7 @@ namespace MdXaml
                     String.Format("\"{0}\"\r\n{1}", title, url);
             }
 
-            if (LinkStyle != null)
+            if (LinkStyle is not null)
             {
                 result.Style = LinkStyle;
             }
@@ -564,7 +549,7 @@ namespace MdXaml
             try
             {
                 Uri packUri;
-                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && BaseUri != null)
+                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && BaseUri is not null)
                 {
                     packUri = new Uri(BaseUri, url);
                 }
@@ -584,7 +569,7 @@ namespace MdXaml
                 {
                     Uri imgUri;
 
-                    if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !System.IO.Path.IsPathRooted(url) && AssetPathRoot != null)
+                    if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !System.IO.Path.IsPathRooted(url) && AssetPathRoot is not null)
                     {
                         if (Uri.IsWellFormedUriString(AssetPathRoot, UriKind.Absolute))
                         {
@@ -723,11 +708,6 @@ namespace MdXaml
         /// </remarks>
         private Block SetextHeaderEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             string header = match.Groups[1].Value;
             int level = match.Groups[2].Value.StartsWith("=") ? 1 : 2;
 
@@ -737,11 +717,6 @@ namespace MdXaml
 
         private Block AtxHeaderEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             string header = match.Groups[2].Value;
             int level = match.Groups[1].Value.Length;
             return CreateHeader(level, PrivateRunSpanGamut(header));
@@ -749,17 +724,12 @@ namespace MdXaml
 
         public Block CreateHeader(int level, IEnumerable<Inline> content)
         {
-            if (content is null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
             var block = Create<Paragraph, Inline>(content);
 
             switch (level)
             {
                 case 1:
-                    if (Heading1Style != null)
+                    if (Heading1Style is not null)
                     {
                         block.Style = Heading1Style;
                     }
@@ -770,7 +740,7 @@ namespace MdXaml
                     break;
 
                 case 2:
-                    if (Heading2Style != null)
+                    if (Heading2Style is not null)
                     {
                         block.Style = Heading2Style;
                     }
@@ -781,7 +751,7 @@ namespace MdXaml
                     break;
 
                 case 3:
-                    if (Heading3Style != null)
+                    if (Heading3Style is not null)
                     {
                         block.Style = Heading3Style;
                     }
@@ -792,7 +762,7 @@ namespace MdXaml
                     break;
 
                 case 4:
-                    if (Heading4Style != null)
+                    if (Heading4Style is not null)
                     {
                         block.Style = Heading4Style;
                     }
@@ -803,7 +773,7 @@ namespace MdXaml
                     break;
 
                 case 5:
-                    if (Heading5Style != null)
+                    if (Heading5Style is not null)
                     {
                         block.Style = Heading5Style;
                     }
@@ -814,7 +784,7 @@ namespace MdXaml
                     break;
 
                 case 6:
-                    if (Heading6Style != null)
+                    if (Heading6Style is not null)
                     {
                         block.Style = Heading6Style;
                     }
@@ -847,11 +817,6 @@ namespace MdXaml
         /// </remarks>
         private Block NoteEvaluator(Match match, bool supportTextAlignment)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             string text = match.Groups[2].Value;
 
             TextAlignment? indiAlignment = null;
@@ -882,13 +847,8 @@ namespace MdXaml
 
         public Block NoteComment(IEnumerable<Inline> content, TextAlignment? indiAlignment)
         {
-            if (content is null)
-            {
-                throw new ArgumentNullException(nameof(content));
-            }
-
             var block = Create<Paragraph, Inline>(content);
-            if (NoteStyle != null)
+            if (NoteStyle is not null)
             {
                 block.Style = NoteStyle;
             }
@@ -929,18 +889,13 @@ namespace MdXaml
         /// </remarks>
         private Block RuleEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             switch (match.Groups[1].Value)
             {
                 default:
                 case "-":
                     {
                         var sep = new Separator();
-                        if (SeparatorStyle != null)
+                        if (SeparatorStyle is not null)
                             sep.Style = SeparatorStyle;
 
                         var container = new BlockUIContainer(sep);
@@ -957,7 +912,7 @@ namespace MdXaml
                         for (int i = 0; i < 2; i++)
                         {
                             var sep = new Separator();
-                            if (SeparatorStyle != null)
+                            if (SeparatorStyle is not null)
                                 sep.Style = SeparatorStyle;
 
                             stackPanel.Children.Add(sep);
@@ -981,7 +936,7 @@ namespace MdXaml
                                 Margin = new Thickness(0)
                             };
 
-                            if (SeparatorStyle != null)
+                            if (SeparatorStyle is not null)
                                 sep.Style = SeparatorStyle;
 
                             stackPanel.Children.Add(sep);
@@ -1005,14 +960,14 @@ namespace MdXaml
                                 Margin = new Thickness(0)
                             };
 
-                            if (SeparatorStyle != null)
+                            if (SeparatorStyle is not null)
                                 sep.Style = SeparatorStyle;
 
                             stackPanel.Children.Add(sep);
                         }
 
                         var sepLst = new Separator();
-                        if (SeparatorStyle != null)
+                        if (SeparatorStyle is not null)
                             sepLst.Style = SeparatorStyle;
 
                         stackPanel.Children.Add(sepLst);
@@ -1122,11 +1077,6 @@ namespace MdXaml
 
         private IEnumerable<Block> ListEvaluator(Match match, Regex sublistMarker)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             // Check text marker style.
             var markerDetect = GetTextMarkerStyle(match.Groups["mkr"].Value);
             TextMarkerStyle textMarker = markerDetect.Item1;
@@ -1253,11 +1203,6 @@ namespace MdXaml
 
         private ListItem ListItemEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             string item = match.Groups[4].Value;
             string leadingLine = match.Groups[1].Value;
 
@@ -1348,11 +1293,6 @@ namespace MdXaml
 
         private Block TableEvalutor(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             var headerTxt = match.Groups["hdr"].Value.Trim();
             var styleTxt = match.Groups["col"].Value.Trim();
             var rowTxt = match.Groups["row"].Value.Trim();
@@ -1382,7 +1322,7 @@ namespace MdXaml
 
             // table
             var table = new Table();
-            if (TableStyle != null)
+            if (TableStyle is not null)
             {
                 table.Style = TableStyle;
             }
@@ -1393,7 +1333,7 @@ namespace MdXaml
 
             // table header
             var tableHeaderRG = new TableRowGroup();
-            if (TableHeaderStyle != null)
+            if (TableHeaderStyle is not null)
             {
                 tableHeaderRG.Style = TableHeaderStyle;
             }
@@ -1408,7 +1348,7 @@ namespace MdXaml
 
             // row
             var tableBodyRG = new TableRowGroup();
-            if (TableBodyStyle != null)
+            if (TableBodyStyle is not null)
             {
                 tableBodyRG.Style = TableBodyStyle;
             }
@@ -1496,7 +1436,7 @@ namespace MdXaml
         {
             var text = new Run(code);
             var result = new Paragraph(text);
-            if (CodeBlockStyle != null)
+            if (CodeBlockStyle is not null)
             {
                 result.Style = CodeBlockStyle;
             }
@@ -1568,7 +1508,7 @@ namespace MdXaml
 
 
             var result = new BlockUIContainer(txtEdit);
-            if (CodeBlockStyle != null)
+            if (CodeBlockStyle is not null)
             {
                 result.Style = CodeBlockStyle;
             }
@@ -1621,17 +1561,12 @@ namespace MdXaml
         /// </summary>
         private Inline CodeSpanEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             string span = match.Groups[2].Value;
             span = Regex.Replace(span, @"^[ ]*", ""); // leading whitespace
             span = Regex.Replace(span, @"[ ]*$", ""); // trailing whitespace
 
             var result = new Run(span);
-            if (CodeStyle != null)
+            if (CodeStyle is not null)
             {
                 result.Style = CodeStyle;
             }
@@ -1726,7 +1661,7 @@ namespace MdXaml
                         {
                             var oldI = i;
                             var inline = ParseAsBoldOrItalic(text, ref i);
-                            if (inline == null)
+                            if (inline is null)
                             {
                                 buff.Append(text, oldI, i - oldI + 1);
                             }
@@ -1742,7 +1677,7 @@ namespace MdXaml
                         {
                             var oldI = i;
                             var inline = ParseAsStrikethrough(text, ref i);
-                            if (inline == null)
+                            if (inline is null)
                             {
                                 buff.Append(text, oldI, i - oldI + 1);
                             }
@@ -1758,7 +1693,7 @@ namespace MdXaml
                         {
                             var oldI = i;
                             var inline = ParseAsUnderline(text, ref i);
-                            if (inline == null)
+                            if (inline is null)
                             {
                                 buff.Append(text, oldI, i - oldI + 1);
                             }
@@ -1774,7 +1709,7 @@ namespace MdXaml
                         {
                             var oldI = i;
                             var inline = ParseAsColor(text, ref i);
-                            if (inline == null)
+                            if (inline is null)
                             {
                                 buff.Append(text, oldI, i - oldI + 1);
                             }
@@ -1989,11 +1924,6 @@ namespace MdXaml
 
         private Inline ItalicEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             var content = match.Groups[3].Value;
             var span = Create<Italic, Inline>(PrivateRunSpanGamut(content));
             if (!DisabledTag)
@@ -2005,11 +1935,6 @@ namespace MdXaml
 
         private Inline BoldEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             var content = match.Groups[3].Value;
             var span = Create<Bold, Inline>(PrivateRunSpanGamut(content));
             if (!DisabledTag)
@@ -2021,11 +1946,6 @@ namespace MdXaml
 
         private Inline StrikethroughEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             var content = match.Groups[2].Value;
 
             var span = Create<Span, Inline>(PrivateRunSpanGamut(content));
@@ -2039,11 +1959,6 @@ namespace MdXaml
 
         private Inline UnderlineEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             var content = match.Groups[2].Value;
             var span = Create<Underline, Inline>(PrivateRunSpanGamut(content));
             if (!DisabledTag)
@@ -2063,11 +1978,6 @@ namespace MdXaml
 
         public static IEnumerable<Inline> DoText(string text)
         {
-            if (text is null)
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
-
             var lines = _lbrk.Split(text);
             bool first = true;
             foreach (var line in lines)
@@ -2094,11 +2004,6 @@ namespace MdXaml
 
         private Section BlockquotesEvaluator(Match match)
         {
-            if (match is null)
-            {
-                throw new ArgumentNullException(nameof(match));
-            }
-
             // trim '>'
             var trimmedTxt = string.Join(
                     "\n",
@@ -2115,7 +2020,7 @@ namespace MdXaml
 
             var blocks = PrivateRunBlockGamut(TextUtil.Normalize(trimmedTxt), true);
             var result = Create<Section, Block>(blocks);
-            if (BlockquoteStyle != null)
+            if (BlockquoteStyle is not null)
             {
                 result.Style = BlockquoteStyle;
             }

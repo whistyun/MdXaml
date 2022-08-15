@@ -21,7 +21,7 @@ namespace MdXaml
     [ContentProperty(nameof(Setups))]
     public class MdXamlPlugins
     {
-        public static readonly MdXamlPlugins Default = new MdXamlPlugins();
+        public static readonly MdXamlPlugins Default = new();
 
         public SyntaxManager Syntax { get; }
 
