@@ -16,7 +16,7 @@ namespace MdXaml.Ext
     {
         public Color Base { get; }
         public string Foreground { get; }
-        public Type TargetType { set; get; }
+        public Type? TargetType { set; get; }
 
         public BrightnessExtension(Color @base, string foreground)
         {

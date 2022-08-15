@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -13,11 +14,11 @@ namespace MdXaml
 {
     public static class EmojiTable
     {
-        private static ConcurrentDictionary<String, String> keywords;
+        private static ConcurrentDictionary<String, String>? s_keywords;
 
         static EmojiTable()
         {
-            LoadTxt();
+            s_keywords = LoadTxt();
         }
 
 
@@ -26,32 +27,41 @@ namespace MdXaml
             When you open MarkdownStyle from Xaml Designer,
             A null error occurs. Perhaps static constructor is not executed.         
         */
-        static void LoadTxt()
+        static ConcurrentDictionary<String, String> LoadTxt()
         {
 #if MIG_FREE
             var resourceName = "Markdown.Xaml.EmojiTable.txt";
 #else
             var resourceName = "MdXaml.EmojiTable.txt";
 #endif
-            keywords = new ConcurrentDictionary<string, string>();
+            var dic = new ConcurrentDictionary<string, string>();
 
             Assembly asm = Assembly.GetCallingAssembly();
-            using (var stream = asm.GetManifestResourceStream(resourceName))
-            using (var reader = new StreamReader(stream, true))
+            using var stream = asm.GetManifestResourceStream(resourceName);
+            if (stream is null)
+                throw new InvalidOperationException($"fail to load '{resourceName}'");
+
+            using var reader = new StreamReader(stream, true);
+
+            string? line;
+            while ((line = reader.ReadLine()) != null)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    var elms = line.Split('\t');
-                    keywords[elms[1]] = elms[0];
-                }
+                var elms = line.Split('\t');
+                dic[elms[1]] = elms[0];
             }
+
+            return dic;
         }
 
-        public static bool TryGet(string keyword, out string emoji)
+        public static bool TryGet(
+            string keyword,
+#if !NETFRAMEWORK
+            [MaybeNullWhen(false)]
+#endif
+            out string emoji)
         {
-            if (keywords is null) LoadTxt();
-            return keywords.TryGetValue(keyword, out emoji);
+            if (s_keywords is null) s_keywords = LoadTxt();
+            return s_keywords.TryGetValue(keyword, out emoji);
         }
 
     }

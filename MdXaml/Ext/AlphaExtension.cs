@@ -12,25 +12,25 @@ namespace MdXaml.Ext
 {
     class AlphaExtension : MarkupExtension
     {
-        private readonly string key;
-        private readonly float power;
+        private readonly string _key;
+        private readonly float _power;
 
-        public Type TargetType { set; get; }
+        public Type? TargetType { set; get; }
 
         public AlphaExtension(string key) : this(key, 1f) { }
 
         public AlphaExtension(string key, float power)
         {
-            this.key = key;
-            this.power = power;
+            this._key = key;
+            this._power = power;
         }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            return new Binding(key)
+            return new Binding(_key)
             {
                 RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = TargetType },
-                Converter = new AlphaConverter(power)
+                Converter = new AlphaConverter(_power)
             };
         }
 

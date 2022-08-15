@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using System.Windows.Documents;
 using System.Windows.Markup;
@@ -40,11 +41,11 @@ namespace MdXaml
             Setups.CollectionChanged += Setups_CollectionChanged;
         }
 
-        private void Setups_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Setups_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            if (!(e.NewItems is null))
-                foreach (var addedItem in e.NewItems)
-                    ((IPluginSetup)addedItem).Setup(this);
+            if (e.NewItems is not null)
+                foreach (var addedItem in e.NewItems.Cast<IPluginSetup>())
+                    addedItem.Setup(this);
         }
     }
 }

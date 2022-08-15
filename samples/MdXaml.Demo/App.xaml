@@ -7,8 +7,10 @@
              StartupUri="MainWindow.xaml">
 
     <Application.Resources>
+        <!--
         <mdxam:MdXamlPlugins x:Key="MdXamlPlugins">
             <mdhtml:HtmlPluginSetup/>
         </mdxam:MdXamlPlugins>
+        -->
     </Application.Resources>
 </Application>

@@ -101,7 +101,7 @@ namespace MdXaml
                 var prop = typeof(MarkdownStyle).GetProperty(newName);
                 if (prop == null) return;
 
-                owner.MarkdownStyle = (Style)prop.GetValue(null);
+                owner.MarkdownStyle = (Style?)prop.GetValue(null);
             }
         }
 
@@ -140,8 +140,8 @@ namespace MdXaml
             get => _engine;
         }
 
-        private Uri _baseUri;
-        public Uri BaseUri
+        private Uri? _baseUri;
+        public Uri? BaseUri
         {
             set
             {
@@ -157,8 +157,8 @@ namespace MdXaml
             get => (string)GetValue(AssetPathRootProperty);
         }
 
-        private MdXamlPlugins _plugins;
-        public MdXamlPlugins Plugins
+        private MdXamlPlugins? _plugins;
+        public MdXamlPlugins? Plugins
         {
             set
             {
@@ -167,7 +167,7 @@ namespace MdXaml
             }
             get
             {
-                if (!(_plugins is null))
+                if (_plugins is not null)
                     return _plugins;
 
                 // load from application.resource
@@ -245,7 +245,7 @@ namespace MdXaml
             set { SetValue(MarkdownProperty, value); }
         }
 
-        public Style MarkdownStyle
+        public Style? MarkdownStyle
         {
             get { return (Style)GetValue(MarkdownStyleProperty); }
             set { SetValue(MarkdownStyleProperty, value); }
@@ -257,7 +257,7 @@ namespace MdXaml
             set { SetValue(MarkdownStyleNameProperty, value); }
         }
 
-        public Uri Source
+        public Uri? Source
         {
             get { return (Uri)GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
@@ -277,7 +277,18 @@ namespace MdXaml
 
         public MarkdownScrollViewer()
         {
-            Engine = new Markdown();
+            _engine = new Markdown();
+
+            if (BaseUri != null)
+                _engine.BaseUri = BaseUri;
+
+            if (AssetPathRoot != null)
+                _engine.AssetPathRoot = AssetPathRoot;
+
+            if (MarkdownStyle != null)
+                _engine.DocumentStyle = MarkdownStyle;
+
+            UpdateClickAction();
         }
 
         private void UpdateClickAction()
@@ -356,6 +367,10 @@ namespace MdXaml
             {
                 sucess = TryOpen(source);
             }
+            else if (BaseUri is null)
+            {
+                Debug.WriteLine($"Failed to open markdown from relative path '{source}': BaseUri is null");
+            }
             else if (!(sucess = TryOpen(new Uri(BaseUri, source))))
             {
                 if (Uri.IsWellFormedUriString(AssetPathRoot, UriKind.Absolute))
@@ -368,6 +383,10 @@ namespace MdXaml
                     var assetPath = Path.Combine(AssetPathRoot, source.LocalPath);
                     sucess = TryOpen(new Uri(assetPath));
                 }
+            }
+            else
+            {
+                Debug.WriteLine($"Failed to open markdown from relative path '{source}': not found");
             }
         }
     }

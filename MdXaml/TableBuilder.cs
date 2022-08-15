@@ -55,7 +55,7 @@ namespace MdXaml
                                 Tuple.Create(idx, (TextAlignment?)null);
                     })
                     .Where(tpl => tpl.Item2.HasValue)
-                    .ToDictionary(tpl => tpl.Item1, tpl => tpl.Item2.Value);
+                    .ToDictionary(tpl => tpl.Item1, tpl => tpl.Item2!.Value);
 
             var styleColumnCount = styleMt.Count;
 
@@ -223,14 +223,14 @@ namespace MdXaml
 
     class MdTableCell
     {
-        public string RawText { get; }
-        public string Text { get; }
+        public string? RawText { get; }
+        public string? Text { get; }
         public int RowSpan { set; get; }
         public int ColSpan { set; get; }
         public TextAlignment? Horizontal { set; get; }
         public VerticalAlignment? Vertical { set; get; }
 
-        public MdTableCell(string txt)
+        public MdTableCell(string? txt)
         {
             RawText = txt;
             RowSpan = 1;

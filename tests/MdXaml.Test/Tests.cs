@@ -32,8 +32,8 @@ namespace Markdown.Xaml.Test
 #endif
         }
 
-        string assetPath;
-        Uri baseUri;
+        readonly string assetPath;
+        readonly Uri baseUri;
 
 
         public Tests()
@@ -62,8 +62,10 @@ namespace Markdown.Xaml.Test
         public void Transform_givenTest2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Test1.md");
-            var markdown = new Markdown();
-            markdown.DisabledTag = true;
+            var markdown = new Markdown()
+            {
+                DisabledTag = true,
+            };
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -103,8 +105,10 @@ namespace Markdown.Xaml.Test
         public void Transform_givenTables2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Tables.md");
-            var markdown = new Markdown();
-            markdown.DisabledTag = true;
+            var markdown = new Markdown()
+            {
+                DisabledTag = true
+            };
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -124,8 +128,10 @@ namespace Markdown.Xaml.Test
         public void Transform_givenLinksInline1_generatesExpectedResult()
         {
             var text = Utils.LoadText("Links_inline_style.md");
-            var markdown = new Markdown();
-            markdown.BaseUri = baseUri;
+            var markdown = new Markdown()
+            {
+                BaseUri = baseUri
+            };
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -135,9 +141,11 @@ namespace Markdown.Xaml.Test
         public void Transform_givenLinksInline2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Links_inline_style.md");
-            var markdown = new Markdown();
-            markdown.BaseUri = baseUri;
-            markdown.DisabledTootip = true;
+            var markdown = new Markdown()
+            {
+                BaseUri = baseUri,
+                DisabledTootip = true,
+            };
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -157,9 +165,11 @@ namespace Markdown.Xaml.Test
         public void Transform_givenImages1_generatesExpectedResult()
         {
             var text = Utils.LoadText("Images.md");
-            var markdown = new Markdown();
-            markdown.AssetPathRoot = assetPath;
-            markdown.BaseUri = baseUri;
+            var markdown = new Markdown()
+            {
+                AssetPathRoot = assetPath,
+                BaseUri = baseUri,
+            };
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -178,10 +188,12 @@ namespace Markdown.Xaml.Test
         public void Transform_givenImages2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Images.md");
-            var markdown = new Markdown();
-            markdown.DisabledLazyLoad = true;
-            markdown.AssetPathRoot = assetPath;
-            markdown.BaseUri = baseUri;
+            var markdown = new Markdown()
+            {
+                DisabledLazyLoad = true,
+                AssetPathRoot = assetPath,
+                BaseUri = baseUri,
+            };
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -200,10 +212,12 @@ namespace Markdown.Xaml.Test
         public void Transform_givenImages3_generatesExpectedResult()
         {
             var text = Utils.LoadText("Images.md");
-            var markdown = new Markdown();
-            markdown.DisabledTootip = true;
-            markdown.AssetPathRoot = assetPath;
-            markdown.BaseUri = baseUri;
+            var markdown = new Markdown()
+            {
+                DisabledTootip = true,
+                AssetPathRoot = assetPath,
+                BaseUri = baseUri,
+            };
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -233,9 +247,11 @@ namespace Markdown.Xaml.Test
         public void Transform_givenMixing_generatesExpectedResult()
         {
             var text = Utils.LoadText("Mixing.md");
-            var markdown = new Markdown();
-            markdown.AssetPathRoot = assetPath;
-            markdown.BaseUri = baseUri;
+            var markdown = new Markdown()
+            {
+                AssetPathRoot = assetPath,
+                BaseUri = baseUri,
+            };
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -255,8 +271,10 @@ namespace Markdown.Xaml.Test
         {
             var resources = (ResourceDictionary)XamlReader.Parse(Utils.LoadText("IndentTest.xaml"));
 
-            var markdownViewer = new MarkdownScrollViewer();
-            markdownViewer.MarkdownStyle = null;
+            var markdownViewer = new MarkdownScrollViewer()
+            {
+                MarkdownStyle = null,
+            };
 
             foreach (var idx in Enumerable.Range(1, 4))
             {
@@ -272,8 +290,10 @@ namespace Markdown.Xaml.Test
         public void Transform_givenCodes_generatesExpectedResult()
         {
             var text = Utils.LoadText("Codes.md");
-            var markdown = new Markdown();
-            markdown.AssetPathRoot = assetPath;
+            var markdown = new Markdown()
+            {
+                AssetPathRoot = assetPath
+            };
 
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
@@ -284,9 +304,11 @@ namespace Markdown.Xaml.Test
         public void Transform_givenEmoji()
         {
             var text = Utils.LoadText("Emoji.md");
-            var markdown = new Markdown();
-            markdown.AssetPathRoot = assetPath;
-            markdown.BaseUri = baseUri;
+            var markdown = new Markdown()
+            {
+                AssetPathRoot = assetPath,
+                BaseUri = baseUri,
+            };
 
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -31,7 +32,7 @@ namespace MdXaml.Ext
         /// <summary>
         /// The source of Foreground.
         /// </summary>
-        public Type TargetType { set; get; }
+        public Type? TargetType { set; get; }
 
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
@@ -55,9 +56,9 @@ namespace MdXaml.Ext
 
         class SyntaxHighlightWrapperConverter : IMultiValueConverter
         {
-            public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+            public object? Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
             {
-                string codeLang = values[1] is string l ? l : null;
+                string? codeLang = values[1] is string l ? l : null;
 
                 if (String.IsNullOrEmpty(codeLang))
                     return null;
@@ -90,18 +91,18 @@ namespace MdXaml.Ext
         IHighlightingDefinition baseDef;
         Color foreColor;
 
-        Dictionary<HighlightingRuleSet, HighlightingRuleSet> Converted;
-        Dictionary<string, HighlightingRuleSet> NamedRuleSet;
-        Dictionary<string, HighlightingColor> NamedColors;
+        private Dictionary<HighlightingRuleSet, HighlightingRuleSet> _converted;
+        private Dictionary<string, HighlightingRuleSet> _namedRuleSet;
+        private Dictionary<string, HighlightingColor> _namedColors;
 
         public HighlightWrapper(IHighlightingDefinition baseDef, Color foreColor)
         {
             this.baseDef = baseDef;
             this.foreColor = foreColor;
 
-            Converted = new Dictionary<HighlightingRuleSet, HighlightingRuleSet>();
-            NamedRuleSet = new Dictionary<string, HighlightingRuleSet>();
-            NamedColors = new Dictionary<string, HighlightingColor>();
+            _converted = new Dictionary<HighlightingRuleSet, HighlightingRuleSet>();
+            _namedRuleSet = new Dictionary<string, HighlightingRuleSet>();
+            _namedColors = new Dictionary<string, HighlightingColor>();
 
             foreach (var color in baseDef.NamedHighlightingColors)
             {
@@ -110,44 +111,47 @@ namespace MdXaml.Ext
                 var newCol = color.Clone();
                 newCol.Foreground = color.Foreground is null ?
                     null : new MixHighlightingBrush(color.Foreground, foreColor);
-                NamedColors[name] = newCol;
+                _namedColors[name] = newCol;
             }
 
             MainRuleSet = Wrap(baseDef.MainRuleSet);
         }
 
         public string Name => "Re:" + baseDef.Name;
-        public HighlightingRuleSet MainRuleSet { get; }
-        public IEnumerable<HighlightingColor> NamedHighlightingColors => NamedColors.Values;
+        public HighlightingRuleSet? MainRuleSet { get; }
+        public IEnumerable<HighlightingColor> NamedHighlightingColors => _namedColors.Values;
         public IDictionary<string, string> Properties => baseDef.Properties;
 
-        public HighlightingColor GetNamedColor(string name)
+        public HighlightingColor? GetNamedColor(string name)
         {
-            return NamedColors.TryGetValue(name, out var color) ? color : null;
+            return _namedColors.TryGetValue(name, out var color) ? color : null;
         }
 
-        public HighlightingRuleSet GetNamedRuleSet(string name)
+        public HighlightingRuleSet? GetNamedRuleSet(string name)
         {
-            return NamedRuleSet.TryGetValue(name, out var rset) ? rset : null;
+            return _namedRuleSet.TryGetValue(name, out var rset) ? rset : null;
         }
 
-        private HighlightingRuleSet Wrap(HighlightingRuleSet ruleSet)
+#if !NETFRAMEWORK
+        [return: NotNullIfNotNull("ruleSet")]
+#endif
+        private HighlightingRuleSet? Wrap(HighlightingRuleSet? ruleSet)
         {
             if (ruleSet is null) return null;
 
             if (!String.IsNullOrEmpty(ruleSet.Name)
-                && NamedRuleSet.TryGetValue(ruleSet.Name, out var cachedRule))
+                && _namedRuleSet.TryGetValue(ruleSet.Name, out var cachedRule))
                 return cachedRule;
 
-            if (Converted.TryGetValue(ruleSet, out var cachedRule2))
+            if (_converted.TryGetValue(ruleSet, out var cachedRule2))
                 return cachedRule2;
 
             var copySet = new HighlightingRuleSet();
             copySet.Name = ruleSet.Name;
 
-            Converted[ruleSet] = copySet;
+            _converted[ruleSet] = copySet;
             if (!String.IsNullOrEmpty(copySet.Name))
-                NamedRuleSet[copySet.Name] = copySet;
+                _namedRuleSet[copySet.Name] = copySet;
 
             foreach (var baseSpan in ruleSet.Spans)
             {
@@ -178,12 +182,12 @@ namespace MdXaml.Ext
             return copySet;
         }
 
-        private HighlightingColor Wrap(HighlightingColor color)
+        private HighlightingColor? Wrap(HighlightingColor? color)
         {
             if (color is null) return null;
 
             if (!String.IsNullOrEmpty(color.Name)
-                && NamedColors.TryGetValue(color.Name, out var cachedColor))
+                && _namedColors.TryGetValue(color.Name, out var cachedColor))
                 return cachedColor;
 
             var copyColor = color.Clone();
@@ -191,7 +195,7 @@ namespace MdXaml.Ext
                 null : new MixHighlightingBrush(color.Foreground, foreColor);
 
             if (!String.IsNullOrEmpty(copyColor.Name))
-                NamedColors[copyColor.Name] = copyColor;
+                _namedColors[copyColor.Name] = copyColor;
 
             return copyColor;
         }

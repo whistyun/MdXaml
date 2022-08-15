@@ -12,17 +12,25 @@ namespace MdXaml
 {
     public static class MarkdownStyle
     {
+        private const string DocumentStyleStandard = "DocumentStyleStandard";
+        private const string DocumentStyleCompact = "DocumentStyleCompact";
+        private const string DocumentStyleGithubLike = "DocumentStyleGithubLike";
+        private const string DocumentStyleSasabune = "DocumentStyleSasabune";
+        private const string DocumentStyleSasabuneStandard = "DocumentStyleSasabuneStandard";
+        private const string DocumentStyleSasabuneCompact = "DocumentStyleSasabuneCompact";
+
         static MarkdownStyle()
         {
-            LoadXaml();
+            var resources = LoadDictionary();
+            _standard = (Style)resources[DocumentStyleStandard];
+            _compact = (Style)resources[DocumentStyleCompact];
+            _githublike = (Style)resources[DocumentStyleGithubLike];
+            _sasabune = (Style)resources[DocumentStyleSasabune];
+            _sasabuneStandard = (Style)resources[DocumentStyleSasabuneStandard];
+            _sasabuneCompact = (Style)resources[DocumentStyleSasabuneCompact];
         }
 
-        /*
-            Workaround for Visual Studio Xaml Designer.
-            When you open MarkdownStyle from Xaml Designer,
-            A null error occurs. Perhaps static constructor is not executed.         
-        */
-        static void LoadXaml()
+        static ResourceDictionary LoadDictionary()
         {
 #if MIG_FREE
             var resourceName = "/Markdown.Xaml;component/MarkdownMigFree.Style.xaml";
@@ -39,74 +47,31 @@ namespace MdXaml
 #endif
 
             var resourceUri = new Uri(resourceName, UriKind.RelativeOrAbsolute);
-            ResourceDictionary resources = (ResourceDictionary)Application.LoadComponent(resourceUri);
-            _standard = (Style)resources["DocumentStyleStandard"];
-            _compact = (Style)resources["DocumentStyleCompact"];
-            _githublike = (Style)resources["DocumentStyleGithubLike"];
-            _sasabune = (Style)resources["DocumentStyleSasabune"];
-            _sasabuneStandard = (Style)resources["DocumentStyleSasabuneStandard"];
-            _sasabuneCompact = (Style)resources["DocumentStyleSasabuneCompact"];
+            return (ResourceDictionary)Application.LoadComponent(resourceUri);
         }
 
-        private static Style _standard;
-        private static Style _compact;
-        private static Style _githublike;
-        private static Style _sasabune;
-        private static Style _sasabuneCompact;
-        private static Style _sasabuneStandard;
-
-        public static Style Standard
+        /*
+            Workaround for Visual Studio Xaml Designer.
+            When you open MarkdownStyle from Xaml Designer,
+            A null error occurs. Perhaps static constructor is not executed.         
+        */
+        static Style LoadXaml(string name)
         {
-            get
-            {
-                if (_standard == null) LoadXaml();
-                return _standard;
-            }
+            return (Style)LoadDictionary()[name];
         }
 
-        public static Style Compact
-        {
-            get
-            {
-                if (_compact == null) LoadXaml();
-                return _compact;
-            }
-        }
+        private static readonly Style _standard;
+        private static readonly Style _compact;
+        private static readonly Style _githublike;
+        private static readonly Style _sasabune;
+        private static readonly Style _sasabuneCompact;
+        private static readonly Style _sasabuneStandard;
 
-        public static Style GithubLike
-        {
-            get
-            {
-                if (_githublike == null) LoadXaml();
-                return _githublike;
-            }
-        }
-
-        public static Style Sasabune
-        {
-            get
-            {
-                if (_sasabune == null) LoadXaml();
-                return _sasabune;
-            }
-        }
-
-        public static Style SasabuneStandard
-        {
-            get
-            {
-                if (_sasabuneStandard == null) LoadXaml();
-                return _sasabuneStandard;
-            }
-        }
-
-        public static Style SasabuneCompact
-        {
-            get
-            {
-                if (_sasabuneCompact == null) LoadXaml();
-                return _sasabuneCompact;
-            }
-        }
+        public static Style Standard => _standard is null ? LoadXaml(DocumentStyleStandard) : _standard;
+        public static Style Compact => _compact is null ? LoadXaml(DocumentStyleCompact) : _compact;
+        public static Style GithubLike => _githublike is null ? LoadXaml(DocumentStyleGithubLike) : _githublike;
+        public static Style Sasabune => _sasabune is null ? LoadXaml(DocumentStyleSasabune) : _sasabune;
+        public static Style SasabuneStandard => _sasabuneStandard is null ? LoadXaml(DocumentStyleSasabuneStandard) : _sasabuneStandard;
+        public static Style SasabuneCompact => _sasabuneCompact is null ? LoadXaml(DocumentStyleSasabuneCompact) : _sasabuneCompact;
     }
 }
