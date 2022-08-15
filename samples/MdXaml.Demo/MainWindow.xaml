@@ -11,8 +11,6 @@
         <local:RGBConverter x:Key="Converter"/>
 
         <mdxam:Markdown
-            Plugins="{StaticResource MdXamlPlugins}"
-            
             x:Key="Markdown"/>
 
         <local:MarkdownXamlConverter 

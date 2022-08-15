@@ -15,17 +15,16 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MdXaml;
+using MdXaml.Plugins;
 
 // I will not add System.Index and System.Range. There is not exist with net45.
 #pragma warning disable IDE0056
 #pragma warning disable IDE0057
 
-#if MIG_FREE
-using Markdown.Xaml.Plugins;
-#else
+#if !MIG_FREE
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
-using MdXaml.Plugins;
 #endif
 
 #if MIG_FREE
@@ -87,7 +86,13 @@ namespace MdXaml
 
         public Uri? BaseUri { get; set; }
 
-        public MdXamlPlugins? Plugins { get; set; }
+#if MIG_FREE
+        internal
+#else
+        public
+#endif
+        MdXamlPlugins? Plugins
+        { get; set; }
 
         private ParseParam ParseParam { get; set; }
 

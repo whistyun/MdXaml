@@ -1,4 +1,6 @@
-﻿namespace MdXaml.Html
+﻿using MdXaml.Plugins;
+
+namespace MdXaml.Html
 {
     public class HtmlPluginSetup : IPluginSetup
     {

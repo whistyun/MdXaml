@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
+using MdXaml.Plugins;
 
 #if MIG_FREE
 using Markdown.Xaml.LinkActions;
@@ -158,7 +159,12 @@ namespace MdXaml
         }
 
         private MdXamlPlugins? _plugins;
-        public MdXamlPlugins? Plugins
+#if MIG_FREE
+        internal
+#else
+        public
+#endif
+        MdXamlPlugins? Plugins
         {
             set
             {

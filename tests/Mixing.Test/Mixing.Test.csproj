@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+	<PropertyGroup>
+		<TargetFrameworks>netcoreapp3.0;net462;net5.0-windows</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Md\Mixing.md" />
+		<None Remove="RscImg.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Remove="IndentTest.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Md\Mixing.md" />
+		<Resource Include="RscImg.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ApprovalTests" Version="5.2.4" />
+		<PackageReference Include="nunit" Version="3.12.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
+		<ProjectReference Include="..\..\MdXaml\MdXamlMigfree.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="ExtImg.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Out\core\Tests.MarkdownXaml_Transform_givenMixing_generatesExpectedResult.approved.txt">
+		  <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+		  <ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+		  <DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+		<None Update="Out\dotnet\Tests.MarkdownXaml_Transform_givenMixing_generatesExpectedResult.approved.txt">
+		  <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+		  <ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+		  <DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+		<None Update="Out\framework\Tests.MdXaml_Transform_givenMixing_generatesExpectedResult.approved.txt">
+		  <ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+		  <ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+		  <DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+		<None Update="Out\framework\Tests.Transform_givenCodes_generatesExpectedResult.approved.txt.bak">
+			<ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+			<ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+			<DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+		<None Update="Out\framework\Tests.Transform_givenLists1_generatesExpectedResult.approved.txt.bak">
+			<ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+			<ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+			<DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+	</ItemGroup>
+
+</Project>

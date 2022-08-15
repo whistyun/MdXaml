@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Windows.Documents;
 using System.Text.RegularExpressions;
 
-#if MIG_FREE
-namespace Markdown.Xaml.Plugins
-#else
 namespace MdXaml.Plugins
-#endif
 {
-    public interface IInlineParser
+#if MIG_FREE
+    internal 
+#else
+    public
+#endif
+    interface IInlineParser
     {
         /// <summary>
         /// The head pattern of parsing. It is good for performance that the pattern is match persable syntax.

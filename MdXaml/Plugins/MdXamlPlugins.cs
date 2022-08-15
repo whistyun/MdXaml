@@ -6,20 +6,15 @@ using System.Text;
 using System.Windows.Documents;
 using System.Windows.Markup;
 
-#if MIG_FREE
-using Markdown.Xaml.Plugins;
-#else
-using MdXaml.Plugins;
-#endif
-
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
-namespace MdXaml
-#endif
+namespace MdXaml.Plugins
 {
     [ContentProperty(nameof(Setups))]
-    public class MdXamlPlugins
+#if MIG_FREE
+    internal 
+#else
+    public
+#endif
+    class MdXamlPlugins
     {
         public static readonly MdXamlPlugins Default = new();
 

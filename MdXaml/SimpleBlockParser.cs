@@ -14,12 +14,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-
-#if MIG_FREE
-using Markdown.Xaml.Plugins;
-#else
 using MdXaml.Plugins;
-#endif
 
 #if MIG_FREE
 namespace Markdown.Xaml
