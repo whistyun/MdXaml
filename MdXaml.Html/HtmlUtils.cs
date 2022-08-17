@@ -7,15 +7,11 @@ namespace MdXaml.Html
 {
     internal static class HtmlUtils
     {
-        private static readonly HashSet<string> _emptyList = new HashSet<string>(new[] {
+        private static readonly HashSet<string> s_emptyList = new(new[] {
             "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source",
         });
 
-        private static readonly HashSet<string> _omittableList = new HashSet<string>(new[] {
-            "caption", "dd", "dt", "li", "optgroup", "option", "p", "rp", "rt", "td", "tfoot", "th", "thead", "tr"
-        });
-
-        private static Regex TagPattern = new Regex(@"<(?'close'/?)[\t ]*(?'tagname'[a-z]+)(?'attributes'[ \t][^>]*|/)?>",
+        private static readonly Regex TagPattern = new(@"<(?'close'/?)[\t ]*(?'tagname'[a-z]+)(?'attributes'[ \t][^>]*|/)?>",
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static Regex CreateTagstartPattern(IEnumerable<string> tags)
@@ -55,24 +51,14 @@ namespace MdXaml.Html
 
                 if (mch.Value.EndsWith("/>"))
                 {
-                    // empty tag
                     continue;
                 }
 
                 var tagName = mch.Groups["tagname"].Value.ToLower();
 
-                if (_emptyList.Contains(tagName))
+                if (!String.IsNullOrEmpty(mch.Groups["close"].Value))
                 {
-                    continue;
-                }
-                else if (String.IsNullOrEmpty(mch.Groups["close"].Value))
-                {
-                    // start tag
-                    tags.Push(mch.Groups["tagname"].Value);
-                }
-                else
-                {
-                    // close tag
+                    // pop until same tag name be found.
 
                     while (tags.Count > 0)
                     {
@@ -87,6 +73,15 @@ namespace MdXaml.Html
                     {
                         return mch.Index + mch.Length;
                     }
+                }
+                else
+                {
+                    if (s_emptyList.Contains(tags.Peek()))
+                    {
+                        tags.Pop();
+                    }
+
+                    tags.Push(mch.Groups["tagname"].Value);
                 }
             }
         }

@@ -16,13 +16,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MdXaml.Plugins;
 
+#if MIG_FREE
+namespace Markdown.Xaml
+#else
 namespace MdXaml
+#endif
 {
     internal static class SimpleInlineParser
     {
         private sealed class Parser1 : IInlineParser
         {
-            private Func<Match, IEnumerable<Inline>> _converter;
+            private readonly Func<Match, IEnumerable<Inline>> _converter;
 
             public Regex FirstMatchPattern { get; }
 
@@ -32,7 +36,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Inline> Parse(string text, Match firstMatch, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Inline> Parse(string text, Match firstMatch, Markdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;
@@ -42,7 +46,7 @@ namespace MdXaml
 
         private sealed class Parser2 : IInlineParser
         {
-            private Func<Match, Inline> _converter;
+            private readonly Func<Match, Inline> _converter;
 
             public Regex FirstMatchPattern { get; }
 
@@ -52,7 +56,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Inline> Parse(string text, Match firstMatch, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Inline> Parse(string text, Match firstMatch, Markdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;

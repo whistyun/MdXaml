@@ -4,8 +4,8 @@ namespace MdXaml.Html
 {
     public class HtmlPluginSetup : IPluginSetup
     {
-        private HtmlBlockParser _block = new HtmlBlockParser();
-        private HtmlInlineParser _inline = new HtmlInlineParser();
+        private readonly HtmlBlockParser _block = new();
+        private readonly HtmlInlineParser _inline = new();
 
         public void Setup(MdXamlPlugins plugins)
         {

@@ -136,7 +136,7 @@ namespace MdXaml
                     _engine.DocumentStyle = MarkdownStyle;
 
                 UpdateClickAction();
-                UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
+                UpdateMarkdown(this, default);
             }
             get => _engine;
         }
@@ -169,7 +169,7 @@ namespace MdXaml
             set
             {
                 _plugins = value;
-                UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
+                UpdateMarkdown(this, default);
             }
             get
             {
@@ -277,7 +277,7 @@ namespace MdXaml
             {
                 _clickAction = value;
                 UpdateClickAction();
-                UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
+                UpdateMarkdown(this, default);
             }
         }
 

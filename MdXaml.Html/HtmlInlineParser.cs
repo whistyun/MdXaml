@@ -8,7 +8,7 @@ namespace MdXaml.Html
 {
     public class HtmlInlineParser : IInlineParser
     {
-        private ReplaceManager _replacer;
+        private readonly ReplaceManager _replacer;
 
         public HtmlInlineParser()
         {
@@ -18,10 +18,14 @@ namespace MdXaml.Html
 
         public Regex FirstMatchPattern { get; }
 
-        public IEnumerable<Inline> Parse(string text, Match firstMatch, out int parseTextBegin, out int parseTextEnd)
+        public IEnumerable<Inline> Parse(string text, Match firstMatch, Markdown engine, out int parseTextBegin, out int parseTextEnd)
         {
             parseTextBegin = firstMatch.Index;
             parseTextEnd = HtmlUtils.SearchTagRange(text, firstMatch);
+
+            _replacer.AssetPathRoot = engine.AssetPathRoot;
+            _replacer.BaseUri = engine.BaseUri;
+            _replacer.HyperlinkCommand = engine.HyperlinkCommand;
 
             return _replacer.ParseInline(text.Substring(parseTextBegin, parseTextEnd - parseTextBegin));
         }

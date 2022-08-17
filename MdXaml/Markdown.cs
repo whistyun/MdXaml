@@ -277,7 +277,7 @@ namespace MdXaml
 
                 foreach (var c in candidates)
                 {
-                    result = c.Parser.Parse(text, c.Match, supportTextAlignment, out bestBegin, out bestEnd);
+                    result = c.Parser.Parse(text, c.Match, supportTextAlignment, this, out bestBegin, out bestEnd);
                     if (result is not null) break;
                 }
 
@@ -317,7 +317,7 @@ namespace MdXaml
                     var match = parser.FirstMatchPattern.Match(text, index, length);
                     if (!match.Success) break;
 
-                    var rslt = parser.Parse(text, match, supportTextAlignment, out int parseBegin, out int parserEnd);
+                    var rslt = parser.Parse(text, match, supportTextAlignment, this, out int parseBegin, out int parserEnd);
                     if (rslt is null) break;
 
                     if (parseBegin > index)
@@ -363,7 +363,7 @@ namespace MdXaml
                     var match = parser.FirstMatchPattern.Match(text, index, length);
                     if (!match.Success) break;
 
-                    var rslt = parser.Parse(text, match, out int parseBegin, out int parserEnd);
+                    var rslt = parser.Parse(text, match, this, out int parseBegin, out int parserEnd);
                     if (rslt is null) break;
 
                     if (parseBegin > index)

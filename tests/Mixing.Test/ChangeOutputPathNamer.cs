@@ -5,7 +5,7 @@ namespace MdXamlTest
 {
     public class ChangeOutputPathNamer : UnitTestFrameworkNamer
     {
-        private string dir;
+        private readonly string dir;
 
 
         public override string SourcePath

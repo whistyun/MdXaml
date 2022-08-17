@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using System.Windows.Documents;
 using System.Text.RegularExpressions;
 
+#if MIG_FREE
+using Engine = Markdown.Xaml.Markdown;
+#else
+using Engine = MdXaml.Markdown;
+#endif
+
+
 namespace MdXaml.Plugins
 {
 #if MIG_FREE
@@ -25,6 +32,9 @@ namespace MdXaml.Plugins
         /// <param name="parseTextBegin">The first index of the parsed range(include)</param>
         /// <param name="parseTextEnd">The end index of the parsed range(exclude).</param>
         /// <returns>Parsed result, or null if unable to parsed.</returns>
-        IEnumerable<Block> Parse(string text, Match firstMatch, bool supportTextAlignment, out int parseTextBegin, out int parseTextEnd);
+        IEnumerable<Block> Parse(
+            string text, Match firstMatch, bool supportTextAlignment,
+            Engine engine,
+            out int parseTextBegin, out int parseTextEnd);
     }
 }

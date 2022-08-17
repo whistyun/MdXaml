@@ -28,7 +28,7 @@ namespace MdXaml
     {
         private sealed class Parser1 : IBlockParser
         {
-            private InternalConverter _converter;
+            private readonly InternalConverter _converter;
 
             public Regex FirstMatchPattern { get; }
 
@@ -38,7 +38,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, Markdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;
@@ -48,7 +48,7 @@ namespace MdXaml
 
         private sealed class Parser2 : IBlockParser
         {
-            private Func<Match, IEnumerable<Block>> _converter;
+            private readonly Func<Match, IEnumerable<Block>> _converter;
 
             public Regex FirstMatchPattern { get; }
 
@@ -58,7 +58,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, Markdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;
@@ -68,7 +68,7 @@ namespace MdXaml
 
         private sealed class Parser3 : IBlockParser
         {
-            private Func<Match, Block> _converter;
+            private readonly Func<Match, Block> _converter;
 
             public Regex FirstMatchPattern { get; }
 
@@ -78,7 +78,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, Markdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;
