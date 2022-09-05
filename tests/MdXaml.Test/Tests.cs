@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Markup;
+using System.Windows.Threading;
 
 
 #if !MIG_FREE
@@ -172,6 +173,7 @@ namespace Markdown.Xaml.Test
             };
 
             var result = markdown.Transform(text);
+
             var resultXaml = Utils.AsXaml(result);
 
             var assetUri = new Uri(assetPath);

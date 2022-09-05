@@ -19,6 +19,7 @@ using MdXaml;
 using MdXaml.Plugins;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 // I will not add System.Index and System.Range. There is not exist with net45.
 #pragma warning disable IDE0056
@@ -558,8 +559,6 @@ namespace MdXaml
             string urlTxt = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
-            BitmapImage? imgSource = null;
-
             // collect absolute url
 
             var urls = new List<Uri>();
@@ -597,6 +596,7 @@ namespace MdXaml
             }
             else
             {
+                container.Child = new Label() { Content = $"Load {urlTxt}" };
                 loading.Treats(LoaderManager.LoadImageAsync(urls));
             }
 
@@ -2030,7 +2030,8 @@ namespace MdXaml
 
         public void Treats(Task<ImageLoaderManager.Result<BitmapImage>> task)
         {
-            Application.Current.Dispatcher.Invoke(async () => Treats(await task));
+            var dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+            dispatcher.Invoke(async () => Treats(await task));
         }
 
         public void Treats(ImageLoaderManager.Result<BitmapImage> result)

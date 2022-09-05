@@ -25,39 +25,27 @@
   <Paragraph>(With outer parens and <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">parens in url</Hyperlink>)</Paragraph>
   <Paragraph>
     <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">
-      <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0">
-        <Image.Source>
-          <BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" />
-        </Image.Source>
-      </Image>
+      <Label>Load RscImg.png</Label>
     </Hyperlink>
   </Paragraph>
   <Paragraph>
-    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text<Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image></Hyperlink>
+    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text<Label>Load RscImg.png</Label></Hyperlink>
   </Paragraph>
   <Paragraph>
     <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">
-      <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0">
-        <Image.Source>
-          <BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" />
-        </Image.Source>
-      </Image>text</Hyperlink>
+      <Label>Load RscImg.png</Label>text</Hyperlink>
   </Paragraph>
   <Paragraph>
-    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text<Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image>text</Hyperlink>
+    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text<Label>Load RscImg.png</Label>text</Hyperlink>
   </Paragraph>
   <Paragraph>
-    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image></Hyperlink>
+    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text <Label>Load RscImg.png</Label></Hyperlink>
   </Paragraph>
   <Paragraph>
     <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">
-      <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0">
-        <Image.Source>
-          <BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" />
-        </Image.Source>
-      </Image> text</Hyperlink>
+      <Label>Load RscImg.png</Label> text</Hyperlink>
   </Paragraph>
   <Paragraph>
-    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text <Image Tag="image" Width="701.6608276367188" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.Test;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image> text</Hyperlink>
+    <Hyperlink Command="GoToPage" CommandParameter="/foo(bar)">text <Label>Load RscImg.png</Label> text</Hyperlink>
   </Paragraph>
 </FlowDocument>

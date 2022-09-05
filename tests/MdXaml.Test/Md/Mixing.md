@@ -21,9 +21,9 @@ If there are any bug fixes to the regular expressions in MarkdownSharp, merging 
 * Links with title [Go to Google!](https://www.google.com "google.")
 * Remote images
 
-![image1](http://placehold.it/350x150)
+![image1](https://avatars.githubusercontent.com/u/13712028?v=4)
 
-![imageleft](http://placehold.it/100x150/0000FF "blue")![imageright](http://placehold.it/100x150/00FFFF "cyan")
+![imageleft](https://avatars.githubusercontent.com/u/13712028?v=4 "blue")![imageright](https://avatars.githubusercontent.com/u/13712028?v=4 "cyan")
 
 * Local images
 

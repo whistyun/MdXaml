@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 
 namespace MdXaml.Plugins
 {
@@ -120,10 +121,9 @@ namespace MdXaml.Plugins
 
         private Task<BitmapImage?> OpenImageOnUITrhead(Stream stream)
         {
-            return Application.Current
-                              .Dispatcher
-                              .InvokeAsync(() => OpenImageDirect(stream))
-                              .Task;
+            var dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+            return dispatcher.InvokeAsync(() => OpenImageDirect(stream))
+                             .Task;
         }
 
         private BitmapImage? OpenImageDirect(Stream stream)

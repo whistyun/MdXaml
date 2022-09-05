@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Markup;
+using System.Windows.Threading;
 using System.Xml;
 
 namespace MdXamlTest
@@ -65,6 +66,21 @@ namespace MdXamlTest
             }
 
             return "dotnet";
+        }
+
+        public static void DoEvents()
+        {
+            DispatcherFrame frame = new DispatcherFrame();
+            Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
+                new DispatcherOperationCallback(ExitFrame), frame);
+            Dispatcher.PushFrame(frame);
+
+        }
+
+        private static object ExitFrame(object exitframe)
+        {
+            ((DispatcherFrame)exitframe).Continue = false;
+            return null;
         }
     }
 }
