@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\MdXaml.Html\MdXaml.Html.csproj" />
+    <ProjectReference Include="..\..\MdXaml.Svg\MdXaml.Svg.csproj" />
     <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
-    <PackageId>MdXaml.Html</PackageId>
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
+    <PackageId>MdXaml.Svg</PackageId>
     <Version>1.0.0-alpha1</Version>
     <Authors>whistyun</Authors>
     <Company />
@@ -14,15 +15,15 @@
 
     <UseWPF>true</UseWPF>
     <LangVersion>9</LangVersion>
-		<Nullable>enable</Nullable>
-	</PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-	<ItemGroup>
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Svg" Version="3.0.84" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\MdXaml\MdXaml\MdXaml.csproj" />
-		<ProjectReference Include="..\externals\HtmlXaml.Core\HtmlXaml.Core\HtmlXaml.Core.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
+  </ItemGroup>
 
 </Project>

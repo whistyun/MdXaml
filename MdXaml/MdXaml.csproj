@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PackageId>MdXaml</PackageId>
-    <Version>1.15.0</Version>
+    <Version>1.16.0-alpha1</Version>
     <Authors>Bevan Arps(original); whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>
@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <Page Remove="MarkdownMigFree.Style.xaml" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>

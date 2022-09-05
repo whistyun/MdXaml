@@ -17,6 +17,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MdXaml;
 using MdXaml.Plugins;
+using System.IO;
+using System.Threading.Tasks;
 
 // I will not add System.Index and System.Range. There is not exist with net45.
 #pragma warning disable IDE0056
@@ -96,6 +98,8 @@ namespace MdXaml
 
         private ParseParam ParseParam { get; set; }
 
+        private ImageLoaderManager LoaderManager { get; }
+
         #region dependencyobject property
 
         // Using a DependencyProperty as the backing store for DocumentStyle.  This enables animation, styling, binding, etc...
@@ -141,6 +145,9 @@ namespace MdXaml
             AssetPathRoot = Environment.CurrentDirectory;
             Plugins = null;
             ParseParam = SetupParams(MdXamlPlugins.Default);
+
+            LoaderManager = new();
+            LoaderManager.Restructure(MdXamlPlugins.Default);
         }
 
         public FlowDocument Transform(string text)
@@ -217,7 +224,10 @@ namespace MdXaml
 
         private void SetupParams()
         {
-            ParseParam = SetupParams(Plugins ?? MdXamlPlugins.Default);
+            var plugins = Plugins ?? MdXamlPlugins.Default;
+
+            ParseParam = SetupParams(plugins);
+            LoaderManager.Restructure(plugins);
         }
 
         /// <summary>
@@ -545,131 +555,52 @@ namespace MdXaml
         private Inline TreatsAsImage(Match match)
         {
             string linkText = match.Groups[3].Value;
-            string url = match.Groups[4].Value;
+            string urlTxt = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
             BitmapImage? imgSource = null;
 
-            // check embedded resoruce
-            try
-            {
-                Uri packUri;
-                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && BaseUri is not null)
-                {
-                    packUri = new Uri(BaseUri, url);
-                }
-                else
-                {
-                    packUri = new Uri(url);
-                }
+            // collect absolute url
 
-                imgSource = MakeImage(packUri);
+            var urls = new List<Uri>();
+
+            if (Uri.IsWellFormedUriString(urlTxt, UriKind.Absolute) || Path.IsPathRooted(urlTxt))
+            {
+                urls.Add(new Uri(urlTxt));
             }
-            catch { }
-
-            // check filesystem
-            if (imgSource is null)
+            else
             {
-                try
+                if (BaseUri is not null)
                 {
-                    Uri imgUri;
-
-                    if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !System.IO.Path.IsPathRooted(url) && AssetPathRoot is not null)
+                    urls.Add(new Uri(BaseUri, urlTxt));
+                }
+                if (AssetPathRoot is not null)
+                {
+                    if (Uri.IsWellFormedUriString(AssetPathRoot, UriKind.Absolute))
                     {
-                        if (Uri.IsWellFormedUriString(AssetPathRoot, UriKind.Absolute))
-                        {
-                            imgUri = new Uri(new Uri(AssetPathRoot), url);
-                        }
-                        else
-                        {
-                            url = System.IO.Path.Combine(AssetPathRoot ?? string.Empty, url);
-                            imgUri = new Uri(url, UriKind.RelativeOrAbsolute);
-                        }
+                        urls.Add(new Uri(new Uri(AssetPathRoot), urlTxt));
                     }
-                    else imgUri = new Uri(url, UriKind.RelativeOrAbsolute);
-
-                    imgSource = MakeImage(imgUri);
-                }
-                catch { }
-            }
-
-            // error
-            if (imgSource is null)
-            {
-                return new Run("!" + url) { Foreground = Brushes.Red };
-            }
-
-
-            var image = new Image { Source = imgSource, Tag = linkText };
-            if (ImageStyle is null)
-            {
-                image.Margin = new Thickness(0);
-            }
-            else
-            {
-                image.Style = ImageStyle;
-            }
-            if (!DisabledTootip && !string.IsNullOrWhiteSpace(title))
-            {
-                image.ToolTip = title;
-            }
-
-            // Bind size so document is updated when image is downloaded
-            if (imgSource.IsDownloading)
-            {
-                Binding binding = new(nameof(BitmapImage.Width));
-                binding.Source = imgSource;
-                binding.Mode = BindingMode.OneWay;
-
-                BindingExpressionBase bindingExpression = BindingOperations.SetBinding(image, Image.WidthProperty, binding);
-                imgSource.DownloadCompleted += downloadCompletedHandler;
-
-                void downloadCompletedHandler(object? sender, EventArgs e)
-                {
-                    imgSource.DownloadCompleted -= downloadCompletedHandler;
-                    imgSource.Freeze();
-                    bindingExpression.UpdateTarget();
+                    else if (Path.IsPathRooted(AssetPathRoot))
+                    {
+                        urls.Add(new Uri(Path.Combine(AssetPathRoot, urlTxt)));
+                    }
                 }
             }
-            else
-            {
-                image.Width = imgSource.Width;
-            }
 
-            var container = new InlineUIContainer() { Child = image };
-            imgSource.DownloadFailed += (s, e) =>
-            {
-                var ext = e.ErrorException;
 
-                var label = new Label()
-                {
-                    Foreground = Brushes.Red,
-                    Content = "!" + url + "\r\n" + ext.GetType().Name + ":" + ext.Message
-                };
+            var container = new InlineUIContainer();
+            var loading = new ImageLoading(this, linkText, urlTxt, title, container);
 
-                container.Child = label;
-            };
-
-            return container;
-        }
-
-        private BitmapImage MakeImage(Uri url)
-        {
             if (DisabledLazyLoad)
             {
-                return new BitmapImage(url);
+                loading.Treats(LoaderManager.LoadImage(urls));
             }
             else
             {
-                var imgSource = new BitmapImage();
-                imgSource.BeginInit();
-                imgSource.CacheOption = BitmapCacheOption.OnLoad;
-                imgSource.CreateOptions = BitmapCreateOptions.None;
-                imgSource.UriSource = url;
-                imgSource.EndInit();
-
-                return imgSource;
+                loading.Treats(LoaderManager.LoadImageAsync(urls));
             }
+
+            return container;
         }
 
         #endregion
@@ -2074,6 +2005,104 @@ namespace MdXaml
             Inlines = inlines.ToArray();
         }
     }
+
+    internal class ImageLoading
+    {
+        private string _linkText;
+        private string _urlTxt;
+        private string _title;
+        private InlineUIContainer _container;
+
+        private Style? _imageStyle;
+
+        public ImageLoading(
+            Markdown owner,
+            string linkText, string urlTxt, string title,
+            InlineUIContainer container)
+        {
+            _linkText = linkText;
+            _urlTxt = urlTxt;
+            _title = owner.DisabledTootip ? "" : title;
+            _container = container;
+
+            _imageStyle = owner.ImageStyle;
+        }
+
+        public void Treats(Task<ImageLoaderManager.Result<BitmapImage>> task)
+        {
+            Application.Current.Dispatcher.Invoke(async () => Treats(await task));
+        }
+
+        public void Treats(ImageLoaderManager.Result<BitmapImage> result)
+        {
+            var source = result.Value;
+
+            if (source is null)
+            {
+                _container.Child = new Label()
+                {
+                    Foreground = Brushes.Red,
+                    Content = "!" + _urlTxt + "\r\n" + result.ErrorMessage
+                };
+            }
+            else
+            {
+                CreateImage(source);
+            }
+        }
+
+
+        private void CreateImage(ImageSource source)
+        {
+            var image = new Image()
+            {
+                Source = source,
+            };
+
+            if (_imageStyle is null)
+            {
+                image.Margin = new Thickness(0);
+            }
+            else
+            {
+                image.Style = _imageStyle;
+            }
+
+            if (!string.IsNullOrWhiteSpace(_linkText))
+            {
+                image.Tag = _linkText;
+            }
+
+            if (!string.IsNullOrWhiteSpace(_title))
+            {
+                image.ToolTip = _title;
+            }
+
+            if (source is BitmapSource bs && bs.IsDownloading)
+            {
+                Binding binding = new(nameof(BitmapImage.Width));
+                binding.Source = bs;
+                binding.Mode = BindingMode.OneWay;
+
+                BindingExpressionBase bindingExpression = BindingOperations.SetBinding(image, Image.WidthProperty, binding);
+                bs.DownloadCompleted += downloadCompletedHandler;
+
+                void downloadCompletedHandler(object? sender, EventArgs e)
+                {
+                    bs.DownloadCompleted -= downloadCompletedHandler;
+                    bs.Freeze();
+                    bindingExpression.UpdateTarget();
+                }
+            }
+            else
+            {
+                image.Width = source.Width;
+            }
+
+            _container.Child = image;
+        }
+    }
+
 
     internal struct Candidate : IComparable<Candidate>
     {

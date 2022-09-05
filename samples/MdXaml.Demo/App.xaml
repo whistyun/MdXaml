@@ -4,11 +4,13 @@
              xmlns:local="clr-namespace:MdXaml.Demo"
              xmlns:mdxam="clr-namespace:MdXaml.Plugins;assembly=MdXaml"
              xmlns:mdhtml="clr-namespace:MdXaml.Html;assembly=MdXaml.Html"
+             xmlns:mdsvg="clr-namespace:MdXaml.Svg;assembly=MdXaml.Svg"
              StartupUri="MainWindow.xaml">
 
     <Application.Resources>
         <mdxam:MdXamlPlugins x:Key="MdXamlPlugins">
             <mdhtml:HtmlPluginSetup/>
+            <mdsvg:SvgPluginSetup/>
         </mdxam:MdXamlPlugins>
     </Application.Resources>
 </Application>

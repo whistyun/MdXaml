@@ -24,14 +24,17 @@ namespace MdXaml.Plugins
         public ObservableCollection<IBlockParser> TopBlock { get; }
         public ObservableCollection<IBlockParser> Block { get; }
         public ObservableCollection<IInlineParser> Inline { get; }
+        public ObservableCollection<IImageLoader> ImageLoader { get; }
 
         public MdXamlPlugins()
         {
-            Syntax = new SyntaxManager();
-            Setups = new ObservableCollection<IPluginSetup>();
-            TopBlock = new ObservableCollection<IBlockParser>();
-            Block = new ObservableCollection<IBlockParser>();
-            Inline = new ObservableCollection<IInlineParser>();
+            Syntax = new();
+
+            Setups = new();
+            TopBlock = new();
+            Block = new();
+            Inline = new();
+            ImageLoader = new();
 
             Setups.CollectionChanged += Setups_CollectionChanged;
         }

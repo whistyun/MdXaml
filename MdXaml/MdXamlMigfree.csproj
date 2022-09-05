@@ -15,8 +15,8 @@
     <Configurations>Debug;Release</Configurations>
     <AssemblyName>Markdown.Xaml</AssemblyName>
     <RootNamespace>Markdown.Xaml</RootNamespace>
-	<LangVersion>9</LangVersion>
-	<Nullable>enable</Nullable>
+    <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -26,6 +26,10 @@
   <ItemGroup>
     <None Remove="EmojiTable.txt" />
     <EmbeddedResource Include="EmojiTable.txt" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
 
   <ItemGroup>
