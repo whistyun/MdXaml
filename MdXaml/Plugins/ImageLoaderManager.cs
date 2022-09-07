@@ -15,13 +15,12 @@ namespace MdXaml.Plugins
 {
     internal class ImageLoaderManager
     {
+        private static readonly HttpClient s_client = new();
 
-        private static HttpClient s_client = new HttpClient();
-
-        private IDictionary<Uri, WeakReference<BitmapImage>> _resultCache
+        private readonly IDictionary<Uri, WeakReference<BitmapImage>> _resultCache
             = new ConcurrentDictionary<Uri, WeakReference<BitmapImage>>();
 
-        private List<IImageLoader> _loaders = new();
+        private readonly List<IImageLoader> _loaders = new();
 
         public void Register(IImageLoader l) => _loaders.Add(l);
 
@@ -159,7 +158,7 @@ namespace MdXaml.Plugins
             return null;
         }
 
-        private async Task<Result<Stream>> OpenStreamAsync(Uri resourceUrl)
+        private static async Task<Result<Stream>> OpenStreamAsync(Uri resourceUrl)
         {
             switch (resourceUrl.Scheme)
             {

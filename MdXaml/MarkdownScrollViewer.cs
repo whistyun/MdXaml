@@ -367,27 +367,25 @@ namespace MdXaml
                 }
             }
 
-            bool sucess;
-
             if (source.IsAbsoluteUri)
             {
-                sucess = TryOpen(source);
+                TryOpen(source);
             }
             else if (BaseUri is null)
             {
                 Debug.WriteLine($"Failed to open markdown from relative path '{source}': BaseUri is null");
             }
-            else if (!(sucess = TryOpen(new Uri(BaseUri, source))))
+            else if (!TryOpen(new Uri(BaseUri, source)))
             {
                 if (Uri.IsWellFormedUriString(AssetPathRoot, UriKind.Absolute))
                 {
                     var assetUri = new Uri(new Uri(AssetPathRoot), source);
-                    sucess = TryOpen(assetUri);
+                    TryOpen(assetUri);
                 }
                 else
                 {
                     var assetPath = Path.Combine(AssetPathRoot, source.LocalPath);
-                    sucess = TryOpen(new Uri(assetPath));
+                    TryOpen(new Uri(assetPath));
                 }
             }
             else

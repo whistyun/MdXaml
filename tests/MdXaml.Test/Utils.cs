@@ -18,7 +18,6 @@ namespace MdXamlTest
 
         public static string LoadText(string name)
         {
-
             using (Stream stream = Assembly.GetExecutingAssembly()
                                .GetManifestResourceStream(ResourceKey + name))
             using (StreamReader reader = new StreamReader(stream))

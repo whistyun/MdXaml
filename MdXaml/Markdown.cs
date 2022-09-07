@@ -2008,12 +2008,12 @@ namespace MdXaml
 
     internal class ImageLoading
     {
-        private string _linkText;
-        private string _urlTxt;
-        private string _title;
-        private InlineUIContainer _container;
+        private readonly string _linkText;
+        private readonly string _urlTxt;
+        private readonly string _title;
+        private readonly InlineUIContainer _container;
 
-        private Style? _imageStyle;
+        private readonly Style? _imageStyle;
 
         public ImageLoading(
             Markdown owner,
