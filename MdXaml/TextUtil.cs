@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using System.Text.RegularExpressions;
+
+// I will not add System.Range. There is not exist with net45.
+#pragma warning disable IDE0057
 
 #if MIG_FREE
 namespace Markdown.Xaml
@@ -74,7 +75,15 @@ namespace MdXaml
         /// If the leading white-space is too short than `indentCount`,
         /// this method return 'false' and `detendedLine` is set null.
         /// </summary>
-        public static bool TryDetendLine(string line, int indentCount, out string detendedLine)
+        public static bool TryDetendLine(
+            string line,
+            int indentCount,
+#if NETFRAMEWORK
+            out string detendedLine)
+#else
+            [MaybeNullWhen(false)]
+            out string detendedLine)
+#endif
         {
             // this index count tab as 1: for String.Substring
             var realIdx = 0;
@@ -99,7 +108,7 @@ namespace MdXaml
                 // give up ded
                 else
                 {
-                    detendedLine = null;
+                    detendedLine = null!;
                     return false;
                 }
             }
@@ -169,5 +178,20 @@ namespace MdXaml
             return output.Append("\n\n").ToString();
         }
 
+        /// <summary>
+        /// this is to emulate what's evailable in PHP
+        /// </summary>
+        public static string RepeatString(string text, int count)
+        {
+            if (text is null)
+            {
+                throw new NullReferenceException(nameof(text));
+            }
+
+            var sb = new StringBuilder(text.Length * count);
+            for (int i = 0; i < count; i++)
+                sb.Append(text);
+            return sb.ToString();
+        }
     }
 }

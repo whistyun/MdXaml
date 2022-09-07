@@ -12,6 +12,7 @@ using MdXaml;
 namespace MdXaml.LinkActions
 #endif
 {
+    // set `public` access level for #29.
     public class DiaplayCommand : ICommand
     {
         private MarkdownScrollViewer Owner;
@@ -23,13 +24,29 @@ namespace MdXaml.LinkActions
             OpenBrowserWithAbsolutePath = openBrowserWithAbsolutePath;
         }
 
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
-        public bool CanExecute(object parameter) => true;
-
-        public void Execute(object parameter)
+        private bool _isExecutable = true;
+        public bool IsExecutable
         {
-            var path = parameter.ToString();
+            get => _isExecutable;
+            set
+            {
+                if (_isExecutable != value)
+                {
+                    _isExecutable = value;
+                    CanExecuteChanged?.Invoke(this, new EventArgs());
+                }
+            }
+        }
+
+        public bool CanExecute(object? parameter) => _isExecutable;
+
+        public void Execute(object? parameter)
+        {
+            var path = parameter?.ToString();
+            if (path is null) throw new ArgumentNullException(nameof(parameter));
+
             var isAbs = Uri.IsWellFormedUriString(path, UriKind.Absolute);
 
             if (OpenBrowserWithAbsolutePath & isAbs)

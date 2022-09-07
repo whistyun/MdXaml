@@ -28,23 +28,11 @@
     </ListItem>
   </List>
   <Paragraph>
-    <Image Tag="image1" Width="1" Margin="0,0,0,0">
-      <Image.Source>
-        <BitmapImage BaseUri="{x:Null}" UriSource="http://placehold.it/350x150" CreateOptions="None" CacheOption="OnLoad" />
-      </Image.Source>
-    </Image>
+    <Label>Load https://avatars.githubusercontent.com/u/13712028?v=4</Label>
   </Paragraph>
   <Paragraph>
-    <Image Tag="imageleft" Width="1" Margin="0,0,0,0" ToolTip="blue">
-      <Image.Source>
-        <BitmapImage BaseUri="{x:Null}" UriSource="http://placehold.it/100x150/0000FF" CreateOptions="None" CacheOption="OnLoad" />
-      </Image.Source>
-    </Image>
-    <Image Tag="imageright" Width="1" Margin="0,0,0,0" ToolTip="cyan">
-      <Image.Source>
-        <BitmapImage BaseUri="{x:Null}" UriSource="http://placehold.it/100x150/00FFFF" CreateOptions="None" CacheOption="OnLoad" />
-      </Image.Source>
-    </Image>
+    <Label>Load https://avatars.githubusercontent.com/u/13712028?v=4</Label>
+    <Label>Load https://avatars.githubusercontent.com/u/13712028?v=4</Label>
   </Paragraph>
   <List MarkerStyle="Disc">
     <ListItem>
@@ -52,11 +40,7 @@
     </ListItem>
   </List>
   <Paragraph>
-    <Image Tag="image" Width="701.660803964984" Margin="0,0,0,0">
-      <Image.Source>
-        <BitmapImage BaseUri="{x:Null}" UriSource="pack://application:,,,/MdXaml.TestMigfree;Component/RscImg.png" CreateOptions="None" CacheOption="OnLoad" />
-      </Image.Source>
-    </Image> <Image Tag="image" Width="384.155275164404" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" UriSource="<assetpathroot>\ExtImg.png" CreateOptions="None" CacheOption="OnLoad" /></Image.Source></Image></Paragraph>
+    <Label>Load RscImg.png</Label> <Label>Load ExtImg.png</Label></Paragraph>
   <List MarkerStyle="Disc">
     <ListItem>
       <Paragraph>Table</Paragraph>

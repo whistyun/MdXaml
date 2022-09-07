@@ -44,17 +44,18 @@ namespace MdXaml.Demo2
 
             MdSource = new Uri("Assets/Main.md", UriKind.Relative);
 
-            Documents = new ObservableCollection<MinDoc>();
+            Documents = new ObservableCollection<MinDoc>
+            {
+                new MinDoc(@"
+                    # Title
+                    [go to google](https://www.google.com)
+                    "),
 
-            Documents.Add(new MinDoc(@"
-                # Title
-                [go to google](https://www.google.com)
-                "));
-
-            Documents.Add(new MinDoc(@"
-                # Title
-                [go to yahoo](https://www.yahoo.com/)
-                "));
+                new MinDoc(@"
+                    # Title
+                    [go to yahoo](https://www.yahoo.com/)
+                    ")
+            };
         }
 
         public void NextPage()
@@ -105,7 +106,7 @@ namespace MdXaml.Demo2
 
     public class Command : ICommand
     {
-        private Action Target;
+        private readonly Action Target;
 
         public event EventHandler CanExecuteChanged;
 

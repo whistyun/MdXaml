@@ -16,7 +16,7 @@ namespace MdXaml.Ext
     {
         private readonly float power;
 
-        public Type TargetType { set; get; }
+        public Type? TargetType { set; get; }
 
         public FontSizeScaleExtension(float power)
         {

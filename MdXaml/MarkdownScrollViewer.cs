@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
+using MdXaml.Plugins;
 
 #if MIG_FREE
 using Markdown.Xaml.LinkActions;
@@ -76,6 +77,7 @@ namespace MdXaml
         {
             if (d is MarkdownScrollViewer owner)
             {
+                owner.Engine.Plugins = owner.Plugins;
                 var doc = owner.Engine.Transform(owner.Markdown ?? "");
                 owner.SetCurrentValue(DocumentProperty, doc);
             }
@@ -100,7 +102,7 @@ namespace MdXaml
                 var prop = typeof(MarkdownStyle).GetProperty(newName);
                 if (prop == null) return;
 
-                owner.MarkdownStyle = (Style)prop.GetValue(null);
+                owner.MarkdownStyle = (Style?)prop.GetValue(null);
             }
         }
 
@@ -134,12 +136,13 @@ namespace MdXaml
                     _engine.DocumentStyle = MarkdownStyle;
 
                 UpdateClickAction();
+                UpdateMarkdown(this, default);
             }
             get => _engine;
         }
 
-        private Uri _baseUri;
-        public Uri BaseUri
+        private Uri? _baseUri;
+        public Uri? BaseUri
         {
             set
             {
@@ -154,6 +157,33 @@ namespace MdXaml
             set => SetValue(AssetPathRootProperty, value);
             get => (string)GetValue(AssetPathRootProperty);
         }
+
+        private MdXamlPlugins? _plugins;
+#if MIG_FREE
+        internal
+#else
+        public
+#endif
+        MdXamlPlugins? Plugins
+        {
+            set
+            {
+                _plugins = value;
+                UpdateMarkdown(this, default);
+            }
+            get
+            {
+                if (_plugins is not null)
+                    return _plugins;
+
+                // load from application.resource
+                var values = Application.Current?.Resources?.Values;
+                if (values is null) return null;
+
+                return _plugins = values.OfType<MdXamlPlugins>().FirstOrDefault();
+            }
+        }
+
 
         public string HereMarkdown
         {
@@ -221,7 +251,7 @@ namespace MdXaml
             set { SetValue(MarkdownProperty, value); }
         }
 
-        public Style MarkdownStyle
+        public Style? MarkdownStyle
         {
             get { return (Style)GetValue(MarkdownStyleProperty); }
             set { SetValue(MarkdownStyleProperty, value); }
@@ -233,7 +263,7 @@ namespace MdXaml
             set { SetValue(MarkdownStyleNameProperty, value); }
         }
 
-        public Uri Source
+        public Uri? Source
         {
             get { return (Uri)GetValue(SourceProperty); }
             set { SetValue(SourceProperty, value); }
@@ -247,12 +277,24 @@ namespace MdXaml
             {
                 _clickAction = value;
                 UpdateClickAction();
+                UpdateMarkdown(this, default);
             }
         }
 
         public MarkdownScrollViewer()
         {
-            Engine = new Markdown();
+            _engine = new Markdown();
+
+            if (BaseUri != null)
+                _engine.BaseUri = BaseUri;
+
+            if (AssetPathRoot != null)
+                _engine.AssetPathRoot = AssetPathRoot;
+
+            if (MarkdownStyle != null)
+                _engine.DocumentStyle = MarkdownStyle;
+
+            UpdateClickAction();
         }
 
         private void UpdateClickAction()
@@ -271,8 +313,6 @@ namespace MdXaml
                     Engine.HyperlinkCommand = new DiaplayCommand(this, false);
                     break;
             }
-
-            UpdateMarkdown(this, default(DependencyPropertyChangedEventArgs));
         }
 
         internal void Open(Uri source, bool updateSourceProperty)
@@ -327,24 +367,30 @@ namespace MdXaml
                 }
             }
 
-            bool sucess;
-
             if (source.IsAbsoluteUri)
             {
-                sucess = TryOpen(source);
+                TryOpen(source);
             }
-            else if (!(sucess = TryOpen(new Uri(BaseUri, source))))
+            else if (BaseUri is null)
+            {
+                Debug.WriteLine($"Failed to open markdown from relative path '{source}': BaseUri is null");
+            }
+            else if (!TryOpen(new Uri(BaseUri, source)))
             {
                 if (Uri.IsWellFormedUriString(AssetPathRoot, UriKind.Absolute))
                 {
                     var assetUri = new Uri(new Uri(AssetPathRoot), source);
-                    sucess = TryOpen(assetUri);
+                    TryOpen(assetUri);
                 }
                 else
                 {
                     var assetPath = Path.Combine(AssetPathRoot, source.LocalPath);
-                    sucess = TryOpen(new Uri(assetPath));
+                    TryOpen(new Uri(assetPath));
                 }
+            }
+            else
+            {
+                Debug.WriteLine($"Failed to open markdown from relative path '{source}': not found");
             }
         }
     }

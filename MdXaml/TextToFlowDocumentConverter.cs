@@ -22,7 +22,7 @@ namespace MdXaml
 
         private static void MarkdownUpdate(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (e.NewValue != null)
+            if (e.NewValue is not null)
             {
                 var owner = (TextToFlowDocumentConverter)d;
                 if (owner.MarkdownStyle != null)
@@ -32,12 +32,12 @@ namespace MdXaml
             }
         }
 
-        private Lazy<Markdown> mMarkdown;
-        private Style markdownStyle;
+        private Lazy<Markdown> _markdown;
+        private Style? _markdownStyle;
 
         public TextToFlowDocumentConverter()
         {
-            mMarkdown = new Lazy<Markdown>(MakeMarkdown);
+            _markdown = new Lazy<Markdown>(MakeMarkdown);
         }
 
         public Markdown Markdown
@@ -45,13 +45,13 @@ namespace MdXaml
             get { return (Markdown)GetValue(MarkdownProperty); }
             set { SetValue(MarkdownProperty, value); }
         }
-        public Style MarkdownStyle
+        public Style? MarkdownStyle
         {
-            get { return markdownStyle; }
+            get { return _markdownStyle; }
             set
             {
-                markdownStyle = value;
-                if (value != null && Markdown != null)
+                _markdownStyle = value;
+                if (value is not null && Markdown is not null)
                 {
                     Markdown.DocumentStyle = value;
                 }
@@ -68,16 +68,16 @@ namespace MdXaml
         /// <param name="targetType">The type of the binding target property.</param>
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null)
+            if (value is null)
             {
                 return null;
             }
 
             var text = (string)value;
 
-            var engine = Markdown ?? mMarkdown.Value;
+            var engine = Markdown ?? _markdown.Value;
 
             return engine.Transform(text);
         }
@@ -100,7 +100,7 @@ namespace MdXaml
         private Markdown MakeMarkdown()
         {
             var markdown = new Markdown();
-            if (MarkdownStyle != null)
+            if (MarkdownStyle is not null)
             {
                 markdown.DocumentStyle = MarkdownStyle;
             }
