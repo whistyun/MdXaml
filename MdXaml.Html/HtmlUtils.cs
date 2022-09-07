@@ -44,7 +44,15 @@ namespace MdXaml.Html
 
             for (; ; )
             {
+                var isEmptyTag = s_emptyList.Contains(tags.Peek());
+
                 var mch = TagPattern.Match(text, start);
+
+                if (isEmptyTag && (!mch.Success || mch.Index != start))
+                {
+                    return start;
+                }
+
                 if (!mch.Success) return -1;
 
                 start = mch.Index + mch.Length;
