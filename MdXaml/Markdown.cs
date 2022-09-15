@@ -559,8 +559,13 @@ namespace MdXaml
             string urlTxt = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
-            // collect absolute url
+            return LoadImage(linkText, urlTxt, title);
+        }
 
+        public InlineUIContainer LoadImage(
+            string? tag, string urlTxt, string? tooltipTxt,
+            Action<InlineUIContainer, Image, ImageSource>? onSuccess = null)
+        {
             var urls = new List<Uri>();
 
             if (Uri.IsWellFormedUriString(urlTxt, UriKind.Absolute) || Path.IsPathRooted(urlTxt))
@@ -586,9 +591,8 @@ namespace MdXaml
                 }
             }
 
-
             var container = new InlineUIContainer();
-            var loading = new ImageLoading(this, linkText, urlTxt, title, container);
+            var loading = new ImageLoading(this, tag, urlTxt, tooltipTxt, container, onSuccess);
 
             if (DisabledLazyLoad)
             {
@@ -602,6 +606,7 @@ namespace MdXaml
 
             return container;
         }
+
 
         #endregion
 
@@ -2008,22 +2013,25 @@ namespace MdXaml
 
     internal class ImageLoading
     {
-        private readonly string _linkText;
+        private readonly string? _tag;
         private readonly string _urlTxt;
-        private readonly string _title;
+        private readonly string? _tooltipTxt;
         private readonly InlineUIContainer _container;
+        private readonly Action<InlineUIContainer, Image, ImageSource>? _onSuccess;
 
         private readonly Style? _imageStyle;
 
         public ImageLoading(
             Markdown owner,
-            string linkText, string urlTxt, string title,
-            InlineUIContainer container)
+            string? tag, string urlTxt, string? tooltipTxt,
+            InlineUIContainer container,
+            Action<InlineUIContainer, Image, ImageSource>? onSuccess)
         {
-            _linkText = linkText;
+            _tag = tag;
             _urlTxt = urlTxt;
-            _title = owner.DisabledTootip ? "" : title;
+            _tooltipTxt = owner.DisabledTootip ? "" : tooltipTxt;
             _container = container;
+            _onSuccess = onSuccess;
 
             _imageStyle = owner.ImageStyle;
         }
@@ -2069,14 +2077,14 @@ namespace MdXaml
                 image.Style = _imageStyle;
             }
 
-            if (!string.IsNullOrWhiteSpace(_linkText))
+            if (!string.IsNullOrWhiteSpace(_tag))
             {
-                image.Tag = _linkText;
+                image.Tag = _tag;
             }
 
-            if (!string.IsNullOrWhiteSpace(_title))
+            if (!string.IsNullOrWhiteSpace(_tooltipTxt))
             {
-                image.ToolTip = _title;
+                image.ToolTip = _tooltipTxt;
             }
 
             if (source is BitmapSource bs && bs.IsDownloading)
@@ -2101,6 +2109,8 @@ namespace MdXaml
             }
 
             _container.Child = image;
+
+            _onSuccess?.Invoke(_container, image, source);
         }
     }
 

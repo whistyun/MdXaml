@@ -1,4 +1,4 @@
-﻿using HtmlXaml.Core;
+﻿using MdXaml.Html.Core;
 using MdXaml.Plugins;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -13,7 +13,7 @@ namespace MdXaml.Html
         public HtmlBlockParser()
         {
             _replacer = new ReplaceManager();
-            FirstMatchPattern = HtmlUtils.CreateTagstartPattern(_replacer.BlockTags);
+            FirstMatchPattern = SimpleHtmlUtils.CreateTagstartPattern(_replacer.BlockTags);
         }
 
         public Regex FirstMatchPattern { get; }
@@ -21,11 +21,9 @@ namespace MdXaml.Html
         public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportTextAlignment, Markdown engine, out int parseTextBegin, out int parseTextEnd)
         {
             parseTextBegin = firstMatch.Index;
-            parseTextEnd = HtmlUtils.SearchTagRange(text, firstMatch);
+            parseTextEnd = SimpleHtmlUtils.SearchTagRange(text, firstMatch);
 
-            _replacer.AssetPathRoot = engine.AssetPathRoot;
-            _replacer.BaseUri = engine.BaseUri;
-            _replacer.HyperlinkCommand = engine.HyperlinkCommand;
+            _replacer.Engine = engine;
 
             return _replacer.ParseBlock(text.Substring(parseTextBegin, parseTextEnd - parseTextBegin));
         }

@@ -1,0 +1,19 @@
+﻿#HtmlTag   | FlowDocumentTag                    | TagName              | ExtraModify
+a          | System.Windows.Documents.Hyperlink | TagHyperlink         | Hyperlink
+abbr       | System.Windows.Documents.Span      | TagAbbr              | Acronym
+acronym    | System.Windows.Documents.Span      | TagAbbr              | Acronym
+b          | System.Windows.Documents.Bold      | TagBoldSpan          |
+bdi        | System.Windows.Documents.Span      | TagBdi               |
+br         | System.Windows.Documents.LineBreak |                      |
+cite       | System.Windows.Documents.Span      | TagCite              |
+del        | System.Windows.Documents.Span      | TagStrikethroughSpan | Strikethrough
+em         | System.Windows.Documents.Italic    | TagItalicSpan        |
+i          | System.Windows.Documents.Italic    | TagItalicSpan        |
+ins        | System.Windows.Documents.Underline | TagUnderlineSpan     |
+mark       | System.Windows.Documents.Span      | TagMark              |
+s          | System.Windows.Documents.Span      | TagStrikethroughSpan | Strikethrough
+strike     | System.Windows.Documents.Span      | TagStrikethroughSpan | Strikethrough
+strong     | System.Windows.Documents.Bold      | TagBoldSpan          |
+sub        | System.Windows.Documents.Run       | TagSubscript         | Subscript
+sup        | System.Windows.Documents.Run       | TagSuperscript       | Superscript
+u          | System.Windows.Documents.Underline | TagUnderlineSpan     |

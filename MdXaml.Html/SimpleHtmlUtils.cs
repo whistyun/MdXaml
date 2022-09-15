@@ -5,13 +5,13 @@ using System.Text.RegularExpressions;
 
 namespace MdXaml.Html
 {
-    internal static class HtmlUtils
+    internal static class SimpleHtmlUtils
     {
         private static readonly HashSet<string> s_emptyList = new(new[] {
             "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source",
         });
 
-        private static readonly Regex TagPattern = new(@"<(?'close'/?)[\t ]*(?'tagname'[a-z]+)(?'attributes'[ \t][^>]*|/)?>",
+        private static readonly Regex TagPattern = new(@"<(?'close'/?)[\t ]*(?'tagname'[a-z][a-z0-9]*)(?'attributes'[ \t][^>]*|/)?>",
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static Regex CreateTagstartPattern(IEnumerable<string> tags)
@@ -50,7 +50,9 @@ namespace MdXaml.Html
 
                 if (isEmptyTag && (!mch.Success || mch.Index != start))
                 {
-                    return start;
+                    if (tags.Count == 1) return start;
+                    
+                    tags.Pop();
                 }
 
                 if (!mch.Success) return -1;
