@@ -22,7 +22,7 @@ namespace MdXaml.Html.Core.Parsers
         public bool TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<Inline> generated)
         {
             var doc = new FlowDocument();
-            doc.Blocks.AddRange(manager.ParseAndGroup(node.ChildNodes));
+            doc.Blocks.AddRange(manager.ParseChildrenAndGroup(node));
 
             var box = new FlowDocumentScrollViewer()
             {

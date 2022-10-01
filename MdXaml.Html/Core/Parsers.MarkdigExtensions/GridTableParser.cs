@@ -86,7 +86,7 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
                 var tableSec = new Section();
                 foreach (var cap in captions)
                 {
-                    tableSec.Blocks.AddRange(manager.ParseAndGroup(cap.ChildNodes));
+                    tableSec.Blocks.AddRange(manager.ParseChildrenAndGroup(cap));
                 }
 
                 tableSec.Blocks.Add(table);
@@ -158,7 +158,7 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
                 foreach (var cellTag in rowTag.ChildNodes.CollectTag("td", "th"))
                 {
                     var cell = new TableCell();
-                    cell.Blocks.AddRange(manager.ParseAndGroup(cellTag.ChildNodes));
+                    cell.Blocks.AddRange(manager.ParseChildrenAndGroup(cellTag));
 
                     int colspan = TryParse(cellTag.Attributes["colspan"]?.Value);
                     int rowspan = TryParse(cellTag.Attributes["rowspan"]?.Value);

@@ -24,7 +24,7 @@ namespace MdXaml.Html.Core.Parsers
 
             foreach (var listItemTag in node.ChildNodes.CollectTag("li"))
             {
-                var itemContent = manager.ParseAndGroup(listItemTag.ChildNodes);
+                var itemContent = manager.ParseChildrenAndGroup(listItemTag);
 
                 var listItem = new ListItem();
                 listItem.Blocks.AddRange(itemContent);

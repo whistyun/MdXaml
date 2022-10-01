@@ -22,12 +22,17 @@ namespace MdXaml.Html.Core.Parsers
         {
             if (node is HtmlTextNode textNode)
             {
-                generated = new[] { new Run(textNode.Text.Replace('\n', ' ')) };
+                generated = Replace(textNode.Text, manager);
                 return true;
             }
 
             generated = EnumerableExt.Empty<Inline>();
             return false;
         }
+
+        public IEnumerable<Inline> Replace(string text, ReplaceManager manager)
+            => text.StartsWith("\n") ?
+                    new[] { new Run() { Text = text.Replace('\n', ' ') } } :
+                    manager.Engine.RunSpanGamut(text.Replace('\n', ' '));
     }
 }

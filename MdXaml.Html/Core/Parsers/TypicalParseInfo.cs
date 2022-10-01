@@ -81,15 +81,15 @@ namespace MdXaml.Html.Core.Parsers
                 switch (FlowDocumentTagText)
                 {
                     case "#blocks":
-                        generated = manager.ParseAndGroup(node.ChildNodes).ToArray();
+                        generated = manager.ParseChildrenAndGroup(node).ToArray();
                         break;
 
                     case "#jagging":
-                        generated = manager.ParseJagging(node.ChildNodes).ToArray();
+                        generated = manager.ParseChildrenJagging(node).ToArray();
                         break;
 
                     case "#inlines":
-                        if (manager.ParseJagging(node.ChildNodes).TryCast<Inline>(out var inlines))
+                        if (manager.ParseChildrenJagging(node).TryCast<Inline>(out var inlines))
                         {
                             generated = inlines.ToArray();
                             break;
@@ -111,24 +111,26 @@ namespace MdXaml.Html.Core.Parsers
                 var cntInlines = (tag as Paragraph)?.Inlines ?? (tag as Span)?.Inlines;
                 if (cntInlines is not null)
                 {
-                    if (manager.ParseJagging(node.ChildNodes).TryCast<Inline>(out var parsed))
+                    var parseResult = manager.ParseChildrenJagging(node).ToArray();
+
+
+                    if (parseResult.TryCast<Inline>(out var parsed))
                     {
                         cntInlines.AddRange(parsed);
                     }
                     else
                     {
+
+
+
                         generated = EnumerableExt.Empty<TextElement>();
                         return false;
                     }
 
                 }
-                else if (tag is Run run)
-                {
-                    run.Text = node.InnerText.Replace('\n', ' ');
-                }
                 else if (tag is Section section)
                 {
-                    section.Blocks.AddRange(manager.ParseAndGroup(node.ChildNodes));
+                    section.Blocks.AddRange(manager.ParseChildrenAndGroup(node));
                 }
                 else if (tag is not LineBreak)
                 {
@@ -177,14 +179,14 @@ namespace MdXaml.Html.Core.Parsers
             span.TextDecorations = TextDecorations.Strikethrough;
         }
 
-        public void ExtraModifySubscript(Run run, HtmlNode node, ReplaceManager manager)
+        public void ExtraModifySubscript(Span span, HtmlNode node, ReplaceManager manager)
         {
-            Typography.SetVariants(run, FontVariants.Subscript);
+            Typography.SetVariants(span, FontVariants.Subscript);
         }
 
-        public void ExtraModifySuperscript(Run run, HtmlNode node, ReplaceManager manager)
+        public void ExtraModifySuperscript(Span span, HtmlNode node, ReplaceManager manager)
         {
-            Typography.SetVariants(run, FontVariants.Superscript);
+            Typography.SetVariants(span, FontVariants.Superscript);
         }
 
         public void ExtraModifyAcronym(Span span, HtmlNode node, ReplaceManager manager)

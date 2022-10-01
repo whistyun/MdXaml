@@ -28,8 +28,9 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
             var captionList = captionPair.Item1;
             var contentList = captionPair.Item2;
 
-            var captionBlock = manager.Grouping(manager.ParseJagging(captionList.SelectMany(c => c.ChildNodes)));
-            var contentBlock = manager.Grouping(manager.ParseJagging(contentList));
+
+            var captionBlock = captionList.SelectMany(c => manager.Grouping(manager.ParseBlockAndInline(c)));
+            var contentBlock = contentList.SelectMany(c => manager.Grouping(manager.ParseChildrenJagging(c)));
 
             var section = new Section();
             section.Tag = manager.GetTag(Tags.TagFigure);

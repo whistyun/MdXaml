@@ -21,6 +21,8 @@ namespace MdXaml.Html.Core
         private readonly Dictionary<string, List<IBlockTagParser>> _blockBindParsers;
         private readonly Dictionary<string, List<ITagParser>> _bindParsers;
 
+        private TextNodeParser textParser;
+
         public ReplaceManager()
         {
             _inlineBindParsers = new();
@@ -33,10 +35,10 @@ namespace MdXaml.Html.Core
             Register(new CommentParsre());
             Register(new ImageParser());
             Register(new CodeBlockParser());
-            Register(new CodeSpanParser());
+            //Register(new CodeSpanParser());
             Register(new OrderListParser());
             Register(new UnorderListParser());
-            Register(new TextNodeParser());
+            Register(textParser = new TextNodeParser());
             Register(new HorizontalRuleParser());
             Register(new FigureParser());
             Register(new GridTableParser());
@@ -122,7 +124,7 @@ namespace MdXaml.Html.Core
         public IEnumerable<Block> Parse(string htmldoc)
         {
             var doc = new HtmlDocument();
-            doc.LoadHtml(Format(htmldoc));
+            doc.LoadHtml(htmldoc);
 
             return Parse(doc);
         }
@@ -158,21 +160,49 @@ namespace MdXaml.Html.Core
         }
 
         /// <summary>
-        /// Convert a html tag list to an element of markdown.
+        /// Convert html tag children to an element of markdown.
         /// Inline elements are aggreated into paragraph.
         /// </summary>
-        public IEnumerable<Block> ParseAndGroup(HtmlNodeCollection nodes)
+        public IEnumerable<Block> ParseChildrenAndGroup(HtmlNode node)
         {
-            var jaggingResult = ParseJagging(nodes);
+            var jaggingResult = ParseChildrenJagging(node);
 
             return Grouping(jaggingResult);
+        }
+
+        /// <summary>
+        /// Convert html tag children to an element of markdown.
+        /// this result contains a block element and an inline element.
+        /// </summary>
+        public IEnumerable<TextElement> ParseChildrenJagging(HtmlNode node)
+        {
+            // search empty line
+            var empNd = node.ChildNodes
+                            .Select((nd, idx) => new { Node = nd, Index = idx })
+                            .Where(tpl => tpl.Node is HtmlTextNode)
+                            .Select(tpl => new
+                            {
+                                NodeIndex = tpl.Index,
+                                TextIndex = tpl.Node.InnerText.IndexOf("\n\n")
+                            })
+                            .FirstOrDefault(tpl => tpl.TextIndex != -1);
+
+
+            if (empNd is null)
+            {
+                return ParseJagging(node.ChildNodes);
+            }
+            else
+            {
+                return ParseJaggingAndRunBlockGamut(node.ChildNodes, empNd.NodeIndex, empNd.TextIndex);
+            }
         }
 
         /// <summary>
         /// Convert a html tag to an element of markdown.
         /// this result contains a block element and an inline element.
         /// </summary>
-        public IEnumerable<TextElement> ParseJagging(IEnumerable<HtmlNode> nodes)
+        private IEnumerable<TextElement> ParseJagging(IEnumerable<HtmlNode> nodes)
         {
             bool isPrevBlock = true;
             TextElement? lastElement = null;
@@ -198,13 +228,48 @@ namespace MdXaml.Html.Core
             }
         }
 
+        private IEnumerable<TextElement> ParseJaggingAndRunBlockGamut(IEnumerable<HtmlNode> nodes, int nodeIdx, int textIdx)
+        {
+            var parseTargets = new List<HtmlNode>();
+            var textBuf = new StringBuilder();
+            var mdTextBuf = new StringBuilder();
+
+            foreach (var tpl in nodes.Select((value, i) => new { Node = value, Index = i }))
+            {
+                if (tpl.Index < nodeIdx)
+                {
+                    parseTargets.Add(tpl.Node);
+                }
+                else if (tpl.Index == nodeIdx)
+                {
+                    var nodeText = tpl.Node.InnerText;
+
+                    textBuf.Append(nodeText.Substring(0, textIdx));
+                    mdTextBuf.Append(nodeText.Substring(textIdx + 2));
+                }
+                else
+                {
+                    mdTextBuf.Append(tpl.Node.OuterHtml);
+                }
+            }
+
+            foreach (var elm in ParseJagging(parseTargets))
+                yield return elm;
+
+            foreach (var elm in textParser.Replace(textBuf.ToString(), this))
+                yield return elm;
+
+            foreach (var elm in Engine.RunBlockGamut(mdTextBuf.ToString(), true))
+                yield return elm;
+        }
+
         /// <summary>
         /// Convert a html tag to an element of markdown.
         /// Only tag node and text node are accepted.
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        private IEnumerable<TextElement> ParseBlockAndInline(HtmlNode node)
+        public IEnumerable<TextElement> ParseBlockAndInline(HtmlNode node)
         {
             if (_bindParsers.TryGetValue(node.Name.ToLower(), out var binds))
             {
@@ -237,7 +302,7 @@ namespace MdXaml.Html.Core
         public IEnumerable<Block> ParseBlock(string html)
         {
             var doc = new HtmlDocument();
-            doc.LoadHtml(Format(html));
+            doc.LoadHtml(html);
 
             foreach (var node in doc.DocumentNode.ChildNodes)
                 foreach (var block in ParseBlock(node))
@@ -247,7 +312,7 @@ namespace MdXaml.Html.Core
         public IEnumerable<Inline> ParseInline(string html)
         {
             var doc = new HtmlDocument();
-            doc.LoadHtml(Format(html));
+            doc.LoadHtml(html);
 
             foreach (var node in doc.DocumentNode.ChildNodes)
                 foreach (var inline in ParseInline(node))
@@ -426,8 +491,8 @@ namespace MdXaml.Html.Core
             // html?
             foreach (var child in documentNode.ChildNodes)
             {
-                if (child.Name == HtmlTextNode.HtmlNodeTypeNameText
-                    || child.Name == HtmlTextNode.HtmlNodeTypeNameComment)
+                if (child.Name == HtmlNode.HtmlNodeTypeNameText
+                    || child.Name == HtmlNode.HtmlNodeTypeNameComment)
                     continue;
 
                 switch (child.Name.ToLower())
@@ -436,8 +501,8 @@ namespace MdXaml.Html.Core
                         // body? head?
                         foreach (var descendants in child.ChildNodes)
                         {
-                            if (descendants.Name == HtmlTextNode.HtmlNodeTypeNameText
-                                || descendants.Name == HtmlTextNode.HtmlNodeTypeNameComment)
+                            if (descendants.Name == HtmlNode.HtmlNodeTypeNameText
+                                || descendants.Name == HtmlNode.HtmlNodeTypeNameComment)
                                 continue;
                             switch (descendants.Name.ToLower())
                             {
@@ -473,9 +538,5 @@ namespace MdXaml.Html.Core
             }
             return null;
         }
-
-        public static string Format(string html)
-            => html.Replace("\r\n", "\n")
-                   .Replace("\r", "\n");
     }
 }

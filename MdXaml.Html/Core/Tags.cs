@@ -14,15 +14,15 @@ namespace MdXaml.Html.Core
         TagTableCaption,
 
         TagBlockquote,
-        TagBoldSpan,
+        TagBold,
         TagCite,
         TagFooter,
-        TagItalicSpan,
+        TagItalic,
         TagMark,
-        TagStrikethroughSpan,
+        TagStrikethrough,
         TagSubscript,
         TagSuperscript,
-        TagUnderlineSpan,
+        TagUnderline,
         TagHyperlink,
 
         TagFigure,
@@ -35,7 +35,7 @@ namespace MdXaml.Html.Core
         TagHeading5,
         TagHeading6,
 
-        TagCode,
+        TagCodeSpan,
         TagCodeBlock,
         TagAddress,
         TagArticle,
