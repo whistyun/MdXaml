@@ -18,7 +18,7 @@ namespace MdXaml.Html
 
         public Regex FirstMatchPattern { get; }
 
-        public IEnumerable<Inline> Parse(string text, Match firstMatch, Markdown engine, out int parseTextBegin, out int parseTextEnd)
+        public IEnumerable<Inline> Parse(string text, Match firstMatch, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
         {
             parseTextBegin = firstMatch.Index;
             parseTextEnd = SimpleHtmlUtils.SearchTagRange(text, firstMatch);

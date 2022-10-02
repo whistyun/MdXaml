@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MdXaml.Plugins;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
-namespace MdXaml.Plugins
+namespace MdXaml
 {
     internal class ImageLoaderManager
     {

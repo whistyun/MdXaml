@@ -33,4 +33,8 @@
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
+  </ItemGroup>
 </Project>

@@ -36,7 +36,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Inline> Parse(string text, Match firstMatch, Markdown engine, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Inline> Parse(string text, Match firstMatch, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;
@@ -56,7 +56,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Inline> Parse(string text, Match firstMatch, Markdown engine, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Inline> Parse(string text, Match firstMatch, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;

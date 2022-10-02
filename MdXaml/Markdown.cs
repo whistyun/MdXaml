@@ -36,7 +36,7 @@ namespace Markdown.Xaml
 namespace MdXaml
 #endif
 {
-    public class Markdown : DependencyObject, IUriContext
+    public class Markdown : DependencyObject,IMarkdown, IUriContext
     {
         #region const
         /// <summary>

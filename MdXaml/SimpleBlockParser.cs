@@ -38,7 +38,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, Markdown engine, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;
@@ -58,7 +58,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, Markdown engine, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;
@@ -78,7 +78,7 @@ namespace MdXaml
                 _converter = converter;
             }
 
-            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, Markdown engine, out int parseTextBegin, out int parseTextEnd)
+            public IEnumerable<Block> Parse(string text, Match firstMatch, bool supportAlignment, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
             {
                 parseTextBegin = firstMatch.Index;
                 parseTextEnd = firstMatch.Index + firstMatch.Length;

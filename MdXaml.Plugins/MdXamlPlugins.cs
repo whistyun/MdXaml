@@ -9,12 +9,7 @@ using System.Windows.Markup;
 namespace MdXaml.Plugins
 {
     [ContentProperty(nameof(Setups))]
-#if MIG_FREE
-    internal 
-#else
-    public
-#endif
-    class MdXamlPlugins
+    public class MdXamlPlugins
     {
         public static readonly MdXamlPlugins Default = new();
 

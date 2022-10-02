@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Linq;
 using System.Text;
 using MdXaml;
+using MdXaml.Plugins;
 
 namespace MdXaml.Html.Core
 {
@@ -65,7 +66,7 @@ namespace MdXaml.Html.Core
 
         public UnknownTagsOption UnknownTags { get; set; }
 
-        public Markdown Engine { get; set; }
+        public IMarkdown Engine { get; set; }
 
         public ICommand? HyperlinkCommand => Engine.HyperlinkCommand;
 

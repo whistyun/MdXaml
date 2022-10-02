@@ -35,4 +35,8 @@
   <ItemGroup>
     <Page Remove="Markdown.Style.xaml" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
+  </ItemGroup>
 </Project>
