@@ -118,11 +118,19 @@ namespace MdXaml.Html.Core.Parsers
                     {
                         cntInlines.AddRange(parsed);
                     }
+                    else if (tag is Paragraph && parseResult.Length == 1 && parseResult[0] is Paragraph)
+                    {
+                        tag = parseResult[0];
+                    }
+                    else if (tag is Span && manager.Grouping(parseResult).TryCast<Paragraph>(out var paragraphs))
+                    {
+                        // FIXME: MdXaml can't bubbling a block element in a inline element.
+                        foreach (var para in paragraphs)
+                            foreach (var inline in para.Inlines.ToArray())
+                                cntInlines.Add(inline);
+                    }
                     else
                     {
-
-
-
                         generated = EnumerableExt.Empty<TextElement>();
                         return false;
                     }
