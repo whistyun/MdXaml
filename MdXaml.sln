@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Svg", "MdXaml.Svg\Md
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Html.Test", "tests\MdXaml.Html.Test\MdXaml.Html.Test.csproj", "{CEF2B49F-90AF-4B65-AA0C-A12AB1C0A18F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Plugins", "MdXaml.Plugins\MdXaml.Plugins.csproj", "{823DB5D5-17C0-4418-895C-A28DD7D04CE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,10 @@ Global
 		{CEF2B49F-90AF-4B65-AA0C-A12AB1C0A18F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEF2B49F-90AF-4B65-AA0C-A12AB1C0A18F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEF2B49F-90AF-4B65-AA0C-A12AB1C0A18F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{823DB5D5-17C0-4418-895C-A28DD7D04CE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{823DB5D5-17C0-4418-895C-A28DD7D04CE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{823DB5D5-17C0-4418-895C-A28DD7D04CE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{823DB5D5-17C0-4418-895C-A28DD7D04CE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
