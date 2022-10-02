@@ -5,14 +5,16 @@ using System.Text.RegularExpressions;
 
 namespace MdXaml.Html
 {
-    internal static class HtmlUtils
+    internal static class SimpleHtmlUtils
     {
         private static readonly HashSet<string> s_emptyList = new(new[] {
             "area", "base", "br", "col", "embed", "hr", "img", "input", "keygen", "link", "meta", "param", "source",
         });
 
-        private static readonly Regex TagPattern = new(@"<(?'close'/?)[\t ]*(?'tagname'[a-z]+)(?'attributes'[ \t][^>]*|/)?>",
+        private static readonly Regex s_tagPattern = new(@"<(?'close'/?)[\t ]*(?'tagname'[a-z][a-z0-9]*)(?'attributes'[ \t][^>]*|/)?>",
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        private static readonly Regex s_emptylinePattern = new(@"\n{2}", RegexOptions.Compiled);
 
         public static Regex CreateTagstartPattern(IEnumerable<string> tags)
         {
@@ -37,6 +39,27 @@ namespace MdXaml.Html
             }
         }
 
+        public static int SearchTagRangeContinuous(string text, Match tagStartPatternMatch)
+        {
+            int idx = SearchTagRange(text, tagStartPatternMatch);
+
+            for (; ; )
+            {
+                if (text.Length - 1 <= idx) return idx;
+
+                var emp = s_emptylinePattern.Match(text, idx);
+                if (!emp.Success) return text.Length - 1;
+
+                var tag = s_tagPattern.Match(text, idx);
+                if (tag.Success && tag.Index < emp.Index)
+                {
+                    idx = SearchTagRange(text, tag);
+                }
+                else return emp.Index;
+            }
+        }
+
+
         public static int SearchTagEnd(string text, int start, string startTagName)
         {
             var tags = new Stack<string>();
@@ -46,11 +69,13 @@ namespace MdXaml.Html
             {
                 var isEmptyTag = s_emptyList.Contains(tags.Peek());
 
-                var mch = TagPattern.Match(text, start);
+                var mch = s_tagPattern.Match(text, start);
 
                 if (isEmptyTag && (!mch.Success || mch.Index != start))
                 {
-                    return start;
+                    if (tags.Count == 1) return start;
+
+                    tags.Pop();
                 }
 
                 if (!mch.Success) return -1;

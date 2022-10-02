@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
     <PackageId>MdXaml.Html</PackageId>
-    <Version>1.16.0-alpha1</Version>
+    <Version>1.16.0</Version>
     <Authors>whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>
-    <Copyright>Copyright (c) 2021 whistyun</Copyright>
+    <Copyright>© Simon Baynes 2013; whistyun 2022</Copyright>
     <PackageProjectUrl>https://github.com/whistyun/MdXaml</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
@@ -16,13 +16,20 @@
     <LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-
 	<ItemGroup>
+	  <None Remove="Core\Parsers\TypicalBlockParser.tsv" />
+	  <None Remove="Core\Parsers\TypicalInlineParser.tsv" />
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Include="Core\Parsers\TypicalBlockParser.tsv" />
+	  <EmbeddedResource Include="Core\Parsers\TypicalInlineParser.tsv" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\MdXaml\MdXaml\MdXaml.csproj" />
-		<ProjectReference Include="..\externals\HtmlXaml.Core\HtmlXaml.Core\HtmlXaml.Core.csproj" />
-	</ItemGroup>
+		<ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
+    <PackageReference Include="AvalonEdit" Version="6.0.0" />
+  </ItemGroup>
 
 </Project>

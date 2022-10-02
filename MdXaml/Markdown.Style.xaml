@@ -86,6 +86,15 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            <Style TargetType="Span">
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="CodeSpan">
+                        <Setter Property="FontFamily" Value="Courier New"/>
+                        <Setter Property="Foreground" Value="DarkBlue"/>
+                        <Setter Property="Background" Value="#E0E0E0"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
             <Style TargetType="Hyperlink">
                 <Setter Property="TextDecorations" Value="None" />
@@ -246,6 +255,15 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            <Style TargetType="Span">
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="CodeSpan">
+                        <Setter Property="FontFamily" Value="Courier New"/>
+                        <Setter Property="Foreground" Value="DarkBlue"/>
+                        <Setter Property="Background" Value="#E0E0E0"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
             <Style TargetType="Hyperlink">
                 <Setter Property="TextDecorations"    Value="None" />
@@ -397,6 +415,15 @@
             </Style>
 
             <Style TargetType="Run">
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="CodeSpan">
+                        <Setter Property="FontFamily" Value="Courier New"/>
+                        <Setter Property="FontSize"   Value="11.9"/>
+                        <Setter Property="Background" Value="#12181F25"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
                         <Setter Property="FontFamily" Value="Courier New"/>
@@ -569,6 +596,15 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+            <Style TargetType="Span">
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="CodeSpan">
+                        <Setter Property="FontFamily" Value="Courier New"/>
+                        <Setter Property="FontSize"   Value="11.9"/>
+                        <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800  , TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
             <Style TargetType="Hyperlink">
                 <Setter Property="TextDecorations"    Value="None" />
@@ -723,6 +759,15 @@
             </Style>
 
             <Style TargetType="Run">
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="CodeSpan">
+                        <Setter Property="FontFamily"      Value="Courier New"/>
+                        <Setter Property="Foreground"      Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
                         <Setter Property="FontFamily"      Value="Courier New"/>
@@ -893,6 +938,15 @@
             </Style>
 
             <Style TargetType="Run">
+                <Style.Triggers>
+                    <Trigger Property="Tag" Value="CodeSpan">
+                        <Setter Property="FontFamily" Value="Courier New"/>
+                        <Setter Property="Foreground"      Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                        <Setter Property="Background"      Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer} }"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
                         <Setter Property="FontFamily" Value="Courier New"/>

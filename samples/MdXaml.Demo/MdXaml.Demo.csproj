@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -20,9 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
+    <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
     <ProjectReference Include="..\..\MdXaml.Html\MdXaml.Html.csproj" />
     <ProjectReference Include="..\..\MdXaml.Svg\MdXaml.Svg.csproj" />
-    <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
   </ItemGroup>
 
   <ItemGroup>

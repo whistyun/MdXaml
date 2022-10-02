@@ -1,4 +1,4 @@
-﻿using MdXaml.Plugins;
+using MdXaml.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Text;
