@@ -14,11 +14,10 @@
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
     <Configurations>Debug;Release</Configurations>
     <LangVersion>9</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
-    <Nullable>enable</Nullable>
     <SignAssembly>true</SignAssembly>
-    <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 

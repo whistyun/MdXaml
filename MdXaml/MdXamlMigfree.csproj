@@ -19,9 +19,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <PropertyGroup>
-    <Nullable>enable</Nullable>
     <SignAssembly>true</SignAssembly>
-    <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 

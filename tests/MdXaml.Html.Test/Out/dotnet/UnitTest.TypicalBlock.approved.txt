@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph Tag="Heading1">
+    <Bold Tag="Bold">Heading1</Bold> Title</Paragraph>
+  <Paragraph Tag="Heading2">
+    <Italic Tag="Italic">Sub</Italic> Titile</Paragraph>
+  <Paragraph Tag="Heading3">H3_Title</Paragraph>
+  <Paragraph Tag="Heading4">H4_Title</Paragraph>
+  <Paragraph Tag="Heading5">H5_Title</Paragraph>
+  <Paragraph Tag="Heading6">H6_Title</Paragraph>
+  <Section Tag="Address">
+    <Paragraph>Written by <Hyperlink Command="GoToPage" CommandParameter="mailto:webmaster@example.com" Tag="Hyperlink">Jon Doe</Hyperlink>.<LineBreak />simewhere, someland, somecountry</Paragraph>
+  </Section>
+  <Section Tag="Article">
+    <Paragraph Tag="Heading3" xml:space="preserve">Article         Element</Paragraph>
+    <Paragraph xml:space="preserve">description of         this element...</Paragraph>
+  </Section>
+  <Section Tag="Aside">
+    <Paragraph Tag="Heading4" xml:space="preserve">ASide         Element</Paragraph>
+    <Paragraph>このタグに関する説明を書いてください・・・</Paragraph>
+  </Section>
+  <Section Tag="Blockquote">
+    <Section Tag="Aside">
+      <Paragraph Tag="Heading4" xml:space="preserve">ASide             Element</Paragraph>
+      <Paragraph>このタグに関する説明を書いてください・・・</Paragraph>
+    </Section>
+    <Paragraph>hm?</Paragraph>
+  </Section>
+  <Section TextAlignment="Center" Tag="Center">
+    <Paragraph Tag="Heading5">Center Element</Paragraph>
+    <Paragraph>center tag center tag center tag...</Paragraph>
+  </Section>
+  <Paragraph Tag="Heading6">H6_Title</Paragraph>
+  <Paragraph>abcdefghi</Paragraph>
+  <Paragraph>jklmnopqr</Paragraph>
+  <Paragraph>stuvwxyz</Paragraph>
+  <Paragraph>abcdefghi</Paragraph>
+  <Paragraph>jklmnopqr<Run>stuvwxyz</Run></Paragraph>
+</FlowDocument>

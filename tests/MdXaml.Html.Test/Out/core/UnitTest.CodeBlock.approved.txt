@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:icscaed="clr-namespace:ICSharpCode.AvalonEdit.Document;assembly=ICSharpCode.AvalonEdit" xmlns:scmd="clr-namespace:System.ComponentModel.Design;assembly=System.ComponentModel.TypeConverter" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="plain text&#xA;Sub Test()&#xA;    Dim A As Long&#xA;    Dim B As Integer&#xA;End Sub&#xA;" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>plain text
+Sub Test()
+    Dim A As Long
+    Dim B As Integer
+End Sub
+</avalonedit:TextEditor>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor SyntaxHighlighting="Java" IsReadOnly="True" IsModified="True" Tag="java" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="import java.lang.*;&#xA;public class Program {&#xA;    public static void main(String[] args) {&#xA;        System.out.println(&quot;Hello&quot;);&#xA;    }    &#xA;}&#xA;" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>import java.lang.*;
+public class Program {
+    public static void main(String[] args) {
+        System.out.println("Hello");
+    }    
+}
+</avalonedit:TextEditor>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="NEMUI&#xA;ONAKASUITA&#xA;SHINDOI&#xA;" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>NEMUI
+ONAKASUITA
+SHINDOI
+</avalonedit:TextEditor>
+  </BlockUIContainer>
+</FlowDocument>

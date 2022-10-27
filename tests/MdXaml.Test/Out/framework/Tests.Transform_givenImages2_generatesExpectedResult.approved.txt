@@ -9,5 +9,5 @@
       </Image.Source>
     </Image>
   </Paragraph>
-  <Paragraph>A resource image <Image Tag="image" Width="701.660827636719" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" /></Image.Source></Image>. A local image <Image Tag="image" Width="384.1552734375" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" /></Image.Source></Image>.</Paragraph>
+  <Paragraph>A resource image <Image Tag="image" Width="701.660803964984" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" /></Image.Source></Image>. A local image <Image Tag="image" Width="384.155275164404" Margin="0,0,0,0"><Image.Source><BitmapImage BaseUri="{x:Null}" /></Image.Source></Image>.</Paragraph>
 </FlowDocument>
