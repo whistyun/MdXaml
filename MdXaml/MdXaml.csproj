@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PackageId>MdXaml</PackageId>
-    <Version>1.16.0</Version>
+    <Version>1.16.1</Version>
     <Authors>Bevan Arps(original); whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>
@@ -13,8 +13,13 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
     <Configurations>Debug;Release</Configurations>
-	<LangVersion>9</LangVersion>
-	<Nullable>enable</Nullable>
+    <LangVersion>9</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

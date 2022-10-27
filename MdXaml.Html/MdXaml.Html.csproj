@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
     <PackageId>MdXaml.Html</PackageId>
-    <Version>1.16.0</Version>
+    <Version>1.16.1</Version>
     <Authors>whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>
@@ -16,7 +16,13 @@
     <LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-	<ItemGroup>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
 	  <None Remove="Core\Parsers\TypicalBlockParser.tsv" />
 	  <None Remove="Core\Parsers\TypicalInlineParser.tsv" />
 	</ItemGroup>
