@@ -2,6 +2,7 @@
 using ApprovalTests;
 using ApprovalTests.Reporters;
 using MdXaml.Plugins;
+using MdXamlTest;
 using NUnit.Framework;
 using System.Linq;
 using System.Threading;
@@ -18,7 +19,11 @@ namespace MdXaml.Html.Test
         [Apartment(ApartmentState.STA)]
         public void Setup()
         {
-            var plugins = new MdXamlPlugins();
+                var fwNm = Utils.GetRuntimeName();
+                Approvals.RegisterDefaultNamerCreation(() => new ChangeOutputPathNamer("Out/" + fwNm));
+
+
+                var plugins = new MdXamlPlugins();
             plugins.Setups.Add(new HtmlPluginSetup());
 
             manager = new()

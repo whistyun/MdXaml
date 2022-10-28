@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph>An <Span Tag="CodeSpan">apple</Span> is an editable fruit produced by an <Span Tag="CodeSpan">apple tree</Span>.</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>
+    <Span Tag="CodeSpan">Apple trees</Span> are caltivated wordwide.</Paragraph>
+</FlowDocument>

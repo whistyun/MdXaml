@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>netcoreapp3.0;net462;net5.0-windows</TargetFrameworks>
 
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>

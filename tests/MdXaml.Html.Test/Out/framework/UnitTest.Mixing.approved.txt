@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph Tag="Heading1">Html Mixing</Paragraph>
+  <Paragraph Tag="Heading2">Html style</Paragraph>
+  <Paragraph>
+    <Hyperlink Command="GoToPage" CommandParameter="http://example.com" Tag="Hyperlink">
+      <Label>Load https://img.shields.io/nuget/v/AssemblyInfoHelper.svg</Label> asdf <Italic Tag="Italic">asdf</Italic> asdf</Hyperlink>
+  </Paragraph>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <Paragraph Tag="Heading2">Html style</Paragraph>
+  <Paragraph>
+    <Hyperlink Command="GoToPage" CommandParameter="http://example.com" Tag="Hyperlink">![](https://img.shields.io/nuget/v/AssemblyInfoHelper.svg) asdf *asdf* asdf</Hyperlink>
+  </Paragraph>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <Table>
+    <Table.Columns>
+      <TableColumn />
+      <TableColumn />
+    </Table.Columns>
+    <TableRowGroup Tag="TableBody">
+      <TableRow Tag="OddTableRow">
+        <TableCell ColumnSpan="1" RowSpan="1">
+          <List MarkerStyle="Disc">
+            <ListItem>
+              <Paragraph>one</Paragraph>
+            </ListItem>
+            <ListItem>
+              <Paragraph>two</Paragraph>
+            </ListItem>
+          </List>
+        </TableCell>
+      </TableRow>
+    </TableRowGroup>
+  </Table>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <Table>
+    <Table.Columns>
+      <TableColumn />
+      <TableColumn />
+    </Table.Columns>
+    <TableRowGroup Tag="TableBody">
+      <TableRow Tag="OddTableRow">
+        <TableCell ColumnSpan="1" RowSpan="1">
+          <Paragraph>* one * two</Paragraph>
+        </TableCell>
+      </TableRow>
+    </TableRowGroup>
+  </Table>
+</FlowDocument>

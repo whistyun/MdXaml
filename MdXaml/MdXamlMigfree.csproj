@@ -4,7 +4,7 @@
     <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PackageId>MdXaml_migfree</PackageId>
-    <Version>1.16.0</Version>
+    <Version>1.16.1</Version>
     <Authors>Bevan Arps(original); whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>
@@ -17,6 +17,10 @@
     <RootNamespace>Markdown.Xaml</RootNamespace>
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph>
+    <Button IsEnabled="False">
+      <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
+        <FlowDocument />
+      </FlowDocumentScrollViewer>
+    </Button> <Button IsEnabled="False"><FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0"><FlowDocument /></FlowDocumentScrollViewer></Button> <Button IsEnabled="False"><FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0"><FlowDocument><Paragraph>some text</Paragraph></FlowDocument></FlowDocumentScrollViewer></Button> <Button IsEnabled="False"><FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0"><FlowDocument><Section TextAlignment="Center" Tag="Center"><Paragraph Tag="Heading1">title</Paragraph></Section><Paragraph>description1 description2</Paragraph></FlowDocument></FlowDocumentScrollViewer></Button></Paragraph>
+</FlowDocument>
