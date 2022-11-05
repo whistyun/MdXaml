@@ -9,4 +9,8 @@
     <BaseOutputPath>$(ArtifactsDir)bin\$(MSBuildProjectName)\</BaseOutputPath>
     <PackageOutputPath>$(ArtifactsDir)nuget\$(Configuration)\</PackageOutputPath>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageVersion>1.16.2</PackageVersion>
+  </PropertyGroup>
 </Project>

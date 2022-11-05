@@ -349,7 +349,7 @@ namespace MdXaml
                             throw new ArgumentException($"unsupport schema {path.Scheme}");
                     }
 
-                    var assetPathRoot = path.Scheme == "file" ? path.LocalPath : path.AbsoluteUri;
+                    var assetPathRoot = path.Scheme == "file" ? Path.GetDirectoryName(path.LocalPath) : path.AbsoluteUri;
 
                     Engine.AssetPathRoot = assetPathRoot;
 
@@ -384,7 +384,7 @@ namespace MdXaml
                 }
                 else
                 {
-                    var assetPath = Path.Combine(AssetPathRoot, source.LocalPath);
+                    var assetPath = Path.Combine(AssetPathRoot, source.ToString());
                     TryOpen(new Uri(assetPath));
                 }
             }

@@ -1,0 +1,63 @@
+﻿<Window x:Class="VisualTestApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VisualTestApp"
+        xmlns:mdxam="clr-namespace:MdXaml;assembly=MdXaml"
+        xmlns:mdplug="clr-namespace:MdXaml.Plugins;assembly=MdXaml.Plugins"
+        xmlns:mdsvg="clr-namespace:MdXaml.Svg;assembly=MdXaml.Svg"
+        mc:Ignorable="d"
+        Title="VisualTestApp.MainWindow" Height="450" Width="800">
+
+    <Window.DataContext>
+        <local:MainWIndowViewModel/>
+    </Window.DataContext>
+
+    <DockPanel LastChildFill="True">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label 
+                Grid.Row="0" Grid.Column="0"
+                Content="AssetPathRoot"
+                />
+
+            <TextBox
+                Grid.Row="0" Grid.Column="1"
+                x:Name="AssetPathRootTextBox"
+                Text="{Binding AssetPathRoot}"
+                />
+
+            <Label 
+                Grid.Row="1" Grid.Column="0"
+                Content="Markdown"
+                />
+
+            <TextBox
+                Grid.Row="1" Grid.Column="1"
+                x:Name="MarkdownPathTextBlox"
+                Text="{Binding MarkdownPath, UpdateSourceTrigger=PropertyChanged}"
+                />
+        </Grid>
+
+        <mdxam:MarkdownScrollViewer 
+            x:Name="MarkdownScrollViewer"
+            AssetPathRoot="{Binding AssetPathRoot}"
+            Source="{Binding MarkdownPath}">
+
+            <mdxam:MarkdownScrollViewer.Plugins>
+                <mdplug:MdXamlPlugins>
+                    <mdsvg:SvgPluginSetup/>
+                </mdplug:MdXamlPlugins>
+            </mdxam:MarkdownScrollViewer.Plugins>
+        </mdxam:MarkdownScrollViewer>
+    </DockPanel>
+</Window>

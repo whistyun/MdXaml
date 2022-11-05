@@ -134,8 +134,12 @@ namespace MdXaml
             {
                 var imgSource = new BitmapImage();
                 imgSource.BeginInit();
+                // close the stream after the BitmapImage is created
+                imgSource.CacheOption = BitmapCacheOption.OnLoad;
                 imgSource.StreamSource = stream;
                 imgSource.EndInit();
+
+                stream.Close();
 
                 return imgSource;
             }
@@ -156,6 +160,7 @@ namespace MdXaml
                 catch { }
             }
 
+            stream.Close();
             return null;
         }
 
@@ -202,25 +207,25 @@ namespace MdXaml
             }
 
             return new Result<Stream>("unsupport scheme");
+
+
+            static async Task<Stream> CheckSupportSeek(Stream stream)
+            {
+                if (stream.CanSeek)
+                    return stream;
+
+                return await AsMemoryStream(stream);
+            }
+
+            static async Task<MemoryStream> AsMemoryStream(Stream stream)
+            {
+                var ms = new MemoryStream();
+                await stream.CopyToAsync(ms);
+                stream.Close();
+
+                return ms;
+            }
         }
-
-        private static async Task<Stream> CheckSupportSeek(Stream stream)
-        {
-            if (stream.CanSeek)
-                return stream;
-
-            return await AsMemoryStream(stream);
-        }
-
-        private static async Task<MemoryStream> AsMemoryStream(Stream stream)
-        {
-            var ms = new MemoryStream();
-            await stream.CopyToAsync(ms);
-            stream.Close();
-
-            return ms;
-        }
-
 
         public class Result<T> where T : class
         {
