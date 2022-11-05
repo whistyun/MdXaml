@@ -1,5 +1,4 @@
-﻿#if !OnGitHubAction
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Diagnostics;
 using System.Drawing.Text;
@@ -124,4 +123,3 @@ namespace VisualTest
         }
     }
 }
-#endif
