@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿#if !OnGitHubAction
+using NUnit.Framework;
 using System;
 using System.Diagnostics;
 using System.Drawing.Text;
@@ -34,16 +35,21 @@ namespace VisualTest
             _exeFilePath = Path.Combine(_projectDirectory.Replace("VisualTest", "VisualTestApp"), relPath, "VisualTestApp.exe");
         }
 
-
         [SetUp]
         public void Setup()
         {
             _process = Process.Start(_exeFilePath);
 
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             while (_hwnd == IntPtr.Zero)
             {
                 Thread.Sleep(1000);
                 _hwnd = _process.MainWindowHandle;
+
+                if (stopwatch.ElapsedMilliseconds > 5000)
+                    throw new InvalidOperationException("Application startup timeout");
             }
         }
 
@@ -60,10 +66,16 @@ namespace VisualTest
             markdownValPtn.SetValue("Markdown.txt");
 
             // wait for viewing markdown
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
             var markdownView = mainWindow.FindPatternById<TextPattern>("MarkdownScrollViewer");
             while (markdownView.DocumentRange.GetChildren().Length < 4)
             {
                 Thread.Sleep(1000);
+
+                if (stopwatch.ElapsedMilliseconds > 5000)
+                    throw new InvalidOperationException("Markdown drawing timeout");
             }
 
             Thread.Sleep(1000);
@@ -112,3 +124,4 @@ namespace VisualTest
         }
     }
 }
+#endif

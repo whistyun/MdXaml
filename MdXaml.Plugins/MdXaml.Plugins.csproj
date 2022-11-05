@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
     <PackageId>MdXaml.Plugins</PackageId>
-    <Version>1.16.1</Version>
+    <Version>$(PackageVersion)</Version>
     <Authors>whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>

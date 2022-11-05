@@ -25,5 +25,8 @@
     </None>
   </ItemGroup>
 
+  <PropertyGroup Condition=" '$(RUNON_GITHUB)' != '' ">
+    <DefineConstants>OnGitHubAction</DefineConstants>
+  </PropertyGroup>
 
 </Project>
