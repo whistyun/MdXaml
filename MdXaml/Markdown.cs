@@ -1252,13 +1252,26 @@ namespace MdXaml
                 return txt;
             }
 
+            // split columns by '|' but ignore '\|'
+            static string[] SplitColumns(string text)
+            {
+                text = ExtractCoverBar(text);
+
+                text = text.Replace("\\|", "" + (char)5);
+
+                var columns = text.Split('|').Select(x => x.Replace((char)5, '|'))
+                    .ToArray();
+
+                return columns;
+            }
+
             var mdtable = new MdTable(
-                ExtractCoverBar(headerTxt).Split('|'),
-                ExtractCoverBar(styleTxt).Split('|').Select(txt => txt.Trim()).ToArray(),
+                SplitColumns(headerTxt),
+                SplitColumns(styleTxt).Select(txt => txt.Trim()).ToArray(),
                 rowTxt.Split('\n').Select(ritm =>
                 {
                     var trimRitm = ritm.Trim();
-                    return ExtractCoverBar(trimRitm).Split('|');
+                    return SplitColumns(trimRitm);
                 }).ToList());
 
             // table
