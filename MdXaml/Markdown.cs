@@ -972,7 +972,7 @@ namespace MdXaml
             ^
             (?<whltxt>                      # whole list
               (?<mkr_i>                     # list marker with indent
-                (?![ ]{{0,3}}(?<hrm>[-=*_])([ ]{{0,2}}\k<hrm>){{2,}})
+                (?![ ]{{0,3}}(?<hrm>[-=*_])([ ]{{0,2}}\k<hrm>){{2,}}[ ]*\n)
                 (?<idt>[ ]{{0,{2}}})
                 (?<mkr>{0})                 # first list item marker
                 [ ]+
@@ -990,7 +990,7 @@ namespace MdXaml
               )
             )";
 
-        private static readonly Regex _startNoIndentRule = new(@"\A[ ]{0,2}(?<hrm>[-=*_])([ ]{0,2}\k<hrm>){2,}",
+        private static readonly Regex _startNoIndentRule = new(@"\A[ ]{0,2}(?<hrm>[-=*_])([ ]{0,2}\k<hrm>){2,}[ ]*$",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private static readonly Regex _startQuoteOrHeader = new(@"\A(\#{1,6}[ ]|>|```)", RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
