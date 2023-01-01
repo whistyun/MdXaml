@@ -138,6 +138,42 @@
         <avalonedit:TextEditorOptions />
       </avalonedit:TextEditor.Options>* * *</avalonedit:TextEditor>
   </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleBold">
+    <StackPanel>
+      <Separator Margin="0,0,0,0" />
+      <Separator Margin="0,0,0,0" />
+    </StackPanel>
+  </BlockUIContainer>
   <Paragraph>Underscores:</Paragraph>
   <BlockUIContainer Tag="RuleBoldWithSingle">
     <StackPanel>

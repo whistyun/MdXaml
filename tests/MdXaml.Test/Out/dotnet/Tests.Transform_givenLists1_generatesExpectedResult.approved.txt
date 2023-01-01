@@ -54,6 +54,23 @@
     <ListItem>
       <Paragraph>asterisk 3</Paragraph>
     </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Bold Tag="Bold">bold</Bold>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Italic Tag="Italic">italic</Italic>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Bold Tag="Bold">
+          <Italic Tag="Italic">bold italic</Italic>
+        </Bold>
+      </Paragraph>
+    </ListItem>
   </List>
   <BlockUIContainer Tag="RuleBold">
     <StackPanel>
