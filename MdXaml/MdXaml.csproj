@@ -11,6 +11,7 @@
     <Copyright>Copyright (c) 2010 Bevan Arps, 2020 whistyun</Copyright>
     <PackageProjectUrl>https://github.com/whistyun/MdXaml</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>MdXaml.md</PackageReadmeFile>
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
     <Configurations>Debug;Release</Configurations>
     <LangVersion>9</LangVersion>
@@ -24,6 +25,7 @@
   <ItemGroup>
     <None Remove="EmojiTable.txt" />
     <EmbeddedResource Include="EmojiTable.txt" />
+    <None Include="..\pack_readme\MdXaml.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>

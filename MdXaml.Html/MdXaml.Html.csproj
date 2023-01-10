@@ -9,6 +9,7 @@
     <Copyright>© Simon Baynes 2013; whistyun 2022</Copyright>
     <PackageProjectUrl>https://github.com/whistyun/MdXaml</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>MdXaml.Html.md</PackageReadmeFile>
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
     <Configurations>Debug;Release</Configurations>
 
@@ -20,6 +21,11 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\pack_readme\MdXaml.Html.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
   <ItemGroup>
 	  <None Remove="Core\Parsers\TypicalBlockParser.tsv" />
 	  <None Remove="Core\Parsers\TypicalInlineParser.tsv" />
