@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
+		<TargetFrameworks>netcoreapp3.0;net452;net5.0-windows</TargetFrameworks>
     <PackageId>MdXaml.Html</PackageId>
     <Version>$(PackageVersion)</Version>
     <Authors>whistyun</Authors>

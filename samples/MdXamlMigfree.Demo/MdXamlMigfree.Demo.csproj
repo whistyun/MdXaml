@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net45;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net452;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <IsPackable>False</IsPackable>
   </PropertyGroup>

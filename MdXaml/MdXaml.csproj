@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0;net452;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <PackageId>MdXaml</PackageId>
     <Version>$(PackageVersion)</Version>
@@ -32,7 +32,7 @@
     <Page Remove="MarkdownMigFree.Style.xaml" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 
