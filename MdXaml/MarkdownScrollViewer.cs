@@ -281,6 +281,17 @@ namespace MdXaml
             }
         }
 
+        public new FlowDocument? Document
+        {
+            get
+            {
+                var bs = (FlowDocumentScrollViewer)this;
+                return bs.Document ??= new FlowDocument();
+            }
+            set => ((FlowDocumentScrollViewer)this).Document = value;
+        }
+
+
         public MarkdownScrollViewer()
         {
             _engine = new Markdown();
