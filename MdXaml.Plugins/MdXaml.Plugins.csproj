@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>$(PackageTargetFrameworks)</TargetFrameworks>
     <PackageId>MdXaml.Plugins</PackageId>
     <Version>$(PackageVersion)</Version>
     <Authors>whistyun</Authors>

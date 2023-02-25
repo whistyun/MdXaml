@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp3.0;net45;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>$(SampleTargetFrameworks)</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Configurations>Debug;Release</Configurations>
     <IsPackable>False</IsPackable>

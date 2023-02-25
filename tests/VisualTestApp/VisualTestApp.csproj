@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp3.0;net462;net5.0-windows</TargetFrameworks>
+    <TargetFrameworks>$(TestTargetFrameworks)</TargetFrameworks>
     <Nullable>enable</Nullable>
     <LangVersion>9</LangVersion>
     <UseWPF>true</UseWPF>

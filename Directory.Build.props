@@ -10,7 +10,12 @@
     <PackageOutputPath>$(ArtifactsDir)nuget\$(Configuration)\</PackageOutputPath>
   </PropertyGroup>
 
+  
+  
   <PropertyGroup>
-    <PackageVersion>1.16.3</PackageVersion>
+    <PackageTargetFrameworks>net45;netcoreapp3.0;net6.0-windows</PackageTargetFrameworks>
+    <SampleTargetFrameworks>netcoreapp3.0;net461;net6.0-windows</SampleTargetFrameworks>
+    <TestTargetFrameworks>netcoreapp3.1;net461;net6.0-windows</TestTargetFrameworks>
+    <PackageVersion>1.17.0</PackageVersion>
   </PropertyGroup>
 </Project>
