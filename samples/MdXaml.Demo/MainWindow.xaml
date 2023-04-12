@@ -152,6 +152,7 @@
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
                     Margin="5"
+                    ClickAction="OpenBrowser"
                     MarkdownStyle="{Binding SelectedStyleInfo.Style}"
                     Markdown="{Binding TextView}">
 

@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using MdXaml.Plugins;
+using System.Windows.Media;
 
 #if MIG_FREE
 using Markdown.Xaml.LinkActions;
@@ -310,20 +311,26 @@ namespace MdXaml
 
         private void UpdateClickAction()
         {
+            ICommand command;
             switch (_clickAction)
             {
                 case ClickAction.OpenBrowser:
-                    Engine.HyperlinkCommand = new OpenCommand();
+                    command = new OpenCommand();
                     break;
 
                 case ClickAction.DisplayWithRelativePath:
-                    Engine.HyperlinkCommand = new DiaplayCommand(this, true);
+                    command = new DiaplayCommand(this, true);
                     break;
 
                 case ClickAction.DisplayAll:
-                    Engine.HyperlinkCommand = new DiaplayCommand(this, false);
+                    command = new DiaplayCommand(this, false);
                     break;
+
+                default:
+                    return;
             }
+
+            Engine.HyperlinkCommand = new FlowDocumentJumpAnchorIfNecessary(this, command);
         }
 
         internal void Open(Uri source, bool updateSourceProperty)
