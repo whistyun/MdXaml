@@ -29,7 +29,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
-		<ProjectReference Include="..\..\MdXaml\MdXamlMigfree.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

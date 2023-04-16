@@ -108,6 +108,12 @@ namespace MdXaml.Html.Core.Parsers
             {
                 var tag = (TextElement)Activator.CreateInstance(FlowDocumentTag)!;
 
+                // for href anchor
+                if (node.Attributes["id"]?.Value is string idval)
+                {
+                    tag.SetValue(DocumentAnchor.HyperlinkAnchorProperty, idval);
+                }
+
                 var cntInlines = (tag as Paragraph)?.Inlines ?? (tag as Span)?.Inlines;
                 if (cntInlines is not null)
                 {

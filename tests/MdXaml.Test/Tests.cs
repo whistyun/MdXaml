@@ -1,5 +1,6 @@
 using ApprovalTests;
 using ApprovalTests.Reporters;
+using MdXaml.Plugins;
 using MdXamlTest;
 using NUnit.Framework;
 using System;
@@ -67,6 +68,16 @@ namespace Markdown.Xaml.Test
             {
                 DisabledTag = true,
             };
+            var result = markdown.Transform(text);
+            Approvals.Verify(Utils.AsXaml(result));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void Transform_givenBoldAndItalic_generatesExpectedResult()
+        {
+            var text = Utils.LoadText("BoldAndItalic1.md");
+            var markdown = new Markdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }

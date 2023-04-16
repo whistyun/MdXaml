@@ -21,15 +21,28 @@ namespace MdXaml.Plugins
         public ObservableCollection<IInlineParser> Inline { get; }
         public ObservableCollection<IImageLoader> ImageLoader { get; }
 
-        public MdXamlPlugins()
+        public MdXamlPlugins() : this(new SyntaxManager())
         {
-            Syntax = new();
+        }
 
-            Setups = new();
-            TopBlock = new();
-            Block = new();
-            Inline = new();
-            ImageLoader = new();
+        public MdXamlPlugins(SyntaxManager manager) : this(manager, new(), new(), new(), new(), new())
+        {
+        }
+
+        private MdXamlPlugins(
+            SyntaxManager manager,
+            ObservableCollection<IPluginSetup> setups,
+            ObservableCollection<IBlockParser> topBlock,
+            ObservableCollection<IBlockParser> block,
+            ObservableCollection<IInlineParser> inline,
+            ObservableCollection<IImageLoader> imageLoader)
+        {
+            Syntax = manager;
+            Setups = setups;
+            TopBlock = topBlock;
+            Block = block;
+            Inline = inline;
+            ImageLoader = imageLoader;
 
             Setups.CollectionChanged += Setups_CollectionChanged;
         }
@@ -40,5 +53,15 @@ namespace MdXaml.Plugins
                 foreach (var addedItem in e.NewItems.Cast<IPluginSetup>())
                     addedItem.Setup(this);
         }
+
+        public MdXamlPlugins Clone()
+            => new MdXamlPlugins(
+                        Syntax.Clone(),
+                        new(Setups),
+                        new(TopBlock),
+                        new(Block),
+                        new(Inline),
+                        new(ImageLoader));
+
     }
 }

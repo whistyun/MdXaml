@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
 using MdXaml.Plugins;
+using System.Windows.Media;
 
 #if MIG_FREE
 using Markdown.Xaml.LinkActions;
@@ -77,7 +78,24 @@ namespace MdXaml
         {
             if (d is MarkdownScrollViewer owner)
             {
-                owner.Engine.Plugins = owner.Plugins;
+                var plugins = (owner.Plugins ?? MdXamlPlugins.Default).Clone();
+                switch (owner.Syntax)
+                {
+                    case SyntaxVersion.Plain:
+                        plugins.Syntax.And(SyntaxManager.Plain);
+                        break;
+
+                    case SyntaxVersion.Standard:
+                        plugins.Syntax.And(SyntaxManager.Standard);
+                        break;
+
+                    case SyntaxVersion.MdXaml:
+                        plugins.Syntax.And(SyntaxManager.MdXaml);
+                        break;
+                }
+
+                owner.Engine.Plugins = plugins;
+
                 var doc = owner.Engine.Transform(owner.Markdown ?? "");
                 owner.SetCurrentValue(DocumentProperty, doc);
             }
@@ -281,6 +299,17 @@ namespace MdXaml
             }
         }
 
+        private SyntaxVersion _syntax;
+        public SyntaxVersion Syntax
+        {
+            get => _syntax;
+            set
+            {
+                _syntax = value;
+                UpdateMarkdown(this, default);
+            }
+        }
+
         public new FlowDocument? Document
         {
             get
@@ -295,6 +324,7 @@ namespace MdXaml
         public MarkdownScrollViewer()
         {
             _engine = new Markdown();
+            _syntax = SyntaxVersion.MdXaml;
 
             if (BaseUri != null)
                 _engine.BaseUri = BaseUri;
@@ -310,20 +340,26 @@ namespace MdXaml
 
         private void UpdateClickAction()
         {
+            ICommand command;
             switch (_clickAction)
             {
                 case ClickAction.OpenBrowser:
-                    Engine.HyperlinkCommand = new OpenCommand();
+                    command = new OpenCommand();
                     break;
 
                 case ClickAction.DisplayWithRelativePath:
-                    Engine.HyperlinkCommand = new DiaplayCommand(this, true);
+                    command = new DiaplayCommand(this, true);
                     break;
 
                 case ClickAction.DisplayAll:
-                    Engine.HyperlinkCommand = new DiaplayCommand(this, false);
+                    command = new DiaplayCommand(this, false);
                     break;
+
+                default:
+                    return;
             }
+
+            Engine.HyperlinkCommand = new FlowDocumentJumpAnchorIfNecessary(this, command);
         }
 
         internal void Open(Uri source, bool updateSourceProperty)
@@ -412,5 +448,12 @@ namespace MdXaml
         OpenBrowser,
         DisplayWithRelativePath,
         DisplayAll
+    }
+
+    public enum SyntaxVersion
+    {
+        Plain,
+        Standard,
+        MdXaml
     }
 }

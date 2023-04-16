@@ -25,17 +25,6 @@ namespace MdXaml.Demo
         public MainWindow()
         {
             InitializeComponent();
-
-            CommandBindings.Add(new CommandBinding(
-                NavigationCommands.GoToPage,
-                (sender, e) =>
-                {
-                    var proc = new Process();
-                    proc.StartInfo.UseShellExecute = true;
-                    proc.StartInfo.FileName = (string)e.Parameter;
-
-                    proc.Start();
-                }));
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)

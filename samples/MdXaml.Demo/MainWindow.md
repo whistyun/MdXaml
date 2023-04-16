@@ -9,6 +9,16 @@ WPF window or usercontrol.
 
 ## The Example Of ... ##
 
+* [Text decolation](#text-decolation-included-original-enhance)
+* [Link](#link)
+* [Image](#image)
+* [List](#list)
+* [Table](#table-included-original-enhance)
+* [Code](#code)
+* [Note](#note)
+* [Separator](#separator)
+* [Blockquote](#blockquote)
+
 ### Text decolation [included original enhance] ###
 *italic*, **bold**, ***bold-italic***, ~~strikethrough~~, __underline__ and %{color:red}color%.  
 %{color:blue}***~~__Mixing Text__~~***%
