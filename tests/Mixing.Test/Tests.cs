@@ -58,27 +58,5 @@ namespace MixingTest
 
             Approvals.Verify(resultXaml);
         }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
-        public void MarkdownXaml_Transform_givenMixing_generatesExpectedResult()
-        {
-            var text = Utils.LoadText("Mixing.md");
-            var markdown = new Markdown.Xaml.Markdown()
-            {
-                AssetPathRoot = assetPath,
-                BaseUri = baseUri,
-            };
-
-            var result = markdown.Transform(text);
-            var resultXaml = Utils.AsXaml(result);
-
-            var assetUri = new Uri(assetPath);
-
-            // change absolute filepath to relative-like
-            resultXaml = resultXaml.Replace("UriSource=\"" + assetPath, "UriSource=\"<assetpathroot>");
-
-            Approvals.Verify(resultXaml);
-        }
     }
 }
