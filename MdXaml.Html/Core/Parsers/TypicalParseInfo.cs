@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Documents;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MdXaml.Html.Core.Parsers
 {
@@ -102,6 +103,13 @@ namespace MdXaml.Html.Core.Parsers
 
                     default:
                         throw new InvalidOperationException();
+                }
+
+                // for href anchor
+                if (node.Attributes["id"]?.Value is string idval
+                    && generated.FirstOrDefault() is DependencyObject tag)
+                {
+                    tag.SetValue(DocumentAnchor.HyperlinkAnchorProperty, idval);
                 }
             }
             else

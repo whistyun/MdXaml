@@ -23,7 +23,7 @@ namespace MdXaml.Plugins
             EnableTableBlock = true,
             EnableRuleExt = false,
             EnableTextAlignment = false,
-            EnableStrikethrough = false,
+            EnableStrikethrough = true,
             EnableListMarkerExt = false,
             EnableTextileInline = false,
         };
