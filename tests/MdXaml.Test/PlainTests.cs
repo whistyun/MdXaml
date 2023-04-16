@@ -21,9 +21,9 @@ namespace Markdown.Xaml.Test
 #endif
 {
     [UseReporter(typeof(DiffReporter))]
-    public class Tests
+    public class PlainTests
     {
-        static Tests()
+        static PlainTests()
         {
             var fwNm = Utils.GetRuntimeName();
 #if !MIG_FREE
@@ -38,7 +38,7 @@ namespace Markdown.Xaml.Test
         readonly Uri baseUri;
 
 
-        public Tests()
+        public PlainTests()
         {
             PackUriHelper.Create(new Uri("http://example.com"));
 
@@ -47,6 +47,12 @@ namespace Markdown.Xaml.Test
             baseUri = new Uri($"pack://application:,,,/{asm.GetName().Name};Component/");
         }
 
+        public static Markdown CreateMarkdown()
+        {
+            var markdown = new Markdown();
+            markdown.Plugins = new MdXamlPlugins(SyntaxManager.Standard);
+            return markdown;
+        }
 
 
         [Test]
@@ -54,7 +60,7 @@ namespace Markdown.Xaml.Test
         public void Transform_givenTest1_generatesExpectedResult()
         {
             var text = Utils.LoadText("Test1.md");
-            var markdown = new Markdown();
+            var markdown = CreateMarkdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -64,10 +70,8 @@ namespace Markdown.Xaml.Test
         public void Transform_givenTest2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Test1.md");
-            var markdown = new Markdown()
-            {
-                DisabledTag = true,
-            };
+            var markdown = CreateMarkdown();
+            markdown.DisabledTag = true;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -76,8 +80,10 @@ namespace Markdown.Xaml.Test
         [Apartment(ApartmentState.STA)]
         public void Transform_givenBoldAndItalic_generatesExpectedResult()
         {
-            var text = Utils.LoadText("BoldAndItalic1.md");
-            var markdown = new Markdown();
+            var text = Utils.LoadText("BoldAndItalic2.md");
+            var markdown = CreateMarkdown();
+            markdown.Plugins = new MdXamlPlugins(SyntaxManager.Standard);
+
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -87,7 +93,7 @@ namespace Markdown.Xaml.Test
         public void Transform_givenLists1_generatesExpectedResult()
         {
             var text = Utils.LoadText("Lists1.md");
-            var markdown = new Markdown();
+            var markdown = CreateMarkdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -97,7 +103,7 @@ namespace Markdown.Xaml.Test
         public void Transform_givenLists2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Lists2.md");
-            var markdown = new Markdown();
+            var markdown = CreateMarkdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -107,7 +113,7 @@ namespace Markdown.Xaml.Test
         public void Transform_givenTables1_generatesExpectedResult()
         {
             var text = Utils.LoadText("Tables.md");
-            var markdown = new Markdown();
+            var markdown = CreateMarkdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -117,10 +123,8 @@ namespace Markdown.Xaml.Test
         public void Transform_givenTables2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Tables.md");
-            var markdown = new Markdown()
-            {
-                DisabledTag = true
-            };
+            var markdown = CreateMarkdown();
+            markdown.DisabledTag = true;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -130,7 +134,7 @@ namespace Markdown.Xaml.Test
         public void Transform_givenHorizontalRules_generatesExpectedResult()
         {
             var text = Utils.LoadText("HorizontalRules.md");
-            var markdown = new Markdown();
+            var markdown = CreateMarkdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -140,10 +144,8 @@ namespace Markdown.Xaml.Test
         public void Transform_givenLinksInline1_generatesExpectedResult()
         {
             var text = Utils.LoadText("Links_inline_style.md");
-            var markdown = new Markdown()
-            {
-                BaseUri = baseUri
-            };
+            var markdown = CreateMarkdown();
+            markdown.BaseUri = baseUri;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -153,11 +155,9 @@ namespace Markdown.Xaml.Test
         public void Transform_givenLinksInline2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Links_inline_style.md");
-            var markdown = new Markdown()
-            {
-                BaseUri = baseUri,
-                DisabledTootip = true,
-            };
+            var markdown = CreateMarkdown();
+            markdown.BaseUri = baseUri;
+            markdown.DisabledTootip = true;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -167,7 +167,7 @@ namespace Markdown.Xaml.Test
         public void Transform_givenTextStyles_generatesExpectedResult()
         {
             var text = Utils.LoadText("Text_style.md");
-            var markdown = new Markdown();
+            var markdown = CreateMarkdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -177,11 +177,9 @@ namespace Markdown.Xaml.Test
         public void Transform_givenImages1_generatesExpectedResult()
         {
             var text = Utils.LoadText("Images.md");
-            var markdown = new Markdown()
-            {
-                AssetPathRoot = assetPath,
-                BaseUri = baseUri,
-            };
+            var markdown = CreateMarkdown();
+            markdown.AssetPathRoot = assetPath;
+            markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
 
@@ -201,12 +199,10 @@ namespace Markdown.Xaml.Test
         public void Transform_givenImages2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Images.md");
-            var markdown = new Markdown()
-            {
-                DisabledLazyLoad = true,
-                AssetPathRoot = assetPath,
-                BaseUri = baseUri,
-            };
+            var markdown = CreateMarkdown();
+            markdown.DisabledLazyLoad = true;
+            markdown.AssetPathRoot = assetPath;
+            markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -225,12 +221,10 @@ namespace Markdown.Xaml.Test
         public void Transform_givenImages3_generatesExpectedResult()
         {
             var text = Utils.LoadText("Images.md");
-            var markdown = new Markdown()
-            {
-                DisabledTootip = true,
-                AssetPathRoot = assetPath,
-                BaseUri = baseUri,
-            };
+            var markdown = CreateMarkdown();
+            markdown.DisabledTootip = true;
+            markdown.AssetPathRoot = assetPath;
+            markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -249,7 +243,7 @@ namespace Markdown.Xaml.Test
         public void Transform_givenBlockqoute_generatesExpectedResult()
         {
             var text = Utils.LoadText("Blockquite.md");
-            var markdown = new Markdown();
+            var markdown = CreateMarkdown();
 
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
@@ -260,11 +254,9 @@ namespace Markdown.Xaml.Test
         public void Transform_givenMixing_generatesExpectedResult()
         {
             var text = Utils.LoadText("Mixing.md");
-            var markdown = new Markdown()
-            {
-                AssetPathRoot = assetPath,
-                BaseUri = baseUri,
-            };
+            var markdown = CreateMarkdown();
+            markdown.AssetPathRoot = assetPath;
+            markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -287,6 +279,7 @@ namespace Markdown.Xaml.Test
             var markdownViewer = new MarkdownScrollViewer()
             {
                 MarkdownStyle = null,
+                Plugins = new MdXamlPlugins(SyntaxManager.Standard)
             };
 
             foreach (var idx in Enumerable.Range(1, 4))
@@ -303,10 +296,8 @@ namespace Markdown.Xaml.Test
         public void Transform_givenCodes_generatesExpectedResult()
         {
             var text = Utils.LoadText("Codes.md");
-            var markdown = new Markdown()
-            {
-                AssetPathRoot = assetPath
-            };
+            var markdown = CreateMarkdown();
+            markdown.AssetPathRoot = assetPath;
 
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
@@ -317,11 +308,9 @@ namespace Markdown.Xaml.Test
         public void Transform_givenEmoji()
         {
             var text = Utils.LoadText("Emoji.md");
-            var markdown = new Markdown()
-            {
-                AssetPathRoot = assetPath,
-                BaseUri = baseUri,
-            };
+            var markdown = CreateMarkdown();
+            markdown.AssetPathRoot = assetPath;
+            markdown.BaseUri = baseUri;
 
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));

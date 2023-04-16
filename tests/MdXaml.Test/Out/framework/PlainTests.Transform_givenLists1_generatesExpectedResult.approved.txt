@@ -1,0 +1,452 @@
+<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:icscaed="clr-namespace:ICSharpCode.AvalonEdit.Document;assembly=ICSharpCode.AvalonEdit" xmlns:scmd="clr-namespace:System.ComponentModel.Design;assembly=System" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph>First we have a simple numeric list</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>Alpha</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Beta</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Gamma</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Delta</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Then we have a simple unordered list</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>Han</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Leia</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Luke</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Obiwan</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading2">Unordered</Paragraph>
+  <Paragraph>Asterisks tight:</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>asterisk 1</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>asterisk 2</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>asterisk 3</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Asterisks loose:</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>asterisk 1</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>asterisk 2</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>asterisk 3</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Bold Tag="Bold">bold</Bold>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Italic Tag="Italic">italic</Italic>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Bold Tag="Bold">
+          <Italic Tag="Italic">bold italic</Italic>
+        </Bold>
+      </Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>Pluses tight:</Paragraph>
+  <List MarkerStyle="Box">
+    <ListItem>
+      <Paragraph>Plus 1</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Plus 2</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Plus 3</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Pluses loose:</Paragraph>
+  <List MarkerStyle="Box">
+    <ListItem>
+      <Paragraph>Plus 1</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Plus 2</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Plus 3</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>Minuses tight:</Paragraph>
+  <List MarkerStyle="Circle">
+    <ListItem>
+      <Paragraph>Minus 1</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Minus 2</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Minus 3</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Minuses loose:</Paragraph>
+  <List MarkerStyle="Circle">
+    <ListItem>
+      <Paragraph>Minus 1</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Minus 2</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Minus 3</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading2">Ordered</Paragraph>
+  <Paragraph>Tight:</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>First</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Second</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Third</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>and:</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>One</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Two</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Three</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Loose using tabs:</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>First</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Second</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Third</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>and using spaces:</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>One</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Two</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Three</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Multiple paragraphs:</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>Item 1, graf one.</Paragraph>
+      <Paragraph xml:space="preserve"> Item 2. graf two. The quick brown fox jumped over the lazy dog's back.</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Item 2.</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Item 3.</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading2">Nested</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>Tab</Paragraph>
+      <List MarkerStyle="Disc">
+        <ListItem>
+          <Paragraph>Tab</Paragraph>
+          <List MarkerStyle="Disc">
+            <ListItem>
+              <Paragraph>Tab</Paragraph>
+            </ListItem>
+          </List>
+        </ListItem>
+      </List>
+    </ListItem>
+  </List>
+  <Paragraph>Here's another:</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>First</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Second:</Paragraph>
+      <List MarkerStyle="Disc">
+        <ListItem>
+          <Paragraph>Fee</Paragraph>
+        </ListItem>
+        <ListItem>
+          <Paragraph>Fie</Paragraph>
+        </ListItem>
+        <ListItem>
+          <Paragraph>Foe</Paragraph>
+        </ListItem>
+      </List>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Third</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Same thing but with paragraphs:</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>First</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Second:</Paragraph>
+      <List MarkerStyle="Disc">
+        <ListItem>
+          <Paragraph>Fee</Paragraph>
+        </ListItem>
+        <ListItem>
+          <Paragraph>Fie</Paragraph>
+        </ListItem>
+        <ListItem>
+          <Paragraph>Foe</Paragraph>
+        </ListItem>
+      </List>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Third</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>This was an error in Markdown 1.0.1:</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>this</Paragraph>
+      <List MarkerStyle="Disc">
+        <ListItem>
+          <Paragraph>sub</Paragraph>
+          <Paragraph>that</Paragraph>
+        </ListItem>
+      </List>
+    </ListItem>
+  </List>
+  <Paragraph>Mixing list</Paragraph>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+      <List MarkerStyle="Decimal">
+        <ListItem>
+          <Paragraph>one-one</Paragraph>
+        </ListItem>
+        <ListItem>
+          <Paragraph>one-two inlist 1 inlist 2 inline 3 inline 4</Paragraph>
+          <BlockUIContainer Tag="CodeBlock">
+            <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+              <avalonedit:TextEditor.Document>
+                <icscaed:TextDocument Text="as code" FileName="{x:Null}">
+                  <icscaed:TextDocument.UndoStack>
+                    <icscaed:UndoStack SizeLimit="2147483647" />
+                  </icscaed:TextDocument.UndoStack>
+                  <icscaed:TextDocument.ServiceProvider>
+                    <scmd:ServiceContainer />
+                  </icscaed:TextDocument.ServiceProvider>
+                </icscaed:TextDocument>
+              </avalonedit:TextEditor.Document>
+              <avalonedit:TextEditor.Options>
+                <avalonedit:TextEditorOptions />
+              </avalonedit:TextEditor.Options>as code</avalonedit:TextEditor>
+          </BlockUIContainer>
+        </ListItem>
+      </List>
+    </ListItem>
+    <ListItem>
+      <Paragraph>two</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>three</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>four</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="Box">
+    <ListItem>
+      <Paragraph>five</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>six</Paragraph>
+      <List MarkerStyle="Box">
+        <ListItem>
+          <Paragraph>seven</Paragraph>
+        </ListItem>
+      </List>
+    </ListItem>
+    <ListItem>
+      <Paragraph>eight</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="Circle">
+    <ListItem>
+      <Paragraph>eight</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>nine</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Enhanced syntax alphabet order.</Paragraph>
+  <Paragraph>ab. foo a. bar ab. foo2 a. bar2 a. foo3 a. bar3</Paragraph>
+  <Paragraph>Enhanced syntax roman order.</Paragraph>
+  <Paragraph>yes, we can. no, i can. i, one</Paragraph>
+  <Paragraph>===</Paragraph>
+  <Paragraph>ii, one</Paragraph>
+  <Paragraph>===</Paragraph>
+  <Paragraph>iii, one yes, we can</Paragraph>
+  <Paragraph>===</Paragraph>
+  <Paragraph>iiii, one</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>two</Paragraph>
+    </ListItem>
+  </List>
+  <BlockUIContainer Tag="CodeBlock">
+    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+      <avalonedit:TextEditor.Document>
+        <icscaed:TextDocument Text="code" FileName="{x:Null}">
+          <icscaed:TextDocument.UndoStack>
+            <icscaed:UndoStack SizeLimit="2147483647" />
+          </icscaed:TextDocument.UndoStack>
+          <icscaed:TextDocument.ServiceProvider>
+            <scmd:ServiceContainer />
+          </icscaed:TextDocument.ServiceProvider>
+        </icscaed:TextDocument>
+      </avalonedit:TextEditor.Document>
+      <avalonedit:TextEditor.Options>
+        <avalonedit:TextEditorOptions />
+      </avalonedit:TextEditor.Options>code</avalonedit:TextEditor>
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>three</Paragraph>
+    </ListItem>
+  </List>
+  <Section Tag="Blockquote">
+    <Paragraph>quote</Paragraph>
+  </Section>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>four</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading1">head</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>four</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading2">head</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>one</Paragraph>
+      <BlockUIContainer Tag="RuleSingle">
+        <Separator />
+      </BlockUIContainer>
+    </ListItem>
+    <ListItem>
+      <Paragraph>two</Paragraph>
+      <BlockUIContainer Tag="CodeBlock">
+        <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
+          <avalonedit:TextEditor.Document>
+            <icscaed:TextDocument Text="code" FileName="{x:Null}">
+              <icscaed:TextDocument.UndoStack>
+                <icscaed:UndoStack SizeLimit="2147483647" />
+              </icscaed:TextDocument.UndoStack>
+              <icscaed:TextDocument.ServiceProvider>
+                <scmd:ServiceContainer />
+              </icscaed:TextDocument.ServiceProvider>
+            </icscaed:TextDocument>
+          </avalonedit:TextEditor.Document>
+          <avalonedit:TextEditor.Options>
+            <avalonedit:TextEditorOptions />
+          </avalonedit:TextEditor.Options>code</avalonedit:TextEditor>
+      </BlockUIContainer>
+    </ListItem>
+    <ListItem>
+      <Paragraph>three</Paragraph>
+      <Section Tag="Blockquote">
+        <Paragraph>quote</Paragraph>
+      </Section>
+    </ListItem>
+    <ListItem>
+      <Paragraph>four</Paragraph>
+      <Paragraph Tag="Heading1">head</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>four</Paragraph>
+      <Paragraph Tag="Heading2">head</Paragraph>
+    </ListItem>
+  </List>
+</FlowDocument>

@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <None Remove="Md\Blockquite.md" />
+    <None Remove="Md\BoldAndItalic1.md" />
+    <None Remove="Md\BoldAndItalic2.md" />
     <None Remove="Md\Codes.md" />
     <None Remove="Md\Emoji.md" />
     <None Remove="Md\HorizontalRules.md" />
@@ -28,6 +30,8 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Md\Blockquite.md" />
+    <EmbeddedResource Include="Md\BoldAndItalic2.md" />
+    <EmbeddedResource Include="Md\BoldAndItalic1.md" />
     <EmbeddedResource Include="Md\Codes.md" />
     <EmbeddedResource Include="Md\HorizontalRules.md" />
     <EmbeddedResource Include="Md\Images.md" />

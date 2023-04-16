@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Net.Cache;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -15,7 +11,6 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using MdXaml;
 using MdXaml.Plugins;
 using System.IO;
 using System.Threading.Tasks;
@@ -36,7 +31,7 @@ namespace Markdown.Xaml
 namespace MdXaml
 #endif
 {
-    public class Markdown : DependencyObject,IMarkdown, IUriContext
+    public class Markdown : DependencyObject, IMarkdown, IUriContext
     {
         #region const
         /// <summary>
@@ -161,7 +156,7 @@ namespace MdXaml
             SetupParams();
 
             text = TextUtil.Normalize(text);
-            var document = Create<FlowDocument, Block>(PrivateRunBlockGamut(text, true));
+            var document = Create<FlowDocument, Block>(PrivateRunBlockGamut(text, ParseParam.SupportTextAlignment));
 
             document.SetBinding(FlowDocument.StyleProperty, new Binding(DocumentStyleProperty.Name) { Source = this });
 
@@ -192,7 +187,17 @@ namespace MdXaml
             subBlocks.Add(SimpleBlockParser.New(_blockquoteFirst, BlockquotesEvaluator));
             subBlocks.Add(SimpleBlockParser.New(_headerSetext, SetextHeaderEvaluator));
             subBlocks.Add(SimpleBlockParser.New(_headerAtx, AtxHeaderEvaluator));
-            subBlocks.Add(SimpleBlockParser.New(_horizontalRules, RuleEvaluator));
+
+
+            if (plugins.Syntax.EnableRuleExt)
+            {
+                subBlocks.Add(SimpleBlockParser.New(_horizontalRules, RuleEvaluator));
+            }
+            else
+            {
+                subBlocks.Add(SimpleBlockParser.New(_horizontalCommonRules, RuleCommonEvaluator));
+            }
+
             if (plugins.Syntax.EnableTableBlock)
             {
                 subBlocks.Add(SimpleBlockParser.New(_table, TableEvalutor));
@@ -212,15 +217,16 @@ namespace MdXaml
             {
                 inlines.Add(SimpleInlineParser.New(_strictBold, BoldEvaluator));
                 inlines.Add(SimpleInlineParser.New(_strictItalic, ItalicEvaluator));
-                inlines.Add(SimpleInlineParser.New(_strikethrough, StrikethroughEvaluator));
-                inlines.Add(SimpleInlineParser.New(_underline, UnderlineEvaluator));
+
+                if (plugins.Syntax.EnableStrikethrough)
+                    inlines.Add(SimpleInlineParser.New(_strikethrough, StrikethroughEvaluator));
             }
 
             topBlocks.AddRange(plugins.TopBlock);
             subBlocks.AddRange(plugins.Block);
             inlines.AddRange(plugins.Inline);
 
-            return new ParseParam(topBlocks, subBlocks, inlines);
+            return new ParseParam(topBlocks, subBlocks, inlines, plugins.Syntax);
         }
 
         private void SetupParams()
@@ -819,6 +825,17 @@ namespace MdXaml
                     \n                      # End of line.
                 ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
+        private static readonly Regex _horizontalCommonRules = new(@"
+                ^[ ]{0,3}                   # Leading space
+                    ([-*_])                 # $1: First marker ([markers])
+                    (?>                     # Repeated marker group
+                        [ ]{0,2}            # Zero, one, or two spaces.
+                        \1                  # Marker character
+                    ){2,}                   # Group repeated at least twice
+                    [ ]*                    # Trailing spaces
+                    \n                      # End of line.
+                ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+
         /// <summary>
         /// Turn Markdown horizontal rules into HTML hr tags
         /// </summary>
@@ -923,6 +940,19 @@ namespace MdXaml
             }
         }
 
+        private Block RuleCommonEvaluator(Match match)
+        {
+            var sep = new Separator();
+            if (SeparatorStyle is not null)
+                sep.Style = SeparatorStyle;
+
+            var container = new BlockUIContainer(sep);
+            if (!DisabledTag)
+            {
+                container.Tag = TagRuleSingle;
+            }
+            return container;
+        }
         #endregion
 
 
@@ -933,7 +963,7 @@ namespace MdXaml
         private const string _extFirstListMaker = @"(?:[*+=-]|\d+[.]|[a-c][.]|[i]{1,3}[,]|[A-C][.]|[I]{1,3}[,])";
         private const string _extSubseqListMaker = @"(?:[*+=-]|\d+[.]|[a-c][.]|[cdilmvx]+[,]|[A-C][.]|[CDILMVX]+[,])";
 
-        private const string _commonListMaker = @"(?:[*+=-]|\d+[.]|)";
+        private const string _commonListMaker = @"(?:[*+-]|\d+[.])";
 
         //private const string _markerUL = @"[*+=-]";
         //private const string _markerOL = @"\d+[.]|\p{L}+[.,]";
@@ -1090,7 +1120,7 @@ namespace MdXaml
 
             if (outerListBuildre.Length != 0)
             {
-                foreach (var ctrl in PrivateRunBlockGamut(outerListBuildre.ToString(), true))
+                foreach (var ctrl in PrivateRunBlockGamut(outerListBuildre.ToString(), ParseParam.SupportTextAlignment))
                     yield return ctrl;
             }
         }
@@ -1613,21 +1643,25 @@ namespace MdXaml
 
                     case '*': // bold? or italic
                         {
-                            var oldI = i;
-                            var inline = ParseAsBoldOrItalic(text, ref i);
-                            if (inline is null)
+                            var inline = ParseAsBoldOrItalic(text, ch, i, out int parseStart, out int parseEnd);
+
+                            if (i < parseStart)
                             {
-                                buff.Append(text, oldI, i - oldI + 1);
+                                buff.Append(text, i, parseStart - i);
                             }
-                            else
+
+                            if (inline is not null)
                             {
                                 HandleBefore();
                                 rtn.Add(inline);
                             }
+
+                            i = parseEnd - 1;
                             break;
                         }
 
                     case '~': // strikethrough?
+                        if (ParseParam.SupportStrikethrough)
                         {
                             var oldI = i;
                             var inline = ParseAsStrikethrough(text, ref i);
@@ -1642,8 +1676,10 @@ namespace MdXaml
                             }
                             break;
                         }
+                        else goto default;
 
                     case '_': // underline?
+                        if (ParseParam.SupportTextileInline)
                         {
                             var oldI = i;
                             var inline = ParseAsUnderline(text, ref i);
@@ -1658,8 +1694,10 @@ namespace MdXaml
                             }
                             break;
                         }
+                        else goto case '*';
 
                     case '%': // color?
+                        if (ParseParam.SupportTextileInline)
                         {
                             var oldI = i;
                             var inline = ParseAsColor(text, ref i);
@@ -1674,6 +1712,7 @@ namespace MdXaml
                             }
                             break;
                         }
+                        else goto default;
                 }
             }
 
@@ -1745,69 +1784,124 @@ namespace MdXaml
             }
         }
 
-        private Inline? ParseAsBoldOrItalic(string text, ref int start)
+        private Inline? ParseAsBoldOrItalic(string text, char symbol, int start, out int parseStart, out int parseEnd)
         {
-            // count asterisk (bgn)
-            var bgnCnt = CountRepeat(text, start, '*');
+            bool isUnder = symbol == '_';
+            int bgnCnt = CountRepeat(text, start, symbol);
+            int bgnLft = bgnCnt;
 
-            int last = EscapedIndexOf(text, start + bgnCnt, '*');
-
-            int endCnt = last >= 0 ? CountRepeat(text, last, '*') : -1;
-
-            if (endCnt >= 1)
+            if (start > 0 && isUnder && !Char.IsWhiteSpace(text[start - 1]))
             {
-                int cnt = Math.Min(bgnCnt, endCnt);
-                int bgn = start + cnt;
-                int end = last;
-
-                switch (cnt)
-                {
-                    case 1: // italic
-                        {
-                            start = end + cnt - 1;
-
-                            var span = Create<Italic, Inline>(PrivateRunSpanGamut(text.Substring(bgn, end - bgn)));
-                            if (!DisabledTag)
-                            {
-                                span.Tag = TagItalicSpan;
-                            }
-                            return span;
-                        }
-                    case 2: // bold
-                        {
-                            start = end + cnt - 1;
-                            var span = Create<Bold, Inline>(PrivateRunSpanGamut(text.Substring(bgn, end - bgn)));
-                            if (!DisabledTag)
-                            {
-                                span.Tag = TagBoldSpan;
-                            }
-                            return span;
-                        }
-
-                    default: // >3; bold-italic
-                        {
-                            bgn = start + 3;
-                            start = end + 3 - 1;
-
-                            var inline = Create<Italic, Inline>(PrivateRunSpanGamut(text.Substring(bgn, end - bgn)));
-                            if (!DisabledTag)
-                            {
-                                inline.Tag = TagItalicSpan;
-                            }
-
-                            var span = new Bold(inline);
-                            if (!DisabledTag)
-                            {
-                                span.Tag = TagBoldSpan;
-                            }
-                            return span;
-                        }
-                }
-            }
-            else
-            {
-                start += bgnCnt - 1;
+                parseStart = start + bgnCnt;
+                parseEnd = parseStart;
                 return null;
+            }
+
+            int bgn = start + bgnCnt;
+            parseStart = start;
+
+            if (bgn < text.Length && Char.IsWhiteSpace(text[bgn]))
+            {
+                parseStart += bgnLft;
+                parseEnd = bgn;
+                return null;
+            }
+
+            var content = new List<Inline>();
+            for (int i = bgn; i < text.Length;)
+            {
+                char c = text[i];
+
+                if (c == '\\')
+                {
+                    i += 2;
+                    continue;
+
+                }
+                else if (c == symbol)
+                {
+                    int endCnt = CountRepeat(text, i, symbol);
+
+                    if (Char.IsWhiteSpace(text[i - 1]))
+                    {
+                        ParseAsBoldOrItalic(text, symbol, i, out int _, out int subEnd);
+                        i = subEnd;
+                        continue;
+                    }
+
+                    if (isUnder)
+                    {
+                        int check = i + endCnt;
+                        if (check < text.Length && !Char.IsWhiteSpace(text[check]))
+                        {
+                            ++i;
+                            continue;
+                        }
+                    }
+
+                    content.AddRange(PrivateRunSpanGamut(text.Substring(bgn, i - bgn)));
+
+                    var inline = Create(Math.Min(bgnLft, endCnt), content);
+                    content.Clear();
+                    content.Add(inline);
+
+                    if (bgnLft > endCnt)
+                    {
+                        bgnLft -= endCnt;
+                        i += endCnt;
+                        bgn = i;
+                        continue;
+                    }
+                    else if (bgnLft == endCnt)
+                    {
+                        parseEnd = i + endCnt;
+                        return content[0];
+                    }
+                    else
+                    {
+                        parseEnd = i + bgnLft;
+                        return content[0];
+                    }
+                }
+                else ++i;
+            }
+
+            parseStart += bgnLft;
+            parseEnd = bgn;
+            return content.FirstOrDefault();
+
+
+            Inline Create(int symbolCnt, IEnumerable<Inline> inlines)
+            {
+                if (symbolCnt == 1)
+                {
+                    var italic = Create<Italic, Inline>(inlines);
+                    if (!DisabledTag)
+                    {
+                        italic.Tag = TagItalicSpan;
+                    }
+                    return italic;
+                }
+                else if (symbolCnt == 2)
+                {
+                    var bold = Create<Bold, Inline>(inlines);
+                    if (!DisabledTag)
+                    {
+                        bold.Tag = TagBoldSpan;
+                    }
+                    return bold;
+                }
+                else
+                {
+                    var span = Create<Italic, Inline>(inlines);
+                    var bold = new Bold(span);
+                    if (!DisabledTag)
+                    {
+                        span.Tag = TagItalicSpan;
+                        bold.Tag = TagBoldSpan;
+                    }
+                    return bold;
+                }
             }
         }
 
@@ -1833,7 +1927,7 @@ namespace MdXaml
                         PrivateRunSpanGamut(text.Substring(bgnIdx, endIdx - bgnIdx)));
                 }
 
-                var colorLbl = mch.Groups[1].Value;
+                var colorLbl = mch.Groups[1].Value.Trim();
 
                 try
                 {
@@ -1972,7 +2066,7 @@ namespace MdXaml
                         .ToArray()
             );
 
-            var blocks = PrivateRunBlockGamut(TextUtil.Normalize(trimmedTxt), true);
+            var blocks = PrivateRunBlockGamut(TextUtil.Normalize(trimmedTxt), ParseParam.SupportTextAlignment);
             var result = Create<Section, Block>(blocks);
             if (BlockquoteStyle is not null)
             {
@@ -2011,16 +2105,24 @@ namespace MdXaml
         public IBlockParser[] PrimaryBlocks { get; }
         public IBlockParser[] SecondlyBlocks { get; }
         public IInlineParser[] Inlines { get; }
+        public bool SupportTextAlignment { get; }
+        public bool SupportStrikethrough { set; get; }
+        public bool SupportTextileInline { get; set; }
+
 
         public ParseParam(
             IEnumerable<IBlockParser> primary,
             IEnumerable<IBlockParser> secondly,
-            IEnumerable<IInlineParser> inlines)
+            IEnumerable<IInlineParser> inlines,
+            SyntaxManager syntax)
         {
 
             PrimaryBlocks = primary.ToArray();
             SecondlyBlocks = secondly.ToArray();
             Inlines = inlines.ToArray();
+            SupportTextAlignment = syntax.EnableTextAlignment;
+            SupportStrikethrough = syntax.EnableStrikethrough;
+            SupportTextileInline = syntax.EnableTextileInline;
         }
     }
 
