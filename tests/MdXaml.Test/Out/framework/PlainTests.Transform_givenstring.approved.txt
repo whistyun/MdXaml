@@ -19,30 +19,5 @@
     </ListItem>
   </List>
   <Paragraph Tag="Heading2">Table</Paragraph>
-  <Table>
-    <Table.Columns>
-      <TableColumn />
-      <TableColumn />
-    </Table.Columns>
-    <TableRowGroup Tag="TableHeader">
-      <TableRow>
-        <TableCell>
-          <Paragraph>col1</Paragraph>
-        </TableCell>
-        <TableCell>
-          <Paragraph>col2</Paragraph>
-        </TableCell>
-      </TableRow>
-    </TableRowGroup>
-    <TableRowGroup Tag="TableBody">
-      <TableRow Tag="OddTableRow">
-        <TableCell>
-          <Paragraph>val1</Paragraph>
-        </TableCell>
-        <TableCell>
-          <Paragraph>val2</Paragraph>
-        </TableCell>
-      </TableRow>
-    </TableRowGroup>
-  </Table>
+  <Paragraph>|col1|col2| |----|----| |val1|val2|</Paragraph>
 </FlowDocument>

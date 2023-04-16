@@ -324,6 +324,7 @@ namespace MdXaml
         public MarkdownScrollViewer()
         {
             _engine = new Markdown();
+            _syntax = SyntaxVersion.MdXaml;
 
             if (BaseUri != null)
                 _engine.BaseUri = BaseUri;

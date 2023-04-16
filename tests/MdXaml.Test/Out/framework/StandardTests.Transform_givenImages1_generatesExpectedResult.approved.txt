@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph>A remote <Label>Load https://avatars.githubusercontent.com/u/13712028?s=48&amp;v=4</Label>.</Paragraph>
+  <Paragraph>Images side by side <Label>Load https://avatars.githubusercontent.com/u/13712028?s=48&amp;v=4</Label><Label>Load https://avatars.githubusercontent.com/u/13712028?s=48&amp;v=4</Label></Paragraph>
+  <Paragraph>
+    <Label>Load https://avatars.githubusercontent.com/u/13712028?s=48&amp;v=4</Label>
+  </Paragraph>
+  <Paragraph>A resource image <Label>Load RscImg.png</Label>. A local image <Label>Load ExtImg.png</Label>.</Paragraph>
+</FlowDocument>

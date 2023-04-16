@@ -21,9 +21,9 @@ namespace Markdown.Xaml.Test
 #endif
 {
     [UseReporter(typeof(DiffReporter))]
-    public class PlainTests
+    public class StandardTests
     {
-        static PlainTests()
+        static StandardTests()
         {
             var fwNm = Utils.GetRuntimeName();
 #if !MIG_FREE
@@ -38,7 +38,7 @@ namespace Markdown.Xaml.Test
         readonly Uri baseUri;
 
 
-        public PlainTests()
+        public StandardTests()
         {
             PackUriHelper.Create(new Uri("http://example.com"));
 
@@ -50,7 +50,7 @@ namespace Markdown.Xaml.Test
         public static Markdown CreateMarkdown()
         {
             var markdown = new Markdown();
-            markdown.Plugins = new MdXamlPlugins(SyntaxManager.Plain);
+            markdown.Plugins = new MdXamlPlugins(SyntaxManager.Standard);
             return markdown;
         }
 
@@ -278,7 +278,7 @@ namespace Markdown.Xaml.Test
             var markdownViewer = new MarkdownScrollViewer()
             {
                 MarkdownStyle = null,
-                Plugins = new MdXamlPlugins(SyntaxManager.Plain)
+                Plugins = new MdXamlPlugins(SyntaxManager.Standard)
             };
 
             foreach (var idx in Enumerable.Range(1, 4))
