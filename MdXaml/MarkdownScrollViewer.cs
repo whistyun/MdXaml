@@ -336,6 +336,13 @@ namespace MdXaml
                 _engine.DocumentStyle = MarkdownStyle;
 
             UpdateClickAction();
+
+
+            var menu = new ContextMenu();
+            menu.Items.Add(ApplicationCommands.Copy);
+            menu.Items.Add(ApplicationCommands.SelectAll);
+
+            ContextMenu = menu;
         }
 
         private void UpdateClickAction()

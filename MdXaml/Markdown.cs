@@ -15,6 +15,7 @@ using MdXaml.Plugins;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using MdXaml.Menus;
 
 // I will not add System.Index and System.Range. There is not exist with net45.
 #pragma warning disable IDE0056
@@ -1492,6 +1493,8 @@ namespace MdXaml
 
 
             var result = new BlockUIContainer(txtEdit);
+            CommandsForTextEditor.Setup(txtEdit);
+
             if (CodeBlockStyle is not null)
             {
                 result.Style = CodeBlockStyle;
