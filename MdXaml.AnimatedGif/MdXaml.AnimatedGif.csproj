@@ -1,16 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>$(PackageTargetFrameworks)</TargetFrameworks>
-    <PackageId>MdXaml.Svg</PackageId>
+    <PackageId>MdXaml.AniatedGif</PackageId>
     <Version>$(PackageVersion)</Version>
     <Authors>whistyun</Authors>
     <Company />
-    <Description>Displays SVG for MdXaml</Description>
-    <Copyright>Copyright (c) 2022 whistyun</Copyright>
+    <Description>Displays AniatedGif for MdXaml</Description>
+    <Copyright>whistyun 2023</Copyright>
     <PackageProjectUrl>https://github.com/whistyun/MdXaml</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>MdXaml.Svg.md</PackageReadmeFile>
+    <PackageReadmeFile>MdXaml.Html.md</PackageReadmeFile>
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
     <Configurations>Debug;Release</Configurations>
 
@@ -18,22 +18,13 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\key.snk</AssemblyOriginatorKeyFile>
-  </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\pack_readme\MdXaml.Svg.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Svg" Version="3.0.84" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
-    <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
   </ItemGroup>
 
 </Project>

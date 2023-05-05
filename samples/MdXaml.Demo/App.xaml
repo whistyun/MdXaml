@@ -5,12 +5,14 @@
              xmlns:mdplugins="clr-namespace:MdXaml.Plugins;assembly=MdXaml.Plugins"
              xmlns:mdhtml="clr-namespace:MdXaml.Html;assembly=MdXaml.Html"
              xmlns:mdsvg="clr-namespace:MdXaml.Svg;assembly=MdXaml.Svg"
+             xmlns:mdagif="clr-namespace:MdXaml.AnimatedGif;assembly=MdXaml.AnimatedGif"
              StartupUri="MainWindow.xaml">
 
     <Application.Resources>
         <mdplugins:MdXamlPlugins x:Key="MdXamlPlugins">
             <mdhtml:HtmlPluginSetup/>
             <mdsvg:SvgPluginSetup/>
+            <mdagif:AnimatedGifPluginSetup/>
         </mdplugins:MdXamlPlugins>
     </Application.Resources>
 </Application>
