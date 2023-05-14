@@ -18,7 +18,7 @@ namespace MdXaml.Plugins
 
         public InlineUIContainer LoadImage(
             string? tag, string urlTxt, string? tooltipTxt,
-            Action<InlineUIContainer, Image, ImageSource>? onSuccess = null);
+            Action<InlineUIContainer, Image?, ImageSource?>? onSuccess = null);
 
         FlowDocument Transform(string text);
 

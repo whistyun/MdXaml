@@ -2,13 +2,17 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -21,146 +25,75 @@ namespace MdXaml
         private readonly IDictionary<Uri, WeakReference<BitmapImage>> _resultCache
             = new ConcurrentDictionary<Uri, WeakReference<BitmapImage>>();
 
-        private readonly List<IImageLoader> _loaders = new();
-
-        public void Register(IImageLoader l) => _loaders.Add(l);
+        private readonly List<IImageLoader> _iloaders = new();
+        private readonly List<IElementLoader> _eloaders = new();
 
         public void Restructure(MdXamlPlugins plugins)
         {
-            _loaders.Clear();
-            _loaders.AddRange(plugins.ImageLoader);
+            _iloaders.Clear();
+            _eloaders.Clear();
+            _iloaders.AddRange(plugins.ImageLoader);
+            _eloaders.AddRange(plugins.ElementLoader);
         }
 
-        public Result<BitmapImage> LoadImage(IEnumerable<Uri> resourceUrls)
+        public Result<FrameworkElement> LoadImage(IEnumerable<Uri> resourceUrls)
         {
-            Result<BitmapImage>? firsterr = null;
+            return PrivateLoadImageAsync(resourceUrls, false).Result;
+        }
+
+        public Task<Result<FrameworkElement>> LoadImageAsync(IEnumerable<Uri> resourceUrls)
+        {
+            return PrivateLoadImageAsync(resourceUrls, true);
+        }
+
+        public async Task<Result<FrameworkElement>> PrivateLoadImageAsync(IEnumerable<Uri> resourceUrls, bool dispatch)
+        {
+            Result<FrameworkElement>? firsterr = null;
 
             foreach (var resourceUrl in resourceUrls)
             {
-                var resourceResult = CheckResource(resourceUrl);
-                if (resourceResult is not null)
+                var cachedResult = CheckResource(resourceUrl);
+                if (cachedResult is not null)
                 {
-                    return resourceResult;
+                    var task = Create(cachedResult, dispatch);
+
+                    return dispatch ? await task : task.Result;
                 }
 
-                var stream = OpenStreamAsync(resourceUrl).Result;
-                if (stream.Value is null)
+                var streamTask = OpenStreamAsync(resourceUrl);
+                var streamResult = dispatch ? await streamTask : streamTask.Result;
+                if (streamResult.Value is null)
                 {
-                    firsterr ??= new Result<BitmapImage>(stream.ErrorMessage);
+                    firsterr ??= new Result<FrameworkElement>(streamResult.ErrorMessage);
                     continue;
                 }
 
-                var img = OpenImageDirect(stream.Value);
-                if (img is null)
+                using var stream = streamResult.Value;
+                var imageTask = OpenImage(stream, resourceUrl, dispatch);
+                var imageResult = dispatch ? await imageTask : imageTask.Result;
+                if (imageResult is null)
                 {
-                    firsterr ??= new Result<BitmapImage>("unsupported image format");
+                    firsterr ??= new Result<FrameworkElement>("unsupported image format");
                     continue;
                 }
 
-                if (resourceUrl.Scheme == "http" || resourceUrl.Scheme == "https")
-                {
-                    _resultCache[resourceUrl] = new WeakReference<BitmapImage>(img);
-                }
-
-                return new Result<BitmapImage>(img);
+                return new Result<FrameworkElement>(imageResult);
             }
 
             return firsterr ?? throw new ArgumentException("no resourceUrls");
         }
 
-        public async Task<Result<BitmapImage>> LoadImageAsync(IEnumerable<Uri> resourceUrls)
-        {
-            Result<BitmapImage>? firsterr = null;
-
-            foreach (var resourceUrl in resourceUrls)
-            {
-                var resourceResult = CheckResource(resourceUrl);
-                if (resourceResult is not null)
-                {
-                    return resourceResult;
-                }
-
-                var stream = await OpenStreamAsync(resourceUrl);
-                if (stream.Value is null)
-                {
-                    firsterr ??= new Result<BitmapImage>(stream.ErrorMessage);
-                    continue;
-                }
-
-                var img = await OpenImageOnUITrhead(stream.Value);
-                if (img is null)
-                {
-                    firsterr ??= new Result<BitmapImage>("unsupported image format");
-                    continue;
-                }
-
-                if (resourceUrl.Scheme == "http" || resourceUrl.Scheme == "https")
-                {
-                    _resultCache[resourceUrl] = new WeakReference<BitmapImage>(img);
-                }
-
-                return new Result<BitmapImage>(img);
-            }
-
-            return firsterr ?? throw new ArgumentException("no resourceUrls");
-        }
-
-        private Result<BitmapImage>? CheckResource(Uri resourceUrl)
+        private BitmapImage? CheckResource(Uri resourceUrl)
         {
             if ((resourceUrl.Scheme == "http" || resourceUrl.Scheme == "https")
                 && _resultCache.TryGetValue(resourceUrl, out var reference))
             {
                 if (reference.TryGetTarget(out var cachedimg))
                 {
-                    return new Result<BitmapImage>(cachedimg);
+                    return cachedimg;
                 }
                 _resultCache.Remove(resourceUrl);
             }
-            return null;
-        }
-
-        private Task<BitmapImage?> OpenImageOnUITrhead(Stream stream)
-        {
-            var dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
-            return dispatcher.InvokeAsync(() => OpenImageDirect(stream))
-                             .Task;
-        }
-
-        private BitmapImage? OpenImageDirect(Stream stream)
-        {
-            stream.Position = 0;
-
-            try
-            {
-                var imgSource = new BitmapImage();
-                imgSource.BeginInit();
-                // close the stream after the BitmapImage is created
-                imgSource.CacheOption = BitmapCacheOption.OnLoad;
-                imgSource.StreamSource = stream;
-                imgSource.EndInit();
-
-                stream.Close();
-
-                return imgSource;
-            }
-            catch { }
-
-            foreach (var ld in _loaders)
-            {
-                try
-                {
-                    stream.Position = 0;
-                    var img = ld.Load(stream);
-                    if (img is not null)
-                    {
-                        stream.Close();
-                        return img;
-                    }
-                }
-                catch { }
-            }
-
-            stream.Close();
             return null;
         }
 
@@ -225,6 +158,121 @@ namespace MdXaml
 
                 return ms;
             }
+        }
+
+        private Task<FrameworkElement?> OpenImage(Stream stream, Uri? cacheKey, bool dispatch)
+        {
+            if (dispatch)
+            {
+                var dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+                var operation = dispatcher.InvokeAsync(() => OpenImageDirect(stream));
+
+                return operation.Task;
+            }
+            else
+            {
+                return Task.FromResult(OpenImageDirect(stream));
+            }
+
+            FrameworkElement? OpenImageDirect(Stream stream)
+            {
+                foreach (var ld in _iloaders.Where(ld => ld is IPreferredLoader))
+                {
+                    stream.Position = 0;
+
+                    try
+                    {
+                        var img = ld.Load(stream);
+                        if (img is not null)
+                            return Create(cacheKey, img);
+                    }
+                    catch { }
+                }
+
+                foreach (var ld in _eloaders.Where(ld => ld is IPreferredLoader))
+                {
+                    stream.Position = 0;
+
+                    try
+                    {
+                        var img = ld.Load(stream);
+                        if (img is not null)
+                            return img;
+                    }
+                    catch { }
+                }
+
+                stream.Position = 0;
+
+                try
+                {
+                    var imgSource = new BitmapImage();
+                    imgSource.BeginInit();
+                    // close the stream after the BitmapImage is created
+                    imgSource.CacheOption = BitmapCacheOption.OnLoad;
+                    imgSource.StreamSource = stream;
+                    imgSource.EndInit();
+
+                    return Create(cacheKey, imgSource);
+                }
+                catch { }
+
+                foreach (var ld in _iloaders.Where(ld => ld is not IPreferredLoader))
+                {
+                    stream.Position = 0;
+
+                    try
+                    {
+                        var img = ld.Load(stream);
+                        if (img is not null)
+                            return Create(cacheKey, img);
+                    }
+                    catch { }
+                }
+
+                foreach (var ld in _eloaders.Where(ld => ld is not IPreferredLoader))
+                {
+                    stream.Position = 0;
+
+                    try
+                    {
+                        var img = ld.Load(stream);
+                        if (img is not null)
+                            return img;
+                    }
+                    catch { }
+                }
+
+                return null;
+            }
+
+            FrameworkElement Create(Uri resourceKey, BitmapImage bitmap)
+            {
+                if (resourceKey.Scheme == "http" || resourceKey.Scheme == "https")
+                {
+                    _resultCache[resourceKey] = new WeakReference<BitmapImage>(bitmap);
+                }
+
+                return new Image { Source = bitmap };
+            }
+        }
+
+        private Task<Result<FrameworkElement>> Create(BitmapImage image, bool dispatch)
+        {
+            if (dispatch)
+            {
+                var dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
+                var operation = dispatcher.InvokeAsync(() => CreateDirect(image));
+
+                return operation.Task;
+            }
+            else
+            {
+                return Task.FromResult(CreateDirect(image));
+            }
+
+            Result<FrameworkElement> CreateDirect(BitmapImage image)
+                => new Result<FrameworkElement>(new Image { Source = image });
         }
 
         public class Result<T> where T : class

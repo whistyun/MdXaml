@@ -93,6 +93,7 @@ namespace Markdown.Xaml.Test
         {
             var text = Utils.LoadText("Lists1.md");
             var markdown = CreateMarkdown();
+            markdown.DisabledContextMenu = true;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -134,6 +135,7 @@ namespace Markdown.Xaml.Test
         {
             var text = Utils.LoadText("HorizontalRules.md");
             var markdown = CreateMarkdown();
+            markdown.DisabledContextMenu = true;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -256,6 +258,7 @@ namespace Markdown.Xaml.Test
             var markdown = CreateMarkdown();
             markdown.AssetPathRoot = assetPath;
             markdown.BaseUri = baseUri;
+            markdown.DisabledContextMenu = true;
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -297,6 +300,7 @@ namespace Markdown.Xaml.Test
             var text = Utils.LoadText("Codes.md");
             var markdown = CreateMarkdown();
             markdown.AssetPathRoot = assetPath;
+            markdown.DisabledContextMenu = true;
 
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));

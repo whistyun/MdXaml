@@ -100,3 +100,19 @@ Framework: .NET Framework 4.6.2, .NET Core 3, .NET 5
 ## License
 
 MdXaml is licensed under the MIT license.
+
+## Dependencies (Runtime)
+
+* MdXaml
+  * AvalonEdit (MIT) https://github.com/icsharpcode/AvalonEdit
+
+* MdXaml.Html
+  * AvalonEdit (MIT) https://github.com/icsharpcode/AvalonEdit
+  * HtmlAgilityPack (MIT) https://github.com/zzzprojects/html-agility-pack
+
+* MdXaml.Svg
+  * Svg (MIT) https://github.com/svg-net/SVG
+
+* MdXaml.AnimatedGif
+  * WpfAnimatedGif (Apache-2.0) https://github.com/XamlAnimatedGif/WpfAnimatedGif
+

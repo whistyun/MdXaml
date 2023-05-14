@@ -16,6 +16,7 @@ namespace MdXaml.Plugins
             EnableStrikethrough = false,
             EnableListMarkerExt = false,
             EnableTextileInline = false,
+            EnableImageResizeExt = false,
         };
         public static readonly SyntaxManager Standard = new()
         {
@@ -26,6 +27,7 @@ namespace MdXaml.Plugins
             EnableStrikethrough = true,
             EnableListMarkerExt = false,
             EnableTextileInline = false,
+            EnableImageResizeExt = false,
         };
         public static readonly SyntaxManager MdXaml = new();
 
@@ -39,6 +41,8 @@ namespace MdXaml.Plugins
         public bool EnableListMarkerExt { set; get; } = true;
         public bool EnableTextileInline { get; set; } = true;
 
+        public bool EnableImageResizeExt { get; set; } = true;
+
         public void And(SyntaxManager manager)
         {
             EnableNoteBlock &= manager.EnableNoteBlock;
@@ -48,6 +52,7 @@ namespace MdXaml.Plugins
             EnableStrikethrough &= manager.EnableStrikethrough;
             EnableListMarkerExt &= manager.EnableListMarkerExt;
             EnableTextileInline &= manager.EnableTextileInline;
+            EnableImageResizeExt &= manager.EnableImageResizeExt;
         }
 
         public SyntaxManager Clone()
@@ -60,6 +65,7 @@ namespace MdXaml.Plugins
                 EnableStrikethrough = EnableStrikethrough,
                 EnableListMarkerExt = EnableListMarkerExt,
                 EnableTextileInline = EnableTextileInline,
+                EnableImageResizeExt = EnableImageResizeExt,
             };
     }
 }

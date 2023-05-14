@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MdXaml.AnimatedGif\MdXaml.AnimatedGif.csproj" />
     <ProjectReference Include="..\..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
     <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
     <ProjectReference Include="..\..\MdXaml.Html\MdXaml.Html.csproj" />

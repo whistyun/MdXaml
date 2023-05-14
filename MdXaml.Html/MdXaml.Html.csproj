@@ -5,7 +5,7 @@
     <Version>$(PackageVersion)</Version>
     <Authors>whistyun</Authors>
     <Company />
-    <Description>Markdown XAML processor</Description>
+    <Description>cheap html processor for MdXalml</Description>
     <Copyright>© Simon Baynes 2013; whistyun 2022</Copyright>
     <PackageProjectUrl>https://github.com/whistyun/MdXaml</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -23,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\pack_readme\MdXaml.Html.md" Pack="true" PackagePath="\"/>
+    <None Include="..\pack_readme\MdXaml.Html.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

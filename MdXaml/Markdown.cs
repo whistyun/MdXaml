@@ -15,6 +15,8 @@ using MdXaml.Plugins;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using MdXaml.Menus;
+using System.Globalization;
 
 // I will not add System.Index and System.Range. There is not exist with net45.
 #pragma warning disable IDE0056
@@ -77,6 +79,8 @@ namespace MdXaml
         public bool DisabledTootip { get; set; }
 
         public bool DisabledLazyLoad { get; set; }
+
+        public bool DisabledContextMenu { get; set; }
 
         public string? AssetPathRoot { get; set; }
 
@@ -211,6 +215,11 @@ namespace MdXaml
             // inline parser
 
             inlines.Add(SimpleInlineParser.New(_codeSpan, CodeSpanEvaluator));
+
+            if (plugins.Syntax.EnableImageResizeExt)
+            {
+                inlines.Add(SimpleInlineParser.New(_resizeImage, ImageWithSizeEvaluator));
+            }
             inlines.Add(SimpleInlineParser.New(_imageOrHrefInline, ImageOrHrefInlineEvaluator));
 
             if (StrictBoldItalic)
@@ -522,6 +531,40 @@ namespace MdXaml
                 )", _nestedBracketsPattern, _nestedParensPattern),
                   RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
+        private static readonly Regex _resizeImage = new(string.Format(@"
+                (                           # wrap whole match in $1
+                    (!)                     # image maker = $2
+                    \[
+                        ({0})               # link text = $3
+                    \]
+                    \(                      # literal paren
+                        [ ]*
+                        ({1})               # href = $4
+                        [ ]*
+                        (                   # $5
+                        (['""])             # quote char = $6
+                        (.*?)               # title = $7
+                        \6                  # matching quote
+                        [ ]*                # ignore any spaces between closing quote and )
+                        )?                  # title is optional
+                    \)
+                    \{{
+                        ([^\}}]+)             # size = $8
+                    \}}
+                )", _nestedBracketsPattern, _nestedParensPattern),
+                  RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+
+        private static readonly Regex _stylePattern = new Regex(@"
+                [ ]+
+                (?<name>width|height)
+                [ ]*
+                =
+                [ ]*
+                (?<value>[0-9]*(\.[0-9]+)?) 
+                (?<unit>(%|em|ex|mm|Q|cm|in|pt|pc|px|))
+                ",
+                RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
+
         private Inline ImageOrHrefInlineEvaluator(Match match)
         {
             if (String.IsNullOrEmpty(match.Groups[2].Value))
@@ -568,9 +611,36 @@ namespace MdXaml
             return LoadImage(linkText, urlTxt, title);
         }
 
+        private Inline ImageWithSizeEvaluator(Match match)
+        {
+            string linkText = match.Groups[3].Value;
+            string urlTxt = match.Groups[4].Value;
+            string title = match.Groups[7].Value;
+            string style = " " + match.Groups[8].Value;
+
+            List<Action<FrameworkElement>> effects = new();
+            foreach (var mch in _stylePattern.Matches(style).Cast<Match>())
+            {
+                if (!ImageIndicate.TryCreate(mch.Groups["value"].Value, mch.Groups["unit"].Value, out var indicate))
+                    continue;
+
+                effects.Add(mch.Groups["name"].Value == "width" ?
+                    indicate.ApplyToWidth : indicate.ApplyToHeight);
+            }
+
+            InlineUIContainer image = LoadImage(linkText, urlTxt, title, (container, image, source) =>
+            {
+                if (container.Child is FrameworkElement element)
+                    foreach (var effect in effects)
+                        effect(element);
+            });
+
+            return image;
+        }
+
         public InlineUIContainer LoadImage(
             string? tag, string urlTxt, string? tooltipTxt,
-            Action<InlineUIContainer, Image, ImageSource>? onSuccess = null)
+            Action<InlineUIContainer, Image?, ImageSource?>? onSuccess = null)
         {
             var urls = new List<Uri>();
 
@@ -1492,6 +1562,10 @@ namespace MdXaml
 
 
             var result = new BlockUIContainer(txtEdit);
+            if (!DisabledContextMenu)
+            {
+                CommandsForTextEditor.Setup(txtEdit);
+            }
             if (CodeBlockStyle is not null)
             {
                 result.Style = CodeBlockStyle;
@@ -2132,7 +2206,7 @@ namespace MdXaml
         private readonly string _urlTxt;
         private readonly string? _tooltipTxt;
         private readonly InlineUIContainer _container;
-        private readonly Action<InlineUIContainer, Image, ImageSource>? _onSuccess;
+        private readonly Action<InlineUIContainer, Image?, ImageSource?>? _onSuccess;
 
         private readonly Style? _imageStyle;
 
@@ -2140,7 +2214,7 @@ namespace MdXaml
             Markdown owner,
             string? tag, string urlTxt, string? tooltipTxt,
             InlineUIContainer container,
-            Action<InlineUIContainer, Image, ImageSource>? onSuccess)
+            Action<InlineUIContainer, Image?, ImageSource?>? onSuccess)
         {
             _tag = tag;
             _urlTxt = urlTxt;
@@ -2151,17 +2225,17 @@ namespace MdXaml
             _imageStyle = owner.ImageStyle;
         }
 
-        public void Treats(Task<ImageLoaderManager.Result<BitmapImage>> task)
+        public void Treats(Task<ImageLoaderManager.Result<FrameworkElement>> task)
         {
             var dispatcher = Application.Current?.Dispatcher ?? Dispatcher.CurrentDispatcher;
             dispatcher.Invoke(async () => Treats(await task));
         }
 
-        public void Treats(ImageLoaderManager.Result<BitmapImage> result)
+        public void Treats(ImageLoaderManager.Result<FrameworkElement> result)
         {
-            var source = result.Value;
+            var element = result.Value;
 
-            if (source is null)
+            if (element is null)
             {
                 _container.Child = new Label()
                 {
@@ -2171,64 +2245,65 @@ namespace MdXaml
             }
             else
             {
-                CreateImage(source);
+                Setup(element);
             }
         }
 
 
-        private void CreateImage(ImageSource source)
+        private void Setup(FrameworkElement element)
         {
-            var image = new Image()
-            {
-                Source = source,
-            };
-
-            if (_imageStyle is null)
-            {
-                image.Margin = new Thickness(0);
-            }
-            else
-            {
-                image.Style = _imageStyle;
-            }
-
             if (!string.IsNullOrWhiteSpace(_tag))
             {
-                image.Tag = _tag;
+                element.Tag = _tag;
             }
 
             if (!string.IsNullOrWhiteSpace(_tooltipTxt))
             {
-                image.ToolTip = _tooltipTxt;
+                element.ToolTip = _tooltipTxt;
             }
 
-            if (source is BitmapSource bs && bs.IsDownloading)
+            var image = element as Image;
+            if (image is not null)
             {
-                Binding binding = new(nameof(BitmapImage.Width));
-                binding.Source = bs;
-                binding.Mode = BindingMode.OneWay;
-
-                BindingExpressionBase bindingExpression = BindingOperations.SetBinding(image, Image.WidthProperty, binding);
-                bs.DownloadCompleted += downloadCompletedHandler;
-
-                void downloadCompletedHandler(object? sender, EventArgs e)
+                if (_imageStyle is null)
                 {
-                    bs.DownloadCompleted -= downloadCompletedHandler;
-                    bs.Freeze();
-                    bindingExpression.UpdateTarget();
+                    image.Margin = new Thickness(0);
+                }
+                else
+                {
+                    image.Style = _imageStyle;
+                }
+
+                if (image.Source is BitmapSource bs)
+                {
+                    if (bs.IsDownloading)
+                    {
+                        Binding binding = new(nameof(BitmapImage.Width));
+                        binding.Source = bs;
+                        binding.Mode = BindingMode.OneWay;
+
+                        BindingExpressionBase bindingExpression = BindingOperations.SetBinding(image, Image.WidthProperty, binding);
+                        bs.DownloadCompleted += downloadCompletedHandler;
+
+                        void downloadCompletedHandler(object? sender, EventArgs e)
+                        {
+                            bs.DownloadCompleted -= downloadCompletedHandler;
+                            bs.Freeze();
+                            bindingExpression.UpdateTarget();
+                        }
+                    }
+                    else
+                    {
+                        image.Width = bs.Width;
+                    }
+
                 }
             }
-            else
-            {
-                image.Width = source.Width;
-            }
 
-            _container.Child = image;
-
-            _onSuccess?.Invoke(_container, image, source);
+            _container.Child = element;
+            _onSuccess?.Invoke(_container, image, image?.Source);
         }
     }
-
 
     internal struct Candidate : IComparable<Candidate>
     {
@@ -2245,4 +2320,171 @@ namespace MdXaml
             => Match.Index.CompareTo(other.Match.Index);
     }
 
+    internal class ImageIndicate
+    {
+        public double Value { get; }
+        public string Unit { get; }
+
+        public ImageIndicate(double value, string unit)
+        {
+            Value = (Unit = unit) switch
+            {
+                "em" => value * 11,
+                "ex" => value * 11 / 2,
+                "Q" => value * 3.77952755905512 / 4,
+                "mm" => value * 3.77952755905512,
+                "cm" => value * 37.7952755905512,
+                "in" => value * 96,
+                "pt" => value * 1.33333333333333,
+                "pc" => value * 16,
+                "px" => value,
+                _ => value
+            };
+        }
+
+        public void ApplyToHeight(FrameworkElement image)
+        {
+            if (Unit == "%")
+            {
+                image.SetBinding(
+                    Image.HeightProperty,
+                    new Binding(nameof(Image.Width))
+                    {
+                        RelativeSource = new RelativeSource(RelativeSourceMode.Self),
+                        Converter = new MultiplyConverter(Value / 100)
+                    });
+            }
+            else
+            {
+                image.Height = Value;
+            }
+        }
+
+        public void ApplyToWidth(FrameworkElement image)
+        {
+            if (Unit == "%")
+            {
+                var parent = image.Parent;
+
+                for (; ; )
+                {
+                    if (parent is FrameworkElement element)
+                    {
+                        parent = element;
+                        break;
+                    }
+                    else if (parent is FrameworkContentElement content)
+                    {
+                        parent = content.Parent;
+                    }
+                    else break;
+                }
+
+                if (parent is FlowDocumentScrollViewer)
+                {
+                    var binding = CreateMultiBindingForFlowDocumentScrollViewer();
+                    binding.Converter = new MultiMultiplyConverter2(Value / 100);
+                    image.SetBinding(Image.WidthProperty, binding);
+                }
+                else
+                {
+                    var binding = CreateBinding(nameof(FrameworkElement.ActualWidth), typeof(FrameworkElement));
+                    binding.Converter = new MultiplyConverter(Value / 100);
+                    image.SetBinding(Image.WidthProperty, binding);
+                }
+            }
+            else
+            {
+                image.Width = Value;
+            }
+        }
+
+        private MultiBinding CreateMultiBindingForFlowDocumentScrollViewer()
+        {
+            var binding = new MultiBinding();
+
+            var totalWidth = CreateBinding(nameof(FlowDocumentScrollViewer.ActualWidth), typeof(FlowDocumentScrollViewer));
+            var verticalBarVis = CreateBinding(nameof(FlowDocumentScrollViewer.VerticalScrollBarVisibility), typeof(FlowDocumentScrollViewer));
+
+            binding.Bindings.Add(totalWidth);
+            binding.Bindings.Add(verticalBarVis);
+
+            return binding;
+        }
+
+        private static Binding CreateBinding(string propName, Type ancestorType)
+        {
+            return new Binding(propName)
+            {
+                RelativeSource = new RelativeSource()
+                {
+                    Mode = RelativeSourceMode.FindAncestor,
+                    AncestorType = ancestorType,
+                }
+            };
+        }
+
+        public static bool TryCreate(string valueText, string unit, out ImageIndicate indicate)
+        {
+            if (double.TryParse(valueText, out var value))
+            {
+                indicate = new ImageIndicate(value, unit);
+                return true;
+            }
+            else
+            {
+                indicate = default;
+                return false;
+            }
+        }
+
+        class MultiplyConverter : IValueConverter
+        {
+            public double Value { get; }
+
+            public MultiplyConverter(double v)
+            {
+                Value = v;
+            }
+
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return Value * (Double)value;
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                return ((Double)value) / Value;
+            }
+        }
+        class MultiMultiplyConverter2 : IMultiValueConverter
+        {
+            public double Value { get; }
+
+            public MultiMultiplyConverter2(double v)
+            {
+                Value = v;
+            }
+
+            public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+            {
+                var value = (double)values[0];
+                var visibility = (ScrollBarVisibility)values[1];
+
+                if (visibility == ScrollBarVisibility.Visible)
+                {
+                    return Value * (value - SystemParameters.VerticalScrollBarWidth);
+                }
+                else
+                {
+                    return Value * (Double)value;
+                }
+            }
+
+            public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
 }
