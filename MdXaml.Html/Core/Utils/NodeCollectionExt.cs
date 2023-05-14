@@ -25,6 +25,11 @@ namespace MdXaml.Html.Core.Utils
             return store;
         }
 
+        public static bool IsElement(this HtmlNode node, string tagName)
+        {
+            return node.NodeType == HtmlNodeType.Element
+                && string.Equals(node.Name, tagName, StringComparison.OrdinalIgnoreCase);
+        }
         public static bool IsComment(this HtmlNode node) => node is HtmlCommentNode;
 
         public static List<HtmlNode> CollectTag(this HtmlNodeCollection list)
@@ -53,10 +58,8 @@ namespace MdXaml.Html.Core.Utils
             for (var i = 0; i < count; ++i)
             {
                 var e = list[i];
-                if (e.NodeType != HtmlNodeType.Element) continue;
-                if (!string.Equals(e.Name, tagName, StringComparison.OrdinalIgnoreCase)) continue;
-
-                store.Add(e);
+                if (e.IsElement(tagName))
+                    store.Add(e);
             }
 
             return store;
@@ -73,14 +76,11 @@ namespace MdXaml.Html.Core.Utils
                 var e = list[i];
                 if (e.NodeType != HtmlNodeType.Element) continue;
 
-                if (tagNames.Any(tagNm => Eq(e.Name, tagNm)))
+                if (tagNames.Any(tagName => e.IsElement(tagName)))
                     store.Add(e);
             }
 
             return store;
-
-            static bool Eq(string a, string b)
-                => string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
         }
 
         public static bool HasOneTag(

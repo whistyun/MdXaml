@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using MdXaml;
 using MdXaml.Plugins;
+using System.Xml.Linq;
 
 namespace MdXaml.Html.Core
 {
@@ -47,6 +48,7 @@ namespace MdXaml.Html.Core
             Register(new ButtonParser());
             Register(new TextAreaParser());
             Register(new ProgressParser());
+            Register(new DetailsParser());
 
             foreach (var parser in TypicalBlockParser.Load())
                 Register(parser);
@@ -177,27 +179,31 @@ namespace MdXaml.Html.Core
         /// </summary>
         public IEnumerable<TextElement> ParseChildrenJagging(HtmlNode node)
         {
-            // search empty line
-            var empNd = node.ChildNodes
-                            .Select((nd, idx) => new { Node = nd, Index = idx })
-                            .Where(tpl => tpl.Node is HtmlTextNode)
-                            .Select(tpl => new
-                            {
-                                NodeIndex = tpl.Index,
-                                TextIndex = tpl.Node.InnerText.IndexOf("\n\n")
-                            })
-                            .FirstOrDefault(tpl => tpl.TextIndex != -1);
+            return ParseChildrenJagigng(node.ChildNodes);
+        }
 
+        public IEnumerable<TextElement> ParseChildrenJagigng(IEnumerable<HtmlNode> nodes)
+        {
+            // search empty line
+            var empNd = nodes.Select((nd, idx) => new { Node = nd, Index = idx })
+                             .Where(tpl => tpl.Node is HtmlTextNode)
+                             .Select(tpl => new
+                             {
+                                 NodeIndex = tpl.Index,
+                                 TextIndex = tpl.Node.InnerText.IndexOf("\n\n")
+                             })
+                             .FirstOrDefault(tpl => tpl.TextIndex != -1);
 
             if (empNd is null)
             {
-                return ParseJagging(node.ChildNodes);
+                return ParseJagging(nodes);
             }
             else
             {
-                return ParseJaggingAndRunBlockGamut(node.ChildNodes, empNd.NodeIndex, empNd.TextIndex);
+                return ParseJaggingAndRunBlockGamut(nodes, empNd.NodeIndex, empNd.TextIndex);
             }
         }
+
 
         /// <summary>
         /// Convert a html tag to an element of markdown.
