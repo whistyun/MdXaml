@@ -46,6 +46,7 @@ namespace MixingTest
             {
                 AssetPathRoot = assetPath,
                 BaseUri = baseUri,
+                DisabledContextMenu = true,
             };
 
             var result = markdown.Transform(text);

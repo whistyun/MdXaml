@@ -6,7 +6,12 @@
   <Paragraph>
     <Bold Tag="Bold">This text will be bold</Bold>
   </Paragraph>
-  <Paragraph>~~This text will be striketrhough~~</Paragraph>
+  <Paragraph>
+    <Span Tag="Strikethrough">
+      <Span.TextDecorations>
+        <TextDecoration Location="Strikethrough" />
+      </Span.TextDecorations>This text will be striketrhough</Span>
+  </Paragraph>
   <Paragraph>
     <Bold Tag="Bold">This text will be underline</Bold>
   </Paragraph>

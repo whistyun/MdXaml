@@ -80,6 +80,8 @@ namespace MdXaml
 
         public bool DisabledLazyLoad { get; set; }
 
+        public bool DisabledContextMenu { get; set; }
+
         public string? AssetPathRoot { get; set; }
 
         public ICommand? HyperlinkCommand { get; set; }
@@ -1560,8 +1562,10 @@ namespace MdXaml
 
 
             var result = new BlockUIContainer(txtEdit);
-            CommandsForTextEditor.Setup(txtEdit);
-
+            if (!DisabledContextMenu)
+            {
+                CommandsForTextEditor.Setup(txtEdit);
+            }
             if (CodeBlockStyle is not null)
             {
                 result.Style = CodeBlockStyle;
@@ -2248,17 +2252,6 @@ namespace MdXaml
 
         private void Setup(FrameworkElement element)
         {
-            var image = element as Image;
-
-            if (element is null)
-            {
-                element.Margin = new Thickness(0);
-            }
-            else if (image is not null)
-            {
-                image.Style = _imageStyle;
-            }
-
             if (!string.IsNullOrWhiteSpace(_tag))
             {
                 element.Tag = _tag;
@@ -2269,29 +2262,42 @@ namespace MdXaml
                 element.ToolTip = _tooltipTxt;
             }
 
-            if (image is not null && image.Source is BitmapSource bs)
+            var image = element as Image;
+            if (image is not null)
             {
-                if (bs.IsDownloading)
+                if (_imageStyle is null)
                 {
-                    Binding binding = new(nameof(BitmapImage.Width));
-                    binding.Source = bs;
-                    binding.Mode = BindingMode.OneWay;
-
-                    BindingExpressionBase bindingExpression = BindingOperations.SetBinding(image, Image.WidthProperty, binding);
-                    bs.DownloadCompleted += downloadCompletedHandler;
-
-                    void downloadCompletedHandler(object? sender, EventArgs e)
-                    {
-                        bs.DownloadCompleted -= downloadCompletedHandler;
-                        bs.Freeze();
-                        bindingExpression.UpdateTarget();
-                    }
+                    image.Margin = new Thickness(0);
                 }
                 else
                 {
-                    image.Width = bs.Width;
+                    image.Style = _imageStyle;
                 }
 
+                if (image.Source is BitmapSource bs)
+                {
+                    if (bs.IsDownloading)
+                    {
+                        Binding binding = new(nameof(BitmapImage.Width));
+                        binding.Source = bs;
+                        binding.Mode = BindingMode.OneWay;
+
+                        BindingExpressionBase bindingExpression = BindingOperations.SetBinding(image, Image.WidthProperty, binding);
+                        bs.DownloadCompleted += downloadCompletedHandler;
+
+                        void downloadCompletedHandler(object? sender, EventArgs e)
+                        {
+                            bs.DownloadCompleted -= downloadCompletedHandler;
+                            bs.Freeze();
+                            bindingExpression.UpdateTarget();
+                        }
+                    }
+                    else
+                    {
+                        image.Width = bs.Width;
+                    }
+
+                }
             }
 
             _container.Child = element;
