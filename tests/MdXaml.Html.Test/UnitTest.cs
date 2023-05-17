@@ -112,6 +112,19 @@ namespace MdXaml.Html.Test
 
         [Test]
         [Apartment(ApartmentState.STA)]
+        public void Details()
+        {
+            var html = Utils.ReadHtml();
+
+            var doc = manager.Transform(html);
+
+            var xaml = Utils.AsXaml(doc);
+
+            Approvals.Verify(xaml);
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
         public void TypicalBlock()
         {
             var html = Utils.ReadHtml();

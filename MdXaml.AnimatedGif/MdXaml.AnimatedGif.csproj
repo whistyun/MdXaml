@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(PackageTargetFrameworks)</TargetFrameworks>
-    <PackageId>MdXaml.AniatedGif</PackageId>
+    <PackageId>MdXaml.AnimatedGif</PackageId>
     <Version>$(PackageVersion)</Version>
     <Authors>whistyun</Authors>
     <Company />
