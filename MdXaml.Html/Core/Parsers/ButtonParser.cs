@@ -21,7 +21,9 @@ namespace MdXaml.Html.Core.Parsers
 
         public bool TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<Inline> generated)
         {
-            var doc = new FlowDocument();
+            var doc = new FlowDocument() {
+                PagePadding = new Thickness(0),
+            };
             doc.Blocks.AddRange(manager.ParseChildrenAndGroup(node));
 
             var box = new FlowDocumentScrollViewer()
