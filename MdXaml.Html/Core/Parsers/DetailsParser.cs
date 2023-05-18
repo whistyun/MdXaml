@@ -43,6 +43,7 @@ namespace MdXaml.Html.Core.Parsers
                 Content = Create(manager.Engine, manager.Grouping(manager.ParseChildrenJagigng(content))),
             };
 
+            SetupCursor(header.Document);
             header.PreviewMouseDown += (s, e) => Viewer_PreviewMouseDown(expander, s, e);
 
             var container = new BlockUIContainer(expander);
@@ -134,7 +135,58 @@ namespace MdXaml.Html.Core.Parsers
             return false;
         }
 
+        private static void SetupCursor(FlowDocument doc)
+        {
+            doc.Cursor = Cursors.Arrow;
 
+            foreach (var elem in doc.Blocks)
+                SetupCursor(elem);
+        }
+
+        private static void SetupCursor(Block block)
+        {
+            block.Cursor = Cursors.Arrow;
+
+            if (block is List list)
+            {
+                foreach (var item in list.ListItems)
+                    foreach (var elem in item.Blocks)
+                        SetupCursor(elem);
+            }
+            else if (block is Paragraph paragraph)
+            {
+                foreach (var elem in paragraph.Inlines)
+                    SetupCursor(elem);
+            }
+            else if (block is Section section)
+            {
+                foreach (var elem in section.Blocks)
+                    SetupCursor(elem);
+            }
+            else if (block is Table table)
+            {
+                foreach (var rowGroup in table.RowGroups)
+                    foreach (var row in rowGroup.Rows)
+                        foreach (var cell in row.Cells)
+                            foreach (var elem in cell.Blocks)
+                                SetupCursor(elem);
+            }
+        }
+
+        private static void SetupCursor(Inline element)
+        {
+            if (element is Hyperlink)
+            {
+                return;
+            }
+            else if (element is Span span)
+            {
+                foreach (var elem in span.Inlines)
+                    SetupCursor(elem);
+            }
+
+            element.Cursor = Cursors.Arrow;
+        }
 
         private static void Doc_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
