@@ -10,6 +10,7 @@
     <Copyright>whistyun 2023</Copyright>
     <PackageProjectUrl>https://github.com/whistyun/MdXaml</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>MdXaml.AnimatedGif.md</PackageReadmeFile>
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
     <Configurations>Debug;Release</Configurations>
 
@@ -17,6 +18,10 @@
     <LangVersion>9</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\pack_readme\MdXaml.AnimatedGif.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
