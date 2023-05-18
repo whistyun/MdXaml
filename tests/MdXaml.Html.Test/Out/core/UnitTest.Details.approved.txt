@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <BlockUIContainer>
+    <Expander>
+      <Expander.Header>
+        <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
+          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
+            <Paragraph>Spoiler warning <Hyperlink Command="GoToPage" CommandParameter="https://www.google.com" Tag="Hyperlink">link</Hyperlink></Paragraph>
+          </FlowDocument>
+        </FlowDocumentScrollViewer>
+      </Expander.Header>
+      <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
+        <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
+          <Paragraph Tag="Heading1">Heading1</Paragraph>
+          <List MarkerStyle="Disc">
+            <ListItem>
+              <Paragraph>list item1</Paragraph>
+            </ListItem>
+            <ListItem>
+              <Paragraph>list item2</Paragraph>
+            </ListItem>
+          </List>
+        </FlowDocument>
+      </FlowDocumentScrollViewer>
+    </Expander>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <BlockUIContainer>
+    <Expander IsExpanded="True">
+      <Expander.Header>
+        <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
+          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
+            <Paragraph>Spoiler warning</Paragraph>
+          </FlowDocument>
+        </FlowDocumentScrollViewer>
+      </Expander.Header>
+      <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
+        <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
+          <Paragraph Tag="Heading1">Heading1</Paragraph>
+          <List MarkerStyle="Disc">
+            <ListItem>
+              <Paragraph>list item1</Paragraph>
+            </ListItem>
+            <ListItem>
+              <Paragraph>list item2</Paragraph>
+            </ListItem>
+          </List>
+        </FlowDocument>
+      </FlowDocumentScrollViewer>
+    </Expander>
+  </BlockUIContainer>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <BlockUIContainer>
+    <Expander IsExpanded="False">
+      <Expander.Header>
+        <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
+          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
+            <Paragraph>Spoiler warning</Paragraph>
+          </FlowDocument>
+        </FlowDocumentScrollViewer>
+      </Expander.Header>
+      <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
+        <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
+          <Paragraph Tag="Heading1">Heading1</Paragraph>
+          <List MarkerStyle="Disc">
+            <ListItem>
+              <Paragraph>list item1</Paragraph>
+            </ListItem>
+            <ListItem>
+              <Paragraph>list item2</Paragraph>
+            </ListItem>
+          </List>
+        </FlowDocument>
+      </FlowDocumentScrollViewer>
+    </Expander>
+  </BlockUIContainer>
+</FlowDocument>

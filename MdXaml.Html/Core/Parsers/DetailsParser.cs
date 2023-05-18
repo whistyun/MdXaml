@@ -2,6 +2,7 @@
 using MdXaml.Html.Core.Utils;
 using MdXaml.Plugins;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -34,11 +35,15 @@ namespace MdXaml.Html.Core.Parsers
 
             var content = node.ChildNodes.Where(e => !ReferenceEquals(e, summary));
 
+            var header = Create(manager.Engine, manager.ParseChildrenAndGroup(summary));
+
             var expander = new Expander()
             {
-                Header = Create(manager.Engine, manager.ParseChildrenAndGroup(summary)),
+                Header = header,
                 Content = Create(manager.Engine, manager.Grouping(manager.ParseChildrenJagigng(content))),
             };
+
+            header.PreviewMouseDown += (s, e) => Viewer_PreviewMouseDown(expander, s, e);
 
             var container = new BlockUIContainer(expander);
 
@@ -70,7 +75,6 @@ namespace MdXaml.Html.Core.Parsers
                         });
             }
 
-
             var viewer = new FlowDocumentScrollViewer()
             {
                 Document = doc,
@@ -84,6 +88,54 @@ namespace MdXaml.Html.Core.Parsers
             return viewer;
         }
 
+        private static void Viewer_PreviewMouseDown(Expander parent, object sender, MouseButtonEventArgs e)
+        {
+            var doc = (FlowDocumentScrollViewer)sender;
+
+            if (e.LeftButton == MouseButtonState.Pressed
+             && ShouldBubblingToExpander(doc, e.GetPosition(doc)))
+            {
+                parent.SetCurrentValue(Expander.IsExpandedProperty, !parent.IsExpanded);
+                e.Handled = true;
+            }
+        }
+
+        private static bool ShouldBubblingToExpander(FlowDocumentScrollViewer doc, Point point)
+        {
+            object? elemObj = doc.InputHitTest(point);
+
+            while (elemObj is not null)
+            {
+                if (object.ReferenceEquals(doc, elemObj))
+                {
+                    return true;
+                }
+                else if (elemObj is FrameworkElement element)
+                {
+                    if (element is Image)
+                    {
+                        elemObj = element.Parent;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (elemObj is Hyperlink)
+                {
+                    break;
+                }
+                else if (elemObj is FrameworkContentElement contentElement)
+                {
+                    elemObj = contentElement.Parent;
+                }
+            }
+
+            return false;
+        }
+
+
+
         private static void Doc_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.Handled)
@@ -91,6 +143,7 @@ namespace MdXaml.Html.Core.Parsers
 
             if (((FrameworkElement)sender).Parent is UIElement parent)
             {
+                // bubling
                 var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta);
                 eventArg.RoutedEvent = UIElement.MouseWheelEvent;
                 eventArg.Source = sender;
