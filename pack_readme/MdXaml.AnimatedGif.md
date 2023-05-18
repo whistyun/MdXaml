@@ -1,0 +1,1 @@
+A plugin for an animated gif in MdXaml
