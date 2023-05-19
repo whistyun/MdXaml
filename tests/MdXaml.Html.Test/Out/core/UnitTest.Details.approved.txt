@@ -4,8 +4,11 @@
     <Expander>
       <Expander.Header>
         <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
-          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
-            <Paragraph>Spoiler warning <Hyperlink Command="GoToPage" CommandParameter="https://www.google.com" Tag="Hyperlink">link</Hyperlink></Paragraph>
+          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}" Cursor="Arrow">
+            <Paragraph Cursor="Arrow">
+              <Run Cursor="Arrow" xml:space="preserve">Spoiler warning </Run>
+              <Hyperlink Command="GoToPage" CommandParameter="https://www.google.com" Tag="Hyperlink">link</Hyperlink>
+            </Paragraph>
           </FlowDocument>
         </FlowDocumentScrollViewer>
       </Expander.Header>
@@ -31,8 +34,10 @@
     <Expander IsExpanded="True">
       <Expander.Header>
         <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
-          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
-            <Paragraph>Spoiler warning</Paragraph>
+          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}" Cursor="Arrow">
+            <Paragraph Cursor="Arrow">
+              <Run Cursor="Arrow">Spoiler warning</Run>
+            </Paragraph>
           </FlowDocument>
         </FlowDocumentScrollViewer>
       </Expander.Header>
@@ -58,8 +63,10 @@
     <Expander IsExpanded="False">
       <Expander.Header>
         <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,0" Margin="0,0,0,0">
-          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}">
-            <Paragraph>Spoiler warning</Paragraph>
+          <FlowDocument PagePadding="0,0,0,0" Style="{x:Null}" Cursor="Arrow">
+            <Paragraph Cursor="Arrow">
+              <Run Cursor="Arrow">Spoiler warning</Run>
+            </Paragraph>
           </FlowDocument>
         </FlowDocumentScrollViewer>
       </Expander.Header>
