@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 
-#if MIG_FREE
-namespace Markdown.Xaml.Ext
-#else
 namespace MdXaml.Ext
-#endif
 {
     struct HSV
     {

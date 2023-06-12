@@ -14,17 +14,10 @@ using System.Windows.Markup;
 using MdXaml.Plugins;
 using System.Windows.Media;
 
-#if MIG_FREE
-using Markdown.Xaml.LinkActions;
-using MdStyle = Markdown.Xaml.MarkdownStyle;
-
-namespace Markdown.Xaml
-#else
 using MdXaml.LinkActions;
 using MdStyle = MdXaml.MarkdownStyle;
 
 namespace MdXaml
-#endif
 {
     [ContentProperty(nameof(HereMarkdown))]
     public class MarkdownScrollViewer : FlowDocumentScrollViewer, IUriContext
@@ -177,12 +170,7 @@ namespace MdXaml
         }
 
         private MdXamlPlugins? _plugins;
-#if MIG_FREE
-        internal
-#else
-        public
-#endif
-        MdXamlPlugins? Plugins
+        public MdXamlPlugins? Plugins
         {
             set
             {

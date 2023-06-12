@@ -1,6 +1,4 @@
-﻿#if ! MIG_FREE
-
-using ICSharpCode.AvalonEdit;
+﻿using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Rendering;
 using System;
@@ -235,4 +233,3 @@ namespace MdXaml.Ext
         }
     }
 }
-#endif

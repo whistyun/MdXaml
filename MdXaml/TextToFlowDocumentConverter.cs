@@ -8,11 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Data;
 
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
 namespace MdXaml
-#endif
 {
     public class TextToFlowDocumentConverter : DependencyObject, IValueConverter
     {

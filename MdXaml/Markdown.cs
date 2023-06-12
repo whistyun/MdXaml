@@ -22,16 +22,10 @@ using System.Globalization;
 #pragma warning disable IDE0056
 #pragma warning disable IDE0057
 
-#if !MIG_FREE
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
-#endif
 
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
 namespace MdXaml
-#endif
 {
     public class Markdown : DependencyObject, IMarkdown, IUriContext
     {
@@ -88,13 +82,7 @@ namespace MdXaml
 
         public Uri? BaseUri { get; set; }
 
-#if MIG_FREE
-        internal
-#else
-        public
-#endif
-        MdXamlPlugins? Plugins
-        { get; set; }
+        public MdXamlPlugins? Plugins { get; set; }
 
         private ParseParam ParseParam { get; set; }
 
@@ -1476,32 +1464,6 @@ namespace MdXaml
                     )
                     ", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled);
 
-#if MIG_FREE
-        private Block CodeBlocksWithLangEvaluator(Match match)
-            => CodeBlocksEvaluator(match.Groups[3].Value);
-
-        private Block CodeBlocksWithoutLangEvaluator(Match match)
-        {
-            var detentTxt = String.Join("\n", match.Groups[1].Value.Split('\n').Select(line => TextUtil.DetentLineBestEffort(line, 4)));
-            return CodeBlocksEvaluator(_newlinesLeadingTrailing.Replace(detentTxt, ""));
-        }
-
-        private Block CodeBlocksEvaluator(string code)
-        {
-            var text = new Run(code);
-            var result = new Paragraph(text);
-            if (CodeBlockStyle is not null)
-            {
-                result.Style = CodeBlockStyle;
-            }
-            if (!DisabledTag)
-            {
-                result.Tag = TagCodeBlock;
-            }
-
-            return result;
-        }
-#else
         private Block CodeBlocksWithLangEvaluator(Match match)
             => CodeBlocksEvaluator(match.Groups[2].Value, match.Groups[3].Value);
 
@@ -1577,8 +1539,6 @@ namespace MdXaml
 
             return result;
         }
-
-#endif
 
         #endregion
 
