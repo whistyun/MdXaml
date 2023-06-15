@@ -13,6 +13,10 @@
             <mdhtml:HtmlPluginSetup/>
             <mdsvg:SvgPluginSetup/>
             <mdagif:AnimatedGifPluginSetup/>
+
+            <mdplugins:MdXamlPlugins.Highlights>
+                <mdplugins:Definition Alias="pegasus,peg" Resource="pack://application:,,,/Asset/Pegasus-Mode.xshd" />
+            </mdplugins:MdXamlPlugins.Highlights>
         </mdplugins:MdXamlPlugins>
     </Application.Resources>
 </Application>

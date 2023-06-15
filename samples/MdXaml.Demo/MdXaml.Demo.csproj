@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Asset\Pegasus-Mode.xshd" />
     <None Remove="Asset\ResourceImage.png" />
     <None Remove="MainWindow.md" />
   </ItemGroup>
@@ -28,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Asset\Pegasus-Mode.xshd" />
     <Resource Include="Asset\ResourceImage.png" />
   </ItemGroup>
 
