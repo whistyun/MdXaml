@@ -4,6 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFrameworks>$(SampleTargetFrameworks)</TargetFrameworks>
     <UseWPF>true</UseWPF>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
