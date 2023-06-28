@@ -84,7 +84,25 @@ namespace MdXaml.Highlighting
 
         public void Register(Definition def)
         {
-            var definition = Load(def.Resource);
+            if (def.Alias is null)
+                throw new ArgumentException("Definition.Alias must not be null.");
+
+            if ((def.Resource is not null && def.RealName is not null))
+                throw new ArgumentException("Only one of Definition.Resource and Definition.RealName must be set.");
+
+            IHighlightingDefinition definition;
+            if (def.Resource is not null)
+                definition = Load(def.Resource);
+
+            else if (def.RealName is not null)
+                if (Get(def.RealName) is { } d)
+                    definition = d;
+                else
+                    throw new ArgumentException($"syntax highlighting `{def.RealName}` is not found.");
+
+            else
+                throw new ArgumentException("Only one of Definition.Resource and Definition.RealName must be set.");
+
 
             foreach (var alias in def.Alias.Split(','))
             {

@@ -15,7 +15,8 @@
             <mdagif:AnimatedGifPluginSetup/>
 
             <mdplugins:MdXamlPlugins.Highlights>
-                <mdplugins:Definition Alias="pegasus,peg" Resource="pack://application:,,,/Asset/Pegasus-Mode.xshd" />
+                <mdplugins:Definition Alias="pegasus,peg"   Resource="pack://application:,,,/Asset/Pegasus-Mode.xshd" />
+                <mdplugins:Definition Alias="typescript,ts" RealName="javascript" />
             </mdplugins:MdXamlPlugins.Highlights>
         </mdplugins:MdXamlPlugins>
     </Application.Resources>
