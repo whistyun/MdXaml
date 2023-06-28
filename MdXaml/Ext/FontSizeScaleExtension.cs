@@ -6,11 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-#if MIG_FREE
-namespace Markdown.Xaml.Ext
-#else
 namespace MdXaml.Ext
-#endif
 {
     class FontSizeScaleExtension : MarkupExtension
     {

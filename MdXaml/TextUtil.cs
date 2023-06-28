@@ -5,11 +5,7 @@ using System.Text;
 // I will not add System.Range. There is not exist with net45.
 #pragma warning disable IDE0057
 
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
 namespace MdXaml
-#endif
 {
     static class TextUtil
     {

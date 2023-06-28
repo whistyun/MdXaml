@@ -2,15 +2,9 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-#if MIG_FREE
-using Markdown.Xaml;
-
-namespace Markdown.Xaml.LinkActions
-#else
 using MdXaml;
 
 namespace MdXaml.LinkActions
-#endif
 {
     // set `public` access level for #29.
     public class DiaplayCommand : ICommand

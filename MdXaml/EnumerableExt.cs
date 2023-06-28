@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
 namespace MdXaml
-#endif
 {
     internal static class EnumerableExt
     {

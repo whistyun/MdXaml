@@ -22,16 +22,11 @@ using System.Globalization;
 #pragma warning disable IDE0056
 #pragma warning disable IDE0057
 
-#if !MIG_FREE
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
-#endif
+using MdXaml.Highlighting;
 
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
 namespace MdXaml
-#endif
 {
     public class Markdown : DependencyObject, IMarkdown, IUriContext
     {
@@ -88,13 +83,23 @@ namespace MdXaml
 
         public Uri? BaseUri { get; set; }
 
-#if MIG_FREE
-        internal
-#else
-        public
-#endif
-        MdXamlPlugins? Plugins
-        { get; set; }
+        private MdXamlPlugins? _plugins;
+        public MdXamlPlugins? Plugins
+        {
+            get => _plugins;
+            set
+            {
+                if (_plugins == value)
+                    return;
+
+                if (_plugins is not null)
+                    _plugins.Updated -= PluginUpdated;
+
+                _plugins = value ?? MdXamlPlugins.Default;
+                _plugins.Updated += PluginUpdated;
+                PluginUpdated();
+            }
+        }
 
         private ParseParam ParseParam { get; set; }
 
@@ -143,11 +148,8 @@ namespace MdXaml
         {
             HyperlinkCommand = NavigationCommands.GoToPage;
             AssetPathRoot = Environment.CurrentDirectory;
-            Plugins = null;
-            ParseParam = SetupParams(MdXamlPlugins.Default);
-
             LoaderManager = new();
-            LoaderManager.Restructure(MdXamlPlugins.Default);
+            Plugins = MdXamlPlugins.Default;
         }
 
         public FlowDocument Transform(string text)
@@ -157,8 +159,6 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
-            SetupParams();
-
             text = TextUtil.Normalize(text);
             var document = Create<FlowDocument, Block>(PrivateRunBlockGamut(text, ParseParam.SupportTextAlignment));
 
@@ -167,7 +167,7 @@ namespace MdXaml
             return document;
         }
 
-        private ParseParam SetupParams(MdXamlPlugins plugins)
+        private void PluginUpdated()
         {
             var topBlocks = new List<IBlockParser>();
             var subBlocks = new List<IBlockParser>();
@@ -175,7 +175,7 @@ namespace MdXaml
 
             // top-level block parser
 
-            if (plugins.Syntax.EnableListMarkerExt)
+            if (_plugins.Syntax.EnableListMarkerExt)
             {
                 topBlocks.Add(SimpleBlockParser.New(_extListNested, ExtListEvaluator));
             }
@@ -193,7 +193,7 @@ namespace MdXaml
             subBlocks.Add(SimpleBlockParser.New(_headerAtx, AtxHeaderEvaluator));
 
 
-            if (plugins.Syntax.EnableRuleExt)
+            if (_plugins.Syntax.EnableRuleExt)
             {
                 subBlocks.Add(SimpleBlockParser.New(_horizontalRules, RuleEvaluator));
             }
@@ -202,11 +202,11 @@ namespace MdXaml
                 subBlocks.Add(SimpleBlockParser.New(_horizontalCommonRules, RuleCommonEvaluator));
             }
 
-            if (plugins.Syntax.EnableTableBlock)
+            if (_plugins.Syntax.EnableTableBlock)
             {
                 subBlocks.Add(SimpleBlockParser.New(_table, TableEvalutor));
             }
-            if (plugins.Syntax.EnableNoteBlock)
+            if (_plugins.Syntax.EnableNoteBlock)
             {
                 subBlocks.Add(SimpleBlockParser.New(_note, NoteEvaluator));
             }
@@ -216,7 +216,7 @@ namespace MdXaml
 
             inlines.Add(SimpleInlineParser.New(_codeSpan, CodeSpanEvaluator));
 
-            if (plugins.Syntax.EnableImageResizeExt)
+            if (_plugins.Syntax.EnableImageResizeExt)
             {
                 inlines.Add(SimpleInlineParser.New(_resizeImage, ImageWithSizeEvaluator));
             }
@@ -227,23 +227,20 @@ namespace MdXaml
                 inlines.Add(SimpleInlineParser.New(_strictBold, BoldEvaluator));
                 inlines.Add(SimpleInlineParser.New(_strictItalic, ItalicEvaluator));
 
-                if (plugins.Syntax.EnableStrikethrough)
+                if (_plugins.Syntax.EnableStrikethrough)
                     inlines.Add(SimpleInlineParser.New(_strikethrough, StrikethroughEvaluator));
             }
 
-            topBlocks.AddRange(plugins.TopBlock);
-            subBlocks.AddRange(plugins.Block);
-            inlines.AddRange(plugins.Inline);
+            topBlocks.AddRange(_plugins.TopBlock);
+            subBlocks.AddRange(_plugins.Block);
+            inlines.AddRange(_plugins.Inline);
 
-            return new ParseParam(topBlocks, subBlocks, inlines, plugins.Syntax);
-        }
+            var manager = new InternalHighlightManager();
+            foreach (var def in _plugins.Highlights)
+                manager.Register(def);
 
-        private void SetupParams()
-        {
-            var plugins = Plugins ?? MdXamlPlugins.Default;
-
-            ParseParam = SetupParams(plugins);
-            LoaderManager.Restructure(plugins);
+            ParseParam = new ParseParam(topBlocks, subBlocks, inlines, _plugins.Syntax, manager);
+            LoaderManager.Restructure(_plugins);
         }
 
         /// <summary>
@@ -256,8 +253,6 @@ namespace MdXaml
                 throw new ArgumentNullException(nameof(text));
             }
 
-            SetupParams();
-
             return PrivateRunBlockGamut(text, supportTextAlignment);
         }
         /// <summary>
@@ -269,8 +264,6 @@ namespace MdXaml
             {
                 throw new ArgumentNullException(nameof(text));
             }
-
-            SetupParams();
 
             return PrivateRunSpanGamut(text);
         }
@@ -1476,32 +1469,6 @@ namespace MdXaml
                     )
                     ", RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline | RegexOptions.Compiled);
 
-#if MIG_FREE
-        private Block CodeBlocksWithLangEvaluator(Match match)
-            => CodeBlocksEvaluator(match.Groups[3].Value);
-
-        private Block CodeBlocksWithoutLangEvaluator(Match match)
-        {
-            var detentTxt = String.Join("\n", match.Groups[1].Value.Split('\n').Select(line => TextUtil.DetentLineBestEffort(line, 4)));
-            return CodeBlocksEvaluator(_newlinesLeadingTrailing.Replace(detentTxt, ""));
-        }
-
-        private Block CodeBlocksEvaluator(string code)
-        {
-            var text = new Run(code);
-            var result = new Paragraph(text);
-            if (CodeBlockStyle is not null)
-            {
-                result.Style = CodeBlockStyle;
-            }
-            if (!DisabledTag)
-            {
-                result.Tag = TagCodeBlock;
-            }
-
-            return result;
-        }
-#else
         private Block CodeBlocksWithLangEvaluator(Match match)
             => CodeBlocksEvaluator(match.Groups[2].Value, match.Groups[3].Value);
 
@@ -1517,7 +1484,7 @@ namespace MdXaml
 
             if (!String.IsNullOrEmpty(lang))
             {
-                var highlight = HighlightingManager.Instance.GetDefinitionByExtension("." + lang);
+                var highlight = ParseParam.HighlightManager.Get(lang);
                 txtEdit.SetCurrentValue(TextEditor.SyntaxHighlightingProperty, highlight);
                 txtEdit.Tag = lang;
             }
@@ -1577,8 +1544,6 @@ namespace MdXaml
 
             return result;
         }
-
-#endif
 
         #endregion
 
@@ -2182,13 +2147,14 @@ namespace MdXaml
         public bool SupportTextAlignment { get; }
         public bool SupportStrikethrough { set; get; }
         public bool SupportTextileInline { get; set; }
-
+        public InternalHighlightManager HighlightManager { get; }
 
         public ParseParam(
             IEnumerable<IBlockParser> primary,
             IEnumerable<IBlockParser> secondly,
             IEnumerable<IInlineParser> inlines,
-            SyntaxManager syntax)
+            SyntaxManager syntax,
+            InternalHighlightManager highlightManager)
         {
 
             PrimaryBlocks = primary.ToArray();
@@ -2197,6 +2163,7 @@ namespace MdXaml
             SupportTextAlignment = syntax.EnableTextAlignment;
             SupportStrikethrough = syntax.EnableStrikethrough;
             SupportTextileInline = syntax.EnableTextileInline;
+            HighlightManager = highlightManager;
         }
     }
 

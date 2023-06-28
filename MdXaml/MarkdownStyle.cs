@@ -4,11 +4,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
 namespace MdXaml
-#endif
 {
     public static class MarkdownStyle
     {
@@ -32,9 +28,6 @@ namespace MdXaml
 
         static ResourceDictionary LoadDictionary()
         {
-#if MIG_FREE
-            var resourceName = "/Markdown.Xaml;component/MarkdownMigFree.Style.xaml";
-#else
             /*
                 Workaround for XamlParseException.
                 When you don't load 'ICSharpCode.AvalonEdit.dll',
@@ -44,7 +37,6 @@ namespace MdXaml
             txtedit.ToString();
 
             var resourceName = "/MdXaml;component/Markdown.Style.xaml";
-#endif
 
             var resourceUri = new Uri(resourceName, UriKind.RelativeOrAbsolute);
             return (ResourceDictionary)Application.LoadComponent(resourceUri);

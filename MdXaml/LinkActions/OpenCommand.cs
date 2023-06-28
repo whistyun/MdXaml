@@ -2,11 +2,7 @@
 using System.Diagnostics;
 using System.Windows.Input;
 
-#if MIG_FREE
-namespace Markdown.Xaml.LinkActions
-#else
 namespace MdXaml.LinkActions
-#endif
 {
     // set `public` access level for #29.
     public class OpenCommand : ICommand

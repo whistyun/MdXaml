@@ -16,11 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MdXaml.Plugins;
 
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
 namespace MdXaml
-#endif
 {
     internal static class SimpleInlineParser
     {

@@ -5,11 +5,7 @@ using System.Linq;
 using System.Windows;
 using System.Text.RegularExpressions;
 
-#if MIG_FREE
-namespace Markdown.Xaml
-#else
 namespace MdXaml
-#endif
 {
     class MdTable
     {
