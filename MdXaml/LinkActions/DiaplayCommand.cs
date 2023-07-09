@@ -11,11 +11,13 @@ namespace MdXaml.LinkActions
     {
         private MarkdownScrollViewer Owner;
         private bool OpenBrowserWithAbsolutePath;
+        private ICommand OpenCommand;
 
-        public DiaplayCommand(MarkdownScrollViewer owner, bool openBrowserWithAbsolutePath)
+        public DiaplayCommand(MarkdownScrollViewer owner, bool openBrowserWithAbsolutePath, bool safety)
         {
             Owner = owner;
             OpenBrowserWithAbsolutePath = openBrowserWithAbsolutePath;
+            OpenCommand = safety ? new SafetyOpenCommand() : new OpenCommand();
         }
 
         public event EventHandler? CanExecuteChanged;
@@ -45,11 +47,7 @@ namespace MdXaml.LinkActions
 
             if (OpenBrowserWithAbsolutePath & isAbs)
             {
-                Process.Start(new ProcessStartInfo(path)
-                {
-                    UseShellExecute = true,
-                    Verb = "open"
-                });
+                OpenCommand.Execute(path);
             }
             else if (isAbs)
             {

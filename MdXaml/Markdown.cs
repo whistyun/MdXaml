@@ -577,8 +577,8 @@ namespace MdXaml
             string title = match.Groups[7].Value;
 
             var result = Create<Hyperlink, Inline>(PrivateRunSpanGamut(linkText));
-            result.Command = HyperlinkCommand;
             result.CommandParameter = url;
+            result.Command = HyperlinkCommand;
 
             if (!DisabledTootip)
             {
