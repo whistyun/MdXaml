@@ -343,11 +343,19 @@ namespace MdXaml
                     break;
 
                 case ClickAction.DisplayWithRelativePath:
-                    command = new DiaplayCommand(this, true);
+                    command = new DiaplayCommand(this, true, false);
                     break;
 
                 case ClickAction.DisplayAll:
-                    command = new DiaplayCommand(this, false);
+                    command = new DiaplayCommand(this, false, false);
+                    break;
+
+                case ClickAction.SafetyOpenBrowser:
+                    command = new SafetyOpenCommand();
+                    break;
+
+                case ClickAction.SafetyDisplayWithRelativePath:
+                    command = new DiaplayCommand(this, true, true);
                     break;
 
                 default:
@@ -442,7 +450,9 @@ namespace MdXaml
         None,
         OpenBrowser,
         DisplayWithRelativePath,
-        DisplayAll
+        DisplayAll,
+        SafetyOpenBrowser,
+        SafetyDisplayWithRelativePath,
     }
 
     public enum SyntaxVersion
