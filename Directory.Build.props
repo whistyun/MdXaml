@@ -13,7 +13,7 @@
   
   
   <PropertyGroup>
-    <PackageTargetFrameworks>net45;netcoreapp3.0;net6.0-windows</PackageTargetFrameworks>
+    <PackageTargetFrameworks>net45;</PackageTargetFrameworks>
     <SampleTargetFrameworks>netcoreapp3.0;net461;net6.0-windows</SampleTargetFrameworks>
     <TestTargetFrameworks>net461;net6.0-windows</TestTargetFrameworks>
     <PackageVersion>1.21.0</PackageVersion>
