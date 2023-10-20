@@ -141,9 +141,9 @@ namespace MdXaml
                 case "data":
                     try
                     {
-                        Regex dataRegex = new(@"\(data:image/(?:png|jpg|jpeg);base64,(?<data>[^\n|[]*)\).?");
+                        Regex dataRegex = new(@"data:image/(?:png|jpg|jpeg);base64,(?<data>[^\n|[]*)");
                         
-                        var match = dataRegex.Match(uri.AbsoluteUri);
+                        var match = dataRegex.Match(resourceUrl.AbsoluteUri);
                         if(!match.Success)
                             return new Result<Stream>("invalid format for scheme 'data'");
                         
