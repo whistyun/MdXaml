@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Policy;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -136,6 +137,23 @@ namespace MdXaml
                     catch
                     {
                         return new Result<Stream>("resource not found");
+                    }
+                case "data":
+                    try
+                    {
+                        Regex dataRegex = new(@"data:image/(?:png|jpg|jpeg);base64,(?<data>[^\n|[]*)");
+                        
+                        var match = dataRegex.Match(resourceUrl.AbsoluteUri);
+                        if(!match.Success)
+                            return new Result<Stream>("invalid format for scheme 'data'");
+                        
+                        var imageBytes = Convert.FromBase64String(match.Groups["data"].Value);
+
+                        return new Result<Stream>(new MemoryStream(imageBytes, false));
+                    }
+                    catch
+                    {
+                        return new Result<Stream>("invalid data");
                     }
             }
 
