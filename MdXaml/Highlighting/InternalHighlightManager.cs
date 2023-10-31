@@ -112,7 +112,7 @@ namespace MdXaml.Highlighting
 
         public IHighlightingDefinition? Get(string langcode)
         {
-            // 先尝试自定义提供语法高亮的方法。
+            // If provided, try the method of customized syntax highlighting first.
             if (MarkdownCustomHighlighting.HighlightingResolver != null)
             {
                 var def = MarkdownCustomHighlighting.HighlightingResolver(langcode);

@@ -8,19 +8,19 @@ using ICSharpCode.AvalonEdit.Highlighting;
 namespace MdXaml.Highlighting
 {
     /// <summary>
-    /// 自定义高亮语法支持
+    /// customized syntax highlighting
     /// </summary>
     public static class MarkdownCustomHighlighting
     {
         /// <summary>
-        /// 接收语言类型，返回语法高亮定义
+        /// delegate for customize highlighting
         /// </summary>
-        /// <param name="langcode"></param>
-        /// <returns></returns>
+        /// <param name="langcode">language code to highlight</param>
+        /// <returns>IHighlightingDefinition for the langcode</returns>
         public delegate IHighlightingDefinition? GetHighlightingFunc(string langcode);
 
         /// <summary>
-        /// 用户定义的
+        /// customized highlighting method
         /// </summary>
         public static GetHighlightingFunc? HighlightingResolver { get; set; } = null;
     }
