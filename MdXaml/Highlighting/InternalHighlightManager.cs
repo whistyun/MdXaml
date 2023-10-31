@@ -112,6 +112,16 @@ namespace MdXaml.Highlighting
 
         public IHighlightingDefinition? Get(string langcode)
         {
+            // 先尝试自定义提供语法高亮的方法。
+            if (MarkdownCustomHighlighting.HighlightingResolver != null)
+            {
+                var def = MarkdownCustomHighlighting.HighlightingResolver(langcode);
+                if (def != null)
+                {
+                    return def;
+                }
+            }
+
             return HighlightingManager.Instance.GetDefinitionByExtension("." + langcode)
                 ?? GetHighlight(langcode);
         }
