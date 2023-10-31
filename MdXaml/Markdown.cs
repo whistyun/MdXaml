@@ -601,7 +601,16 @@ namespace MdXaml
             string urlTxt = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
-            return LoadImage(linkText, urlTxt, title);
+            try
+            {
+                return LoadImage(linkText, urlTxt, title);
+            }
+            catch (Exception ex)
+            {
+                var errorRun = new Run($"Error: Can not load image from {urlTxt}, {ex.Message}");
+                errorRun.Foreground = Brushes.Red;
+                return errorRun;
+            }
         }
 
         private Inline ImageWithSizeEvaluator(Match match)
