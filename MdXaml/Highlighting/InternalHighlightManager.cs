@@ -112,6 +112,16 @@ namespace MdXaml.Highlighting
 
         public IHighlightingDefinition? Get(string langcode)
         {
+            // If provided, try the method of customized syntax highlighting first.
+            if (MarkdownCustomHighlighting.HighlightingResolver != null)
+            {
+                var def = MarkdownCustomHighlighting.HighlightingResolver(langcode);
+                if (def != null)
+                {
+                    return def;
+                }
+            }
+
             return HighlightingManager.Instance.GetDefinitionByExtension("." + langcode)
                 ?? GetHighlight(langcode);
         }
