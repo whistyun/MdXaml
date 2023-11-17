@@ -33,22 +33,7 @@ namespace MdXaml.LinkActions
         {
             if (parameter is string linkText && linkText.StartsWith("#"))
             {
-                var identifier = linkText.Substring(1);
-                if (_viewer.Document is null)
-                {
-                    Debug.Print($"MarkdownScrollViewer is uninitialized.");
-                    return;
-                }
-
-                var anchor = DocumentAnchor.FindAnchor(_viewer.Document, identifier);
-
-                if (anchor is null)
-                {
-                    Debug.Print($"Not found linkanchor: {identifier}");
-                    return;
-                }
-
-                anchor.BringIntoView();
+                _viewer.ScrollTo(linkText, true);
             }
             else _command.Execute(parameter);
         }

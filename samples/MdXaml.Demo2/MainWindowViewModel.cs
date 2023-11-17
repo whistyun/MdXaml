@@ -24,7 +24,6 @@ namespace MdXaml.Demo2
             get => _MdSource;
             set
             {
-                if (_MdSource == value) return;
                 _MdSource = value;
 
                 Histories.Add(value);
