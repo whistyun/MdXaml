@@ -6,8 +6,10 @@ using System.Text.RegularExpressions;
 
 namespace MdXaml.Html.Core.Utils
 {
-    internal class Length
+    internal class Length : IComparable<Length>
     {
+        public static readonly Length Auto = new Length(Double.NegativeInfinity, Unit.Pixels);
+
         public double Value { get; }
         public Unit Unit { get; }
 
@@ -34,6 +36,44 @@ namespace MdXaml.Html.Core.Utils
 
                 _ => throw new NotSupportedException("")
             };
+        }
+
+        public int CompareTo(
+#if !NETFRAMEWORK
+            [AllowNull] 
+#endif
+            Length other)
+        {
+            if (other is null)
+            {
+                return 1;
+            }
+            if (this == Auto && other == Auto)
+            {
+                return 0;
+            }
+            if (this == Auto)
+            {
+                return -1;
+            }
+            if (other == Auto)
+            {
+                return 1;
+            }
+            if (other.Unit == Unit && Unit == Unit.Percentage)
+            {
+                return Value.CompareTo(other.Value);
+            }
+            if (other.Unit == Unit.Percentage)
+            {
+                return 1;
+            }
+            if (Unit == Unit.Percentage)
+            {
+                return -1;
+            }
+
+            return ToPoint().CompareTo(other.ToPoint());
         }
 
         public static bool TryParse(string? text,
@@ -79,6 +119,23 @@ namespace MdXaml.Html.Core.Utils
         failParse:
             rslt = null;
             return false;
+        }
+
+        public static bool operator >(Length a, Length b)
+        {
+            if (a is null && b is null) return false;
+
+            return a is null ?
+                b.CompareTo(a) < 0 :
+                a.CompareTo(b) > 0;
+        }
+        public static bool operator <(Length a, Length b)
+        {
+            if (a is null && b is null) return false;
+
+            return a is null ?
+                b.CompareTo(a) > 0 :
+                a.CompareTo(b) < 0;
         }
     }
 

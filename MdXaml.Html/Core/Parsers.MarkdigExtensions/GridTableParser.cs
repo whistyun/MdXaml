@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Documents;
 using System.Windows;
 using MdXaml.Html.Core.Utils;
+using System.Security.Cryptography.X509Certificates;
+using System.Collections;
 
 namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
 {
@@ -25,19 +27,16 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
         public bool TryReplace(HtmlNode node, ReplaceManager manager, out IEnumerable<Block> generated)
         {
             var table = new Table();
+            var measures = new ColWidMeasure();
 
-            ParseColumnStyle(node, table);
-
-            int totalColCount = 0;
+            ParseColumnStyle(node, ref measures);
 
             var theadRows = node.SelectNodes("./thead/tr");
             if (theadRows is not null)
             {
-                var group = CreateRowGroup(theadRows, manager, out int colCount);
+                var group = CreateRowGroup(theadRows, manager, ref measures);
                 group.Tag = manager.GetTag(Tags.TagTableHeader);
                 table.RowGroups.Add(group);
-
-                totalColCount = Math.Max(totalColCount, colCount);
             }
 
             var tbodyRows = new List<HtmlNode>();
@@ -51,7 +50,7 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
             }
             if (tbodyRows.Count > 0)
             {
-                var group = CreateRowGroup(tbodyRows, manager, out int colCount);
+                var group = CreateRowGroup(tbodyRows, manager, ref measures);
                 group.Tag = manager.GetTag(Tags.TagTableBody);
                 table.RowGroups.Add(group);
 
@@ -61,24 +60,39 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
                     var useTag = (++idx & 1) == 0 ? Tags.TagEvenTableRow : Tags.TagOddTableRow;
                     row.Tag = manager.GetTag(useTag);
                 }
-
-                totalColCount = Math.Max(totalColCount, colCount);
             }
 
             var tfootRows = node.SelectNodes("./tfoot/tr");
             if (tfootRows is not null)
             {
-                var group = CreateRowGroup(tfootRows, manager, out int colCount);
+                var group = CreateRowGroup(tfootRows, manager, ref measures);
                 group.Tag = manager.GetTag(Tags.TagTableFooter);
                 table.RowGroups.Add(group);
-
-                totalColCount = Math.Max(totalColCount, colCount);
             }
 
-            while (totalColCount >= table.Columns.Count)
+
+            foreach (var measure in measures)
             {
-                table.Columns.Add(new TableColumn());
+                if (measure == Length.Auto || measure is null)
+                {
+                    table.Columns.Add(new TableColumn());
+                }
+                else if (measure.Unit == Unit.Percentage)
+                {
+                    table.Columns.Add(new TableColumn()
+                    {
+                        Width = new GridLength(measure.Value, GridUnitType.Star)
+                    });
+                }
+                else
+                {
+                    table.Columns.Add(new TableColumn()
+                    {
+                        Width = new GridLength(measure.ToPoint(), GridUnitType.Pixel)
+                    });
+                }
             }
+
 
             var captions = node.SelectNodes("./caption");
             if (captions is not null)
@@ -102,39 +116,40 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
             return true;
         }
 
-        private static void ParseColumnStyle(HtmlNode tableTag, Table table)
+        private static void ParseColumnStyle(
+            HtmlNode tableTag,
+            ref ColWidMeasure measures)
         {
             var colHolder = tableTag.ChildNodes.HasOneTag("colgroup", out var colgroup) ? colgroup! : tableTag;
 
+            int colIdx = 0;
             foreach (var col in colHolder.ChildNodes.CollectTag("col"))
             {
-                var coldef = new TableColumn();
-                table.Columns.Add(coldef);
+                int colspan = 1;
 
                 var spanAttr = col.Attributes["span"];
                 if (spanAttr is not null)
                 {
                     if (int.TryParse(spanAttr.Value, out var spanCnt))
                     {
-                        foreach (var _ in Enumerable.Range(0, spanCnt - 1))
-                            table.Columns.Add(coldef);
+                        colspan = spanCnt;
                     }
                 }
 
-                var styleAttr = col.Attributes["style"];
-                if (styleAttr is null) continue;
-
-                var mch = Regex.Match(styleAttr.Value, "width:([^;\"]+)(%|em|ex|mm|cm|in|pt|pc|)");
-                if (!mch.Success) continue;
-
-                if (!Length.TryParse(mch.Groups[1].Value + mch.Groups[2].Value, out var length))
-                    continue;
-
-                coldef.Width = length.Unit switch
+                var length = Length.Auto;
+                if (col.Attributes["style"] is HtmlAttribute styleAttr)
                 {
-                    Unit.Percentage => new GridLength(length.Value, GridUnitType.Star),
-                    _ => new GridLength(length.ToPoint())
-                };
+                    var mch = Regex.Match(styleAttr.Value, "width:([^;\"]+(%|em|ex|mm|cm|in|pt|pc|))");
+                    if (mch.Success)
+                    {
+                        if (Length.TryParse(mch.Groups[1].Value, out var ind))
+                        {
+                            length = ind;
+                        }
+                    }
+                }
+                measures.Sets(length, colIdx, colspan);
+                colIdx += colspan;
             }
         }
 
@@ -142,47 +157,57 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
         private static TableRowGroup CreateRowGroup(
             IEnumerable<HtmlNode> rows,
             ReplaceManager manager,
-            out int maxColCount)
+            ref ColWidMeasure measures)
         {
             var group = new TableRowGroup();
-            var list = new List<ColspanCounter>();
-
-            maxColCount = 0;
+            var counters = new List<ColspanCounter>();
 
             foreach (var rowTag in rows)
             {
                 var row = new TableRow();
 
-                int colCount = list.Sum(e => e.ColSpan);
+                int colIdx = 0;
 
                 foreach (var cellTag in rowTag.ChildNodes.CollectTag("td", "th"))
                 {
-                    var cell = new TableCell();
-                    cell.Blocks.AddRange(manager.ParseChildrenAndGroup(cellTag));
+                    if (counters.FirstOrDefault(e => e.ColIdx == colIdx) is ColspanCounter counter)
+                    {
+                        colIdx += counter.ColSpan;
+                    }
 
                     int colspan = TryParse(cellTag.Attributes["colspan"]?.Value);
                     int rowspan = TryParse(cellTag.Attributes["rowspan"]?.Value);
 
+                    if (cellTag.Attributes["width"] is HtmlAttribute widthAttr
+                     && Length.TryParse(widthAttr.Value, out var length))
+                    {
+                        var setLen = colspan == 1 ? length : new Length(length.Value / colspan, length.Unit);
+                        measures.Sets(setLen, colIdx, colspan);
+                    }
+                    else
+                    {
+                        measures.Sets(Length.Auto, colIdx, colspan);
+                    }
+
+                    var cell = new TableCell();
+                    cell.Blocks.AddRange(manager.ParseChildrenAndGroup(cellTag));
                     cell.RowSpan = rowspan;
                     cell.ColumnSpan = colspan;
-
                     row.Cells.Add(cell);
-
-                    colCount += colspan;
 
                     if (rowspan > 1)
                     {
-                        list.Add(new ColspanCounter(rowspan, colspan));
+                        counters.Add(new ColspanCounter(colIdx, rowspan, colspan));
                     }
+
+                    colIdx += colspan;
                 }
 
                 group.Rows.Add(row);
 
-                maxColCount = Math.Max(maxColCount, colCount);
-
-                for (int idx = list.Count - 1; idx >= 0; --idx)
-                    if (list[idx].Detent())
-                        list.RemoveAt(idx);
+                for (int idx = counters.Count - 1; idx >= 0; --idx)
+                    if (counters[idx].Detent())
+                        counters.RemoveAt(idx);
             }
 
             return group;
@@ -190,14 +215,15 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
             static int TryParse(string? txt) => int.TryParse(txt, out var v) ? v : 1;
         }
 
-
         class ColspanCounter
         {
+            public int ColIdx { get; set; }
             public int Remain { get; set; }
             public int ColSpan { get; }
 
-            public ColspanCounter(int rowspan, int colspan)
+            public ColspanCounter(int colIdx, int rowspan, int colspan)
             {
+                ColIdx = colIdx;
                 Remain = rowspan;
                 ColSpan = colspan;
             }
@@ -205,6 +231,43 @@ namespace MdXaml.Html.Core.Parsers.MarkdigExtensions
             public bool Detent()
             {
                 return --Remain == 0;
+            }
+        }
+
+        class ColWidMeasure : IEnumerable<Length>
+        {
+            private Length[] _array = new Length[0];
+
+            public void Sets(Length val, int idx, int len)
+            {
+                if (idx + len > _array.Length)
+                {
+                    var nary = new Length[idx + len];
+                    for (var i = _array.Length; i < nary.Length; ++i)
+                        nary[i] = Length.Auto;
+
+                    Array.Copy(_array, nary, _array.Length);
+                    _array = nary;
+                }
+
+                for (var i = idx; i < idx + len; ++i)
+                {
+                    if (_array[i] < val)
+                    {
+                        _array[i] = val;
+                    }
+                }
+            }
+
+            public IEnumerator<Length> GetEnumerator() => _array.AsEnumerable<Length>().GetEnumerator();
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+            public int Count => _array.Length;
+
+            public Length this[int idx]
+            {
+                get => _array[idx];
+                set => Sets(value, idx, 1);
             }
         }
     }
