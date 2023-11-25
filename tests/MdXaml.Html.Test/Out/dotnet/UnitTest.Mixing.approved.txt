@@ -25,7 +25,6 @@
   <Table>
     <Table.Columns>
       <TableColumn />
-      <TableColumn />
     </Table.Columns>
     <TableRowGroup Tag="TableBody">
       <TableRow Tag="OddTableRow">
@@ -50,7 +49,6 @@
   </BlockUIContainer>
   <Table>
     <Table.Columns>
-      <TableColumn />
       <TableColumn />
     </Table.Columns>
     <TableRowGroup Tag="TableBody">
