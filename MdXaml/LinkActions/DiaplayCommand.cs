@@ -43,6 +43,11 @@ namespace MdXaml.LinkActions
             var path = parameter?.ToString();
             if (path is null) throw new ArgumentNullException(nameof(parameter));
 
+            if (path.StartsWith("file:///"))
+            {
+                path = path.Replace('\\', '/');
+            }
+
             var isAbs = Uri.IsWellFormedUriString(path, UriKind.Absolute);
 
             if (OpenBrowserWithAbsolutePath & isAbs)
