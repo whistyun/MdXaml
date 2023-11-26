@@ -1,17 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>$(PackageTargetFrameworks)</TargetFrameworks>
     <UseWPF>true</UseWPF>
-    <PackageId>MdXaml</PackageId>
+    <PackageId>MdXaml.Full</PackageId>
     <Version>$(PackageVersion)</Version>
     <Authors>Bevan Arps(original); whistyun</Authors>
     <Company />
     <Description>Markdown XAML processor</Description>
-    <Copyright>Copyright (c) 2010 Bevan Arps, 2020 whistyun</Copyright>
+    <Copyright>Copyright (c) 2010 Bevan Arps, 2023 whistyun</Copyright>
     <PackageProjectUrl>https://github.com/whistyun/MdXaml</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReadmeFile>MdXaml.md</PackageReadmeFile>
+    <PackageReadmeFile>MdXaml.Full.md</PackageReadmeFile>
     <PackageTags>Markdown WPF Xaml FlowDocument</PackageTags>
     <Configurations>Debug;Release</Configurations>
     <LangVersion>9</LangVersion>
@@ -23,24 +23,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="EmojiTable.txt" />
-    <EmbeddedResource Include="EmojiTable.txt" />
-    <None Include="..\pack_readme\MdXaml.md" Pack="true" PackagePath="\" />
+    <None Include="..\pack_readme\MdXaml.Full.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Remove="MarkdownMigFree.Style.xaml" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System.Net.Http" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AvalonEdit" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\MdXaml.AnimatedGif\MdXaml.AnimatedGif.csproj" />
+    <ProjectReference Include="..\MdXaml.Html\MdXaml.Html.csproj" />
     <ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
+    <ProjectReference Include="..\MdXaml.Svg\MdXaml.Svg.csproj" />
+    <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
   </ItemGroup>
+
 </Project>

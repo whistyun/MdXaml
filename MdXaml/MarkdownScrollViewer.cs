@@ -206,7 +206,7 @@ namespace MdXaml
         }
 
         private MdXamlPlugins? _plugins;
-        public MdXamlPlugins? Plugins
+        public virtual MdXamlPlugins? Plugins
         {
             set
             {
