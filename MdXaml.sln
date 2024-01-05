@@ -32,7 +32,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Html.Test", "tests\M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Plugins", "MdXaml.Plugins\MdXaml.Plugins.csproj", "{823DB5D5-17C0-4418-895C-A28DD7D04CE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdXaml.AnimatedGif", "MdXaml.AnimatedGif\MdXaml.AnimatedGif.csproj", "{A7666AD6-CB44-4399-AC61-05DE80D65F9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.AnimatedGif", "MdXaml.AnimatedGif\MdXaml.AnimatedGif.csproj", "{A7666AD6-CB44-4399-AC61-05DE80D65F9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdXaml.Full", "MdXaml.Full\MdXaml.Full.csproj", "{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,10 @@ Global
 		{A7666AD6-CB44-4399-AC61-05DE80D65F9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7666AD6-CB44-4399-AC61-05DE80D65F9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7666AD6-CB44-4399-AC61-05DE80D65F9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

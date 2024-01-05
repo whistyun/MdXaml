@@ -84,7 +84,7 @@ namespace MdXaml
         public Uri? BaseUri { get; set; }
 
         private MdXamlPlugins? _plugins;
-        public MdXamlPlugins? Plugins
+        public virtual MdXamlPlugins? Plugins
         {
             get => _plugins;
             set
