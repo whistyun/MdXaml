@@ -375,12 +375,23 @@ namespace MdXaml
             ContextMenu = menu;
 
 
-            DependencyPropertyDescriptor
-                .FromProperty(FlowDocumentScrollViewer.DocumentProperty, typeof(FlowDocumentScrollViewer))
-                .AddValueChanged(this, OnDocumentChanged);
+            // Do not use DependencyPropertyDescriptor. This may cause memory leaks if used with low understanding.
+            // 
+            // DependencyPropertyDescriptor
+            //     .FromProperty(FlowDocumentScrollViewer.DocumentProperty, typeof(FlowDocumentScrollViewer))
+            //     .AddValueChanged(this, OnDocumentChanged);
         }
 
-        private void OnDocumentChanged(object sender, EventArgs handler)
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            if (e.Property == FlowDocumentScrollViewer.DocumentProperty) 
+                OnDocumentChanged();
+        }
+
+
+        private void OnDocumentChanged()
         {
             if (Document is not null)
                 ScrollTo(Fragment, false);

@@ -34,7 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Plugins", "MdXaml.Pl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.AnimatedGif", "MdXaml.AnimatedGif\MdXaml.AnimatedGif.csproj", "{A7666AD6-CB44-4399-AC61-05DE80D65F9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdXaml.Full", "MdXaml.Full\MdXaml.Full.csproj", "{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Full", "MdXaml.Full\MdXaml.Full.csproj", "{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckMemoryLeak", "samples\CheckMemoryLeak\CheckMemoryLeak.csproj", "{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -90,6 +92,10 @@ Global
 		{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +107,7 @@ Global
 		{C539C7B4-BBF2-4AC2-A732-0C47E125CCD2} = {435867FA-EE25-4708-9BBA-8509ABC7E389}
 		{C45A1400-B4E9-4638-BF1F-4BB38CEC5E93} = {09BEAB2A-F47E-4D2B-AE81-8DC1BBB52638}
 		{CEF2B49F-90AF-4B65-AA0C-A12AB1C0A18F} = {09BEAB2A-F47E-4D2B-AE81-8DC1BBB52638}
+		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79} = {435867FA-EE25-4708-9BBA-8509ABC7E389}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23DF7019-3B25-4B82-8955-25F1DDD72D84}
