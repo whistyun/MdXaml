@@ -16,6 +16,6 @@
     <PackageTargetFrameworks>net45;netcoreapp3.0;net6.0-windows</PackageTargetFrameworks>
     <SampleTargetFrameworks>netcoreapp3.0;net461;net6.0-windows</SampleTargetFrameworks>
     <TestTargetFrameworks>net461;net6.0-windows</TestTargetFrameworks>
-    <PackageVersion>1.22.0</PackageVersion>
+    <PackageVersion>1.23.0</PackageVersion>
   </PropertyGroup>
 </Project>
