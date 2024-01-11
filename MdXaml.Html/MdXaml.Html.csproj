@@ -39,7 +39,14 @@
 		<ProjectReference Include="..\..\MdXaml\MdXaml\MdXaml.csproj" />
 		<ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
-    <PackageReference Include="AvalonEdit" Version="6.0.0" />
   </ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+		<PackageReference Include="AvalonEdit" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
+		<PackageReference Include="AvalonEdit" Version="6.3.0" />
+	</ItemGroup>
 
 </Project>
