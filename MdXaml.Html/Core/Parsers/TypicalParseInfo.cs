@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Documents;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace MdXaml.Html.Core.Parsers
 {
