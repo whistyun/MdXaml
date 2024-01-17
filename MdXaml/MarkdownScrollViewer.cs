@@ -59,10 +59,10 @@ namespace MdXaml
 
         public static readonly DependencyProperty MarkdownStyleNameProperty =
             DependencyProperty.Register(
-            nameof(MarkdownStyleName),
-            typeof(string),
-            typeof(MarkdownScrollViewer),
-            new PropertyMetadata(nameof(MdStyle.Standard), UpdateStyleName));
+                nameof(MarkdownStyleName),
+                typeof(string),
+                typeof(MarkdownScrollViewer),
+                new PropertyMetadata(nameof(MdStyle.Standard), UpdateStyleName));
 
         public static readonly DependencyProperty AssetPathRootProperty =
             DependencyProperty.Register(
@@ -70,6 +70,13 @@ namespace MdXaml
                 typeof(string),
                 typeof(MarkdownScrollViewer),
                 new PropertyMetadata(null, UpdateAssetPathRoot));
+
+        public static readonly DependencyProperty DisabledLazyLoadProperty =
+            DependencyProperty.Register(
+                nameof(DisabledLazyLoad),
+                typeof(bool),
+                typeof(MarkdownScrollViewer),
+                new PropertyMetadata(false, UpdateDisabledLazyLoad));
 
 
         private static void UpdateSource(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -159,6 +166,18 @@ namespace MdXaml
                 {
                     owner.Engine.AssetPathRoot = newPath;
                     UpdateMarkdown(d, e);
+                }
+            }
+        }
+
+        private static void UpdateDisabledLazyLoad(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if(d is MarkdownScrollViewer owner)
+            {
+                var disabledLazyLoad = (bool)e.NewValue;
+                if (disabledLazyLoad != owner.Engine.DisabledLazyLoad)
+                {
+                  owner.Engine.DisabledLazyLoad = (bool)e.NewValue;
                 }
             }
         }
@@ -303,6 +322,12 @@ namespace MdXaml
         {
             get { return (string)GetValue(MarkdownStyleNameProperty); }
             set { SetValue(MarkdownStyleNameProperty, value); }
+        }
+
+        public bool DisabledLazyLoad
+        {
+          get { return (bool)GetValue(DisabledLazyLoadProperty); }
+          set { SetValue(DisabledLazyLoadProperty, value); }
         }
 
         public Uri? Source
