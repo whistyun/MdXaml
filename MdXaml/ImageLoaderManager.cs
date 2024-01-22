@@ -104,7 +104,7 @@ namespace MdXaml
             {
                 case "http":
                 case "https":
-                    var httpResult = await s_client.GetAsync(resourceUrl);
+                    var httpResult = await s_client.GetAsync(resourceUrl).ConfigureAwait(false);
                     if (httpResult.StatusCode == HttpStatusCode.OK)
                     {
                         var webstream = await httpResult.Content.ReadAsStreamAsync();
