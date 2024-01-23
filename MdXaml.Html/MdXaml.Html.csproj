@@ -46,7 +46,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
-		<PackageReference Include="AvalonEdit" Version="6.3.0" />
+		<PackageReference Include="AvalonEdit" Version="6.3.0.90" />
 	</ItemGroup>
 
 </Project>
