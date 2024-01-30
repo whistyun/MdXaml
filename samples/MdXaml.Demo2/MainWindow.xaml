@@ -30,7 +30,6 @@
                             VerticalAlignment="Stretch"
                             HorizontalAlignment="Stretch"
                             ClickAction="DisplayWithRelativePath"
-                            x:Name="MdCont1"
                             Height="150"
                             Markdown="{Binding Text}"/>
                     </DataTemplate>
