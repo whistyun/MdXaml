@@ -583,15 +583,8 @@ namespace MdXaml
             result.Command = HyperlinkCommand;
             if (OnHyperLinkClicked is not null)
             {
-                result.Click += (sender, e) =>
-                {
-                    var hyperlink = sender as Hyperlink;
-                    if (hyperlink is not null)
-                    {
-                        string? url = hyperlink.CommandParameter as string;
-                        OnHyperLinkClicked.Invoke(url!);
-                    }
-                };
+                var holder = new CallbackHolder(OnHyperLinkClicked);
+                result.Click += holder.Clicked;
             }
 
             if (!DisabledTootip)
@@ -2163,6 +2156,26 @@ namespace MdXaml
     }
 
     public delegate void HyperLinkClickCallback(string url);
+
+    public class CallbackHolder
+    {
+        private HyperLinkClickCallback _callback;
+
+        public CallbackHolder(HyperLinkClickCallback callback)
+        {
+            _callback = callback;
+        }
+
+        public void Clicked(object sender, RoutedEventArgs args)
+        {
+            var hyperlink = sender as Hyperlink;
+            if (hyperlink is not null)
+            {
+                string? url = hyperlink.CommandParameter as string;
+                _callback.Invoke(url!);
+            }
+        }
+    }
 
     internal class ParseParam
     {
