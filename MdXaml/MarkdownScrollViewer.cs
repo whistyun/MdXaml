@@ -365,6 +365,17 @@ namespace MdXaml
             }
         }
 
+        private HyperLinkClickCallback _onHyperLinkClicked;
+        public HyperLinkClickCallback OnHyperLinkClicked
+        {
+            get => _onHyperLinkClicked;
+            set
+            {
+                _onHyperLinkClicked = value;
+                Engine.OnHyperLinkClicked = value;
+            }
+        }
+
         public new FlowDocument? Document
         {
             get
@@ -452,6 +463,7 @@ namespace MdXaml
             }
 
             Engine.HyperlinkCommand = new FlowDocumentJumpAnchorIfNecessary(this, command);
+            Engine.OnHyperLinkClicked = _onHyperLinkClicked;
         }
 
         internal void ScrollTo(string fragment, bool updateSourceProperty)
