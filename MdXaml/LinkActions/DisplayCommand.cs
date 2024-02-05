@@ -7,13 +7,13 @@ using MdXaml;
 namespace MdXaml.LinkActions
 {
     // set `public` access level for #29.
-    public class DiaplayCommand : ICommand
+    public class DisplayCommand : ICommand
     {
         private MarkdownScrollViewer Owner;
         private bool OpenBrowserWithAbsolutePath;
         private ICommand OpenCommand;
 
-        public DiaplayCommand(MarkdownScrollViewer owner, bool openBrowserWithAbsolutePath, bool safety)
+        public DisplayCommand(MarkdownScrollViewer owner, bool openBrowserWithAbsolutePath, bool safety)
         {
             Owner = owner;
             OpenBrowserWithAbsolutePath = openBrowserWithAbsolutePath;
