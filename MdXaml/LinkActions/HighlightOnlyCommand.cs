@@ -23,16 +23,6 @@ namespace MdXaml.LinkActions
 
         public bool CanExecute(object? parameter) => _isExecutable;
 
-        public void Execute(object? parameter)
-        {
-            //var path = parameter?.ToString();
-            //if (path is null) throw new ArgumentNullException(nameof(parameter));
-
-            //Process.Start(new ProcessStartInfo(path)
-            //{
-            //    UseShellExecute = true,
-            //    Verb = "open"
-            //});
-        }
+        public void Execute(object? parameter) {}
     }
 }
