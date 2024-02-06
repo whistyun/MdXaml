@@ -443,11 +443,11 @@ namespace MdXaml
                     break;
 
                 case ClickAction.DisplayWithRelativePath:
-                    command = new DiaplayCommand(this, true, false);
+                    command = new DisplayCommand(this, true, false);
                     break;
 
                 case ClickAction.DisplayAll:
-                    command = new DiaplayCommand(this, false, false);
+                    command = new DisplayCommand(this, false, false);
                     break;
 
                 case ClickAction.SafetyOpenBrowser:
@@ -455,8 +455,13 @@ namespace MdXaml
                     break;
 
                 case ClickAction.SafetyDisplayWithRelativePath:
-                    command = new DiaplayCommand(this, true, true);
+                    command = new DisplayCommand(this, true, true);
                     break;
+
+                case ClickAction.HighlightOnly:
+                    Engine.HyperlinkCommand = new HighlightOnlyCommand();
+                    Engine.OnHyperLinkClicked = _onHyperLinkClicked;
+                    return;
 
                 default:
                     return;
@@ -641,6 +646,7 @@ namespace MdXaml
         DisplayAll,
         SafetyOpenBrowser,
         SafetyDisplayWithRelativePath,
+        HighlightOnly,
     }
 
     public enum SyntaxVersion
