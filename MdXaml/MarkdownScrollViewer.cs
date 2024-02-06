@@ -459,8 +459,9 @@ namespace MdXaml
                     break;
 
                 case ClickAction.HighlightOnly:
-                    command = new HighlightOnlyCommand();
-                    break;
+                    Engine.HyperlinkCommand = new HighlightOnlyCommand();
+                    Engine.OnHyperLinkClicked = _onHyperLinkClicked;
+                    return;
 
                 default:
                     return;
