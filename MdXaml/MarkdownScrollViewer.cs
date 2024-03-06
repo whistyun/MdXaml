@@ -376,6 +376,17 @@ namespace MdXaml
             }
         }
 
+        private bool _disableTooltip;
+        public bool DisableTooltip
+        {
+            get => _disableTooltip;
+            set
+            {
+                _disableTooltip = value;
+                Engine.DisabledTootip = _disableTooltip;
+            }
+        }
+
         public new FlowDocument? Document
         {
             get
