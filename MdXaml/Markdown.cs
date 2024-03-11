@@ -1501,6 +1501,10 @@ namespace MdXaml
             if (!String.IsNullOrEmpty(lang))
             {
                 var highlight = ParseParam.HighlightManager.Get(lang);
+                if (highlight == null)
+                {
+                    highlight = HighlightingManager.Instance.GetDefinition(lang);
+                }
                 txtEdit.SetCurrentValue(TextEditor.SyntaxHighlightingProperty, highlight);
                 txtEdit.Tag = lang;
             }
