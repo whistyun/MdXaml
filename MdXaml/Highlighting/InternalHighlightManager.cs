@@ -122,8 +122,14 @@ namespace MdXaml.Highlighting
                 }
             }
 
-            return HighlightingManager.Instance.GetDefinitionByExtension("." + langcode)
-                ?? GetHighlight(langcode);
+            var r = GetHighlight(langcode);
+            if(r is not null)
+            {
+                return r;
+            }
+
+            return
+                HighlightingManager.Instance.GetDefinitionByExtension("." + langcode);
         }
 
         private IHighlightingDefinition? GetHighlight(string langcode)
