@@ -77,6 +77,8 @@ namespace MdXaml
 
         public bool DisabledContextMenu { get; set; }
 
+        public bool UseSoftlineBreakAsHardlineBreak { get; set; }
+
         public string? AssetPathRoot { get; set; }
 
         public ICommand? HyperlinkCommand { get; set; }
@@ -2079,8 +2081,9 @@ namespace MdXaml
         private static readonly Regex _eoln = new("\\s+");
         private static readonly Regex _lbrk = new(@"\ {2,}\n");
 
-        public static IEnumerable<Inline> DoText(string text)
+        public IEnumerable<Inline> DoText(string text)
         {
+            text = UseSoftlineBreakAsHardlineBreak ? text.Replace("\n", "  \n") : text;
             var lines = _lbrk.Split(text);
             bool first = true;
             foreach (var line in lines)

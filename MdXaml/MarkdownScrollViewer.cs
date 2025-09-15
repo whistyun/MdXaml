@@ -78,6 +78,12 @@ namespace MdXaml
                 typeof(MarkdownScrollViewer),
                 new PropertyMetadata(false, UpdateDisabledLazyLoad));
 
+        public static readonly DependencyProperty UseSoftlineBreakAsHardlineBreakProperty =
+            DependencyProperty.Register(
+                nameof(UseSoftlineBreakAsHardlineBreak),
+                typeof(bool),
+                typeof(MarkdownScrollViewer),
+                new PropertyMetadata(false, UpdateUseSoftlineBreakAsHardlineBreak));
 
         private static void UpdateSource(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -178,6 +184,17 @@ namespace MdXaml
                 if (disabledLazyLoad != owner.Engine.DisabledLazyLoad)
                 {
                   owner.Engine.DisabledLazyLoad = (bool)e.NewValue;
+                }
+            }
+        }
+        private static void UpdateUseSoftlineBreakAsHardlineBreak(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if(d is MarkdownScrollViewer owner)
+            {
+                var useSoftlineBreakAsHardlineBreak = (bool)e.NewValue;
+                if (useSoftlineBreakAsHardlineBreak != owner.Engine.UseSoftlineBreakAsHardlineBreak)
+                {
+                  owner.Engine.UseSoftlineBreakAsHardlineBreak = (bool)e.NewValue;
                 }
             }
         }
@@ -340,6 +357,11 @@ namespace MdXaml
         {
             get { return (string)GetValue(FragmentProperty); }
             set { SetValue(FragmentProperty, value); }
+        }
+        public bool UseSoftlineBreakAsHardlineBreak
+        {
+          get { return (bool)GetValue(UseSoftlineBreakAsHardlineBreakProperty); }
+          set { SetValue(UseSoftlineBreakAsHardlineBreakProperty, value); }
         }
 
         private ClickAction _clickAction;
