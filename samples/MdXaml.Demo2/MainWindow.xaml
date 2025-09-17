@@ -25,6 +25,7 @@
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
                     ClickAction="DisplayWithRelativePath" OnHyperLinkClicked="OnLinkClicked"
+                    DisableTooltip="True"
                     Source="{Binding MdSource,Mode=TwoWay}" />
             </DockPanel>
         </TabItem>
