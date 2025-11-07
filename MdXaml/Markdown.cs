@@ -1661,32 +1661,19 @@ namespace MdXaml
                         break;
 
                     case '\\': // escape
-                        if (++i < text.Length)
+                        buff.Append('\\');
+                        if (++i < text.Length && _markdown_punctuation.Contains(text.Substring(i, 1)))
                         {
-                            switch (text[i])
-                            {
-                                default:
-                                    buff.Append('\\').Append(text[i]);
-                                    break;
-
-                                case '\\': // escape
-                                case ':': // bold? or italic
-                                case '*': // bold? or italic
-                                case '~': // strikethrough?
-                                case '_': // underline?
-                                case '%': // color?
-                                    buff.Append(text[i]);
-                                    break;
-                            }
+                            buff.Append(text[i]);
+                            break;
                         }
-                        else
-                            buff.Append('\\');
-
+                        // not escaped
+                        --i;
                         break;
 
                     case ':': // emoji?
                         {
-                            var nxtI = text.IndexOf(':', i + 1);
+                            var nxtI = EscapedIndexOf(text, i + 1, ':');
                             if (nxtI != -1 && EmojiTable.TryGet(text.Substring(i + 1, nxtI - i - 1), out var emoji))
                             {
                                 buff.Append(emoji);
@@ -1869,11 +1856,15 @@ namespace MdXaml
 
                 if (c == '\\')
                 {
-                    i += 2;
-                    continue;
-
+                    if (++i < text.Length && _markdown_punctuation.Contains(text.Substring(i, 1)))
+                    {
+                        ++i;
+                        continue;
+                    }
+                    // not escaped
+                    --i;
                 }
-                else if (c == symbol)
+                if (c == symbol)
                 {
                     int endCnt = CountRepeat(text, i, symbol);
 
@@ -2006,8 +1997,12 @@ namespace MdXaml
             for (var i = start; i < text.Length; ++i)
             {
                 var ch = text[i];
-                if (ch == '\\') ++i;
-                else if (ch == target) return i;
+                if (ch == '\\') {
+                    if (++i < text.Length && _markdown_punctuation.Contains(text.Substring(i, 1))) continue;
+                    // not escaped
+                    --i;
+                }
+                if (ch == target) return i;
             }
             return -1;
         }
@@ -2077,7 +2072,8 @@ namespace MdXaml
         #region grammer - text
 
         private static readonly Regex _eoln = new("\\s+");
-        private static readonly Regex _lbrk = new(@"\ {2,}\n");
+        private static readonly Regex _lbrk = new(@"(?:\\| {2,})\n");
+        private static readonly string _markdown_punctuation = @"!""#$%&'()*+,-./:;<=>?@[\^_`{|~]}";
 
         public static IEnumerable<Inline> DoText(string text)
         {
@@ -2089,7 +2085,29 @@ namespace MdXaml
                     first = false;
                 else
                     yield return new LineBreak();
-                var t = _eoln.Replace(line, " ");
+
+                // Process escape characters
+                var buff = new StringBuilder();
+                for (var i = 0; i < line.Length; ++i) {
+                    var ch = line[i];
+                    switch (ch) {
+                    default:
+                        buff.Append(ch);
+                        break;
+
+                    case '\\': // escape
+                        if (++i < line.Length) {
+                            if (!_markdown_punctuation.Contains(line.Substring(i, 1))) {
+                                buff.Append('\\');
+                            }
+                            buff.Append(line[i]);
+                        } else
+                            buff.Append('\\');
+
+                        break;
+                    }
+                }
+                var t = _eoln.Replace(buff.ToString(), " ");
                 yield return new Run(t);
             }
         }
