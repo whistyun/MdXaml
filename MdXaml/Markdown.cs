@@ -585,12 +585,40 @@ namespace MdXaml
             }
         }
 
+        private string ExtractText(Inline inline)
+        {
+            string text = string.Empty;
+            if (inline is Run run)
+            {
+                text += run.Text;
+            }
+            else if (inline is Hyperlink link)
+            {
+                foreach (var subInline in link.Inlines)
+                {
+                    text += ExtractText(subInline);
+                }
+            }
+            return text;
+        }
+
         private IEnumerable<Inline> TreatsAsHref(string text, Match match, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
         {
             parseTextBegin = match.Groups[1].Index;
             parseTextEnd = match.Index + match.Length;
 
-            string linkText = match.Groups[3].Value;
+            var linkGroup = match.Groups[3];
+
+            var innerMatch = _imageOrHrefInline.Match(text, linkGroup.Index, linkGroup.Length);
+            if (innerMatch.Success && IsHrefMatch(innerMatch))
+            {
+                // We have an inner href link inside link text.
+                // Inner links have higher priority.
+
+                return TreatsAsHref(text, innerMatch, engine, out parseTextBegin, out parseTextEnd);
+            }
+
+            string linkText = linkGroup.Value;
             string url = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
@@ -623,10 +651,36 @@ namespace MdXaml
             parseTextBegin = match.Groups[1].Index;
             parseTextEnd = match.Index + match.Length;
 
-            string linkText = match.Groups[3].Value;
+            var linkGroup = match.Groups[3];
+            string linkText = linkGroup.Value;
             string urlTxt = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
+            var innerMatch = _imageOrHrefInline.Match(linkText);
+            if (innerMatch.Success && IsHrefMatch(innerMatch))
+            {
+                // We have an inner href link inside link text.
+                // Process it but only extract the text content.
+                int innerParseBegin;
+                int innerParseEnd;
+                var href = TreatsAsHref(linkText, innerMatch, engine, out innerParseBegin, out innerParseEnd);
+                string outtext = string.Empty;
+                string extra = linkText.Substring(0, innerParseBegin);
+                foreach (var inline in PrivateRunSpanGamut(extra))
+                {
+                    outtext += ExtractText(inline);
+                }
+                foreach (var inline in href)
+                {
+                    outtext += ExtractText(inline);
+                }
+                extra = linkText.Substring(innerParseEnd);
+                foreach (var inline in PrivateRunSpanGamut(extra))
+                {
+                    outtext += ExtractText(inline);
+                }
+                linkText = outtext;
+            }
             try
             {
                 return LoadImage(linkText, urlTxt, title);

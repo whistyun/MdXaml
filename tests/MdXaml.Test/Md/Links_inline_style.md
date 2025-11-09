@@ -23,6 +23,12 @@ Just a [URL](/url/).
 
 (With outer parens and [parens in url](/foo(bar) "and a title"))
 
+[With [embedded url](/working_url)](/outside_url)
+
+[With [embedded url](/working_url "and a title")](/outside_url)
+
+[Outside [middle[double embedded url](/working_url)](/middle_url)](/outside_url)
+
 [![image](RscImg.png)](/foo(bar) "and a title")
 
 [text![image](RscImg.png)](/foo(bar) "and a title")
