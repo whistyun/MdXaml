@@ -18,18 +18,20 @@
   <Paragraph Tag="Heading2">Markdown capabilities and customizables styles</Paragraph>
   <List MarkerStyle="Disc">
     <ListItem>
-      <Paragraph>Links <Hyperlink Command="GoToPage" CommandParameter="https://www.google.com" ToolTip="https://www.google.com">Go to Google!</Hyperlink></Paragraph>
+      <Paragraph>Links [Go to Google!](https://www.google.com) <Hyperlink Command="GoToPage" CommandParameter="https://www.google.com" ToolTip="https://www.google.com">Go to Google!</Hyperlink></Paragraph>
     </ListItem>
     <ListItem>
-      <Paragraph>Links with title <Hyperlink Command="GoToPage" CommandParameter="https://www.google.com" ToolTip="&quot;google.&quot;&#xD;&#xA;https://www.google.com">Go to Google!</Hyperlink></Paragraph>
+      <Paragraph>Links with title [Go to Google!](https://www.google.com "google.") <Hyperlink Command="GoToPage" CommandParameter="https://www.google.com" ToolTip="&quot;google.&quot;&#xD;&#xA;https://www.google.com">Go to Google!</Hyperlink></Paragraph>
     </ListItem>
     <ListItem>
       <Paragraph>Remote images</Paragraph>
     </ListItem>
   </List>
+  <Paragraph>![image1](https://avatars.githubusercontent.com/u/13712028?v=4)</Paragraph>
   <Paragraph>
     <Label>Load https://avatars.githubusercontent.com/u/13712028?v=4</Label>
   </Paragraph>
+  <Paragraph>![imageleft](https://avatars.githubusercontent.com/u/13712028?v=4 "blue")![imageright](https://avatars.githubusercontent.com/u/13712028?v=4 "cyan")</Paragraph>
   <Paragraph>
     <Label>Load https://avatars.githubusercontent.com/u/13712028?v=4</Label>
     <Label>Load https://avatars.githubusercontent.com/u/13712028?v=4</Label>
@@ -39,6 +41,7 @@
       <Paragraph>Local images</Paragraph>
     </ListItem>
   </List>
+  <Paragraph>![image](RscImg.png)<LineBreak />![image](ExtImg.png)</Paragraph>
   <Paragraph>
     <Label>Load RscImg.png</Label> <Label>Load ExtImg.png</Label></Paragraph>
   <List MarkerStyle="Disc">

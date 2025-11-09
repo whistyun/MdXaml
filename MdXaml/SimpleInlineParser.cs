@@ -60,10 +60,33 @@ namespace MdXaml
             }
         }
 
+        public delegate IEnumerable<Inline> Converter(string text, Match firstMatch, IMarkdown engine, out int parseTextBegin, out int parseTextEnd);
+
+        private sealed class Parser3 : IInlineParser
+        {
+            private readonly Converter _converter;
+
+            public Regex FirstMatchPattern { get; }
+
+            public Parser3(Regex firstMatch, Converter converter)
+            {
+                FirstMatchPattern = firstMatch;
+                _converter = converter;
+            }
+
+            public IEnumerable<Inline> Parse(string text, Match firstMatch, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
+            {
+                return _converter(text, firstMatch, engine, out parseTextBegin, out parseTextEnd);
+            }
+        }
+
         public static IInlineParser New(Regex pattern, Func<Match, IEnumerable<Inline>> converter)
             => new Parser1(pattern, converter);
 
         public static IInlineParser New(Regex pattern, Func<Match, Inline> converter)
             => new Parser2(pattern, converter);
+
+        public static IInlineParser New(Regex pattern, Converter converter)
+            => new Parser3(pattern, converter);
     }
 }
