@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Markup;
 
 namespace MdXaml
 {
@@ -28,18 +25,24 @@ namespace MdXaml
 
         static ResourceDictionary LoadDictionary()
         {
-            /*
-                Workaround for XamlParseException.
-                When you don't load 'ICSharpCode.AvalonEdit.dll',
-                XamlReader fail to read xmlns:avalonEdit="http://icsharpcode.net..."
-             */
-            var txtedit = typeof(ICSharpCode.AvalonEdit.TextEditor);
-            txtedit.ToString();
+            var baseUri = new Uri("/MdXaml;component/Markdown.Style.xaml", UriKind.RelativeOrAbsolute);
+            var core = (ResourceDictionary)Application.LoadComponent(baseUri);
 
-            var resourceName = "/MdXaml;component/Markdown.Style.xaml";
+            try
+            {
+                if (Type.GetType("ICSharpCode.AvalonEdit.TextEditor, ICSharpCode.AvalonEdit") is not null && Type.GetType("MdXaml.SyntaxHigh.AvalonCodeBlockLoader, MdXaml.SyntaxHigh") is not null)
+                {
+                    var avalonUri = new Uri("/MdXaml.SyntaxHigh;component/Markdown.Style.SyntaxHigh.xaml", UriKind.RelativeOrAbsolute);
+                    var avalon = (ResourceDictionary)Application.LoadComponent(avalonUri);
+                    core.MergedDictionaries.Add(avalon);
+                }
+            }
+            catch
+            {
+                // Do nothing, AvalonEdit not found
+            }
 
-            var resourceUri = new Uri(resourceName, UriKind.RelativeOrAbsolute);
-            return (ResourceDictionary)Application.LoadComponent(resourceUri);
+            return core;
         }
 
         /*

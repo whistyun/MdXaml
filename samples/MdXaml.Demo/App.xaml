@@ -1,21 +1,22 @@
-<Application x:Class="MdXaml.Demo.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:MdXaml.Demo"
-             xmlns:mdplugins="clr-namespace:MdXaml.Plugins;assembly=MdXaml.Plugins"
-             xmlns:mdhtml="clr-namespace:MdXaml.Html;assembly=MdXaml.Html"
-             xmlns:mdsvg="clr-namespace:MdXaml.Svg;assembly=MdXaml.Svg"
-             xmlns:mdagif="clr-namespace:MdXaml.AnimatedGif;assembly=MdXaml.AnimatedGif"
-             StartupUri="MainWindow.xaml">
+<Application
+    x:Class="MdXaml.Demo.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:MdXaml.Demo"
+    xmlns:mdagif="clr-namespace:MdXaml.AnimatedGif;assembly=MdXaml.AnimatedGif"
+    xmlns:mdhtml="clr-namespace:MdXaml.Html;assembly=MdXaml.Html"
+    xmlns:mdplugins="clr-namespace:MdXaml.Plugins;assembly=MdXaml.Plugins"
+    xmlns:mdsvg="clr-namespace:MdXaml.Svg;assembly=MdXaml.Svg"
+    StartupUri="MainWindow.xaml">
 
     <Application.Resources>
         <mdplugins:MdXamlPlugins x:Key="MdXamlPlugins">
-            <mdhtml:HtmlPluginSetup/>
-            <mdsvg:SvgPluginSetup/>
-            <mdagif:AnimatedGifPluginSetup/>
+            <mdhtml:HtmlPluginSetup />
+            <mdsvg:SvgPluginSetup />
+            <mdagif:AnimatedGifPluginSetup />
 
             <mdplugins:MdXamlPlugins.Highlights>
-                <mdplugins:Definition Alias="pegasus,peg"   Resource="pack://application:,,,/Asset/Pegasus-Mode.xshd" />
+                <mdplugins:Definition Alias="pegasus,peg" Resource="pack://application:,,,/Asset/Pegasus-Mode.xshd" />
                 <mdplugins:Definition Alias="typescript,ts" RealName="javascript" />
             </mdplugins:MdXamlPlugins.Highlights>
         </mdplugins:MdXamlPlugins>

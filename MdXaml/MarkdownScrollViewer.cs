@@ -1,25 +1,25 @@
-﻿using System;
+﻿using MdXaml.LinkActions;
+using MdXaml.Plugins;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+#if NETFRAMEWORK
 using System.Net;
-using System.Text;
+#else
+using System.Net.Http;
+#endif
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Markup;
-using MdXaml.Plugins;
 using System.Windows.Media;
-
-using MdXaml.LinkActions;
-using MdStyle = MdXaml.MarkdownStyle;
-using System.ComponentModel;
-using System.Windows.Media.Media3D;
 using System.Windows.Threading;
-using System.Threading.Tasks;
+using MdStyle = MdXaml.MarkdownStyle;
 
 namespace MdXaml
 {
@@ -77,6 +77,12 @@ namespace MdXaml
                 typeof(bool),
                 typeof(MarkdownScrollViewer),
                 new PropertyMetadata(false, UpdateDisabledLazyLoad));
+
+        public static readonly DependencyProperty HyperlinkCommandProperty =
+            DependencyProperty.Register(
+                nameof(HyperlinkCommand),
+                typeof(object),
+                typeof(MarkdownScrollViewer), new PropertyMetadata(false, UpdateHyperlinkCommand));
 
 
         private static void UpdateSource(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -179,6 +185,14 @@ namespace MdXaml
                 {
                   owner.Engine.DisabledLazyLoad = (bool)e.NewValue;
                 }
+            }
+        }
+
+        private static void UpdateHyperlinkCommand(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is MarkdownScrollViewer owner)
+            {
+                owner.UpdateClickAction();
             }
         }
 
@@ -342,6 +356,12 @@ namespace MdXaml
             set { SetValue(FragmentProperty, value); }
         }
 
+        public ICommand? HyperlinkCommand
+        {
+            get => GetValue(HyperlinkCommandProperty) as ICommand;
+            set => SetValue(HyperlinkCommandProperty, value);
+        }
+
         private ClickAction _clickAction;
         public ClickAction ClickAction
         {
@@ -464,6 +484,8 @@ namespace MdXaml
                     return;
 
                 default:
+                    Engine.HyperlinkCommand = this.HyperlinkCommand;
+                    Engine.OnHyperLinkClicked = _onHyperLinkClicked;
                     return;
             }
 
@@ -530,6 +552,17 @@ namespace MdXaml
 
         }
 
+#if !NETFRAMEWORK
+        public async Task<string> DownloadTextAsync(string path)
+        {
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(path);
+            response.EnsureSuccessStatusCode();
+            var newMdTxt = await response.Content.ReadAsStringAsync();
+            return newMdTxt;
+        }
+#endif
+
         internal void Open(Uri source, bool updateSourceProperty)
         {
             bool TryOpen(Uri path)
@@ -540,6 +573,7 @@ namespace MdXaml
 
                     switch (path.Scheme)
                     {
+#if NETFRAMEWORK
                         case "http":
                         case "https":
                             using (var wc = new WebClient())
@@ -547,7 +581,12 @@ namespace MdXaml
                             using (var reader = new StreamReader(strm, true))
                                 newMdTxt = reader.ReadToEnd();
                             break;
-
+#else
+                        case "http":
+                        case "https":
+                            newMdTxt = DownloadTextAsync(path.AbsoluteUri).GetAwaiter().GetResult();
+                            break;
+#endif
                         case "file":
                             using (var strm = File.OpenRead(path.LocalPath))
                             using (var reader = new StreamReader(strm, true))
@@ -635,6 +674,14 @@ namespace MdXaml
             }
 
             return Find(this);
+        } 
+
+        protected void AddIfAbsent<T>(IList<IPluginSetup> plugins) where T : IPluginSetup, new()
+        {
+            if (!plugins.Any(p => p is T))
+            {
+                plugins.Add(new T());
+            }
         }
     }
 

@@ -5,7 +5,7 @@ using System.Windows.Media;
 
 namespace MdXaml.Ext
 {
-    static class ColorExt
+    public static class ColorExt
     {
         public static Color Brightness(this Color color, Color fore)
         {

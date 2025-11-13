@@ -32,11 +32,14 @@ namespace WithFluentWPF
                     TextView =
                     TextXaml = String.Format("Could not find sample text *{0}*.md", subjectType.FullName);
                 }
-
-                using (StreamReader reader = new StreamReader(stream))
+                else
                 {
-                    TextView =
-                    TextXaml = reader.ReadToEnd();
+
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        TextView =
+                        TextXaml = reader.ReadToEnd();
+                    }
                 }
             }
 

@@ -11,9 +11,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageTargetFrameworks>net45;net462;netcoreapp3.0;net6.0-windows</PackageTargetFrameworks>
-    <SampleTargetFrameworks>netcoreapp3.0;net462;net6.0-windows</SampleTargetFrameworks>
-    <TestTargetFrameworks>net462;net6.0-windows</TestTargetFrameworks>
+    <PackageTargetFrameworks>net462;net8.0-windows</PackageTargetFrameworks>
+    <SampleTargetFrameworks>net462;net8.0-windows</SampleTargetFrameworks>
+    <TestTargetFrameworks>net462;net8.0-windows</TestTargetFrameworks>
     <PackageVersion>1.27.0</PackageVersion>
   </PropertyGroup>
 </Project>

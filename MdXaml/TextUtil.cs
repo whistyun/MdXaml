@@ -71,7 +71,7 @@ namespace MdXaml
         /// If the leading white-space is too short than `indentCount`,
         /// this method return 'false' and `detendedLine` is set null.
         /// </summary>
-        public static bool TryDetendLine(
+        public static bool TryDetentLine(
             string line,
             int indentCount,
 #if NETFRAMEWORK

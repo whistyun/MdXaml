@@ -1,0 +1,107 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+	<PropertyGroup>
+		<TargetFrameworks>$(TestTargetFrameworks)</TargetFrameworks>
+		<UseWPF>true</UseWPF>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Md\Blockquite.md" />
+		<None Remove="Md\BoldAndItalic1.md" />
+		<None Remove="Md\BoldAndItalic2.md" />
+		<None Remove="Md\Codes.md" />
+		<None Remove="Md\Emoji.md" />
+		<None Remove="Md\HorizontalRules.md" />
+		<None Remove="Md\Images.md" />
+		<None Remove="Md\Links_inline_style.md" />
+		<None Remove="Md\Lists1.md" />
+		<None Remove="Md\Lists2.md" />
+		<None Remove="Md\Mixing.md" />
+		<None Remove="Md\Tables.md" />
+		<None Remove="Md\Test1.md" />
+		<None Remove="Md\Text_style.md" />
+		<None Remove="RscImg.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Remove="IndentTest.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Md\Blockquite.md" />
+		<EmbeddedResource Include="Md\BoldAndItalic2.md" />
+		<EmbeddedResource Include="Md\BoldAndItalic1.md" />
+		<EmbeddedResource Include="Md\Codes.md" />
+		<EmbeddedResource Include="Md\HorizontalRules.md" />
+		<EmbeddedResource Include="Md\Images.md" />
+		<EmbeddedResource Include="Md\Links_inline_style.md" />
+		<EmbeddedResource Include="Md\Lists2.md" />
+		<EmbeddedResource Include="Md\Lists1.md" />
+		<EmbeddedResource Include="Md\Mixing.md" />
+		<EmbeddedResource Include="Md\Tables.md" />
+		<EmbeddedResource Include="Md\Emoji.md" />
+		<EmbeddedResource Include="Md\Test1.md" />
+		<EmbeddedResource Include="Md\Text_style.md" />
+		<EmbeddedResource Include="Md\IndentTest.xaml">
+			<Generator>MSBuild:Compile</Generator>
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<Resource Include="RscImg.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="ApprovalTests" Version="5.8.0" />
+		<PackageReference Include="nunit" Version="3.13.3" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\MdXaml.SyntaxHigh\MdXaml.SyntaxHigh.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+		<PackageReference Include="AvalonEdit" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
+		<PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="ExtImg.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Out\core\Tests.Transform_givenTextStyles_generatesExpectedResult.approved.txt">
+			<ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+			<ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+			<DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+		<None Update="Out\framework\Tests.Transform_givenCodes_generatesExpectedResult.approved.txt">
+			<ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+			<ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+			<DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+		<None Update="Out\framework\Tests.Transform_givenCodes_generatesExpectedResult.approved.txt.bak">
+			<ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+			<ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+			<DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+		<None Update="Out\framework\Tests.Transform_givenLists1_generatesExpectedResult.approved.txt">
+			<ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+			<ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+			<DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+		<None Update="Out\framework\Tests.Transform_givenLists1_generatesExpectedResult.approved.txt.bak">
+			<ParentFile>$([System.String]::Copy('%(FileName)').Split('.')[0])</ParentFile>
+			<ParentExtension>$(ProjectExt.Replace('proj', ''))</ParentExtension>
+			<DependentUpon>%(ParentFile)%(ParentExtension)</DependentUpon>
+		</None>
+	</ItemGroup>
+
+</Project>

@@ -36,14 +36,6 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <PackageReference Include="AvalonEdit" Version="6.0.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
-    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
   </ItemGroup>

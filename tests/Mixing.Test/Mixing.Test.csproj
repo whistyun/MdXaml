@@ -32,6 +32,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\MdXaml.SyntaxHigh\MdXaml.SyntaxHigh.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+		<PackageReference Include="AvalonEdit" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
+		<PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+	</ItemGroup>
+
+
+	<ItemGroup>
 		<None Update="ExtImg.png">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>

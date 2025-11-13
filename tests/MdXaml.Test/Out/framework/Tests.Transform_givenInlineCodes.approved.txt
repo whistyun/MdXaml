@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph Tag="Heading1">
+    <Run Tag="CodeSpan">MdXaml</Run>
+  </Paragraph>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">MdXaml is a modify version of Markdown.Xaml.
+Markdown XAML is a port of the popular *MarkdownSharp* Markdown processor, but 
+with one very significant difference: Instead of rendering to a string 
+containing HTML, it renders to a FlowDocument suitable for embedding into a 
+WPF window or usercontrol.</Paragraph>
+  <Paragraph Tag="Heading2">The Example Of ...</Paragraph>
+  <List MarkerStyle="Disc">
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#text-decolation-included-original-enhance" ToolTip="#text-decolation-included-original-enhance">
+          <Run Tag="CodeSpan">Text decolation</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#link" ToolTip="#link">
+          <Run Tag="CodeSpan">Link</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#image" ToolTip="#image">
+          <Run Tag="CodeSpan">Image</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#list" ToolTip="#list">
+          <Run Tag="CodeSpan">List</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#table-included-original-enhance" ToolTip="#table-included-original-enhance">
+          <Run Tag="CodeSpan">Table</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#code" ToolTip="#code">
+          <Run Tag="CodeSpan">Code</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#note" ToolTip="#note">
+          <Run Tag="CodeSpan">Note</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#separator" ToolTip="#separator">
+          <Run Tag="CodeSpan">Separator</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>
+        <Hyperlink Command="GoToPage" CommandParameter="#blockquote" ToolTip="#blockquote">
+          <Run Tag="CodeSpan">Blockquote</Run>
+        </Hyperlink>
+      </Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph Tag="Heading3">Text decolation [included original enhance]</Paragraph>
+  <Paragraph>
+    <Italic Tag="Italic">
+      <Run Tag="CodeSpan">italic</Run>
+    </Italic>, <Bold Tag="Bold"><Run Tag="CodeSpan">bold</Run></Bold>, <Bold Tag="Bold"><Italic Tag="Italic"><Run Tag="CodeSpan">bold-italic</Run></Italic></Bold>, <Span Tag="Strikethrough"><Span.TextDecorations><TextDecoration Location="Strikethrough" /></Span.TextDecorations><Run Tag="CodeSpan">strikethrough</Run></Span>, <Underline Tag="Underline"><Run Tag="CodeSpan">underline</Run></Underline> and <Span Foreground="#FFFF0000">color</Span>.<LineBreak /><Span Foreground="#FF0000FF"><Bold Tag="Bold"><Italic Tag="Italic"><Span Tag="Strikethrough"><Span.TextDecorations><TextDecoration Location="Strikethrough" /></Span.TextDecorations><Underline Tag="Underline">Mixing Text</Underline></Span></Italic></Bold></Span></Paragraph>
+</FlowDocument>

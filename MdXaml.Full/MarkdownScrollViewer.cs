@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace MdXaml.Full
 {
-    public class MarkdownScrollViewer : MdXaml.MarkdownScrollViewer
+    public class MarkdownScrollViewer : MdXaml.SyntaxHigh.MarkdownScrollViewer
     {
         public override MdXamlPlugins? Plugins
         {
@@ -30,14 +30,6 @@ namespace MdXaml.Full
         public MarkdownScrollViewer()
         {
             Plugins = new MdXamlPlugins();
-        }
-
-        private void AddIfAbsent<T>(IList<IPluginSetup> plugins) where T : IPluginSetup, new()
-        {
-            if (!plugins.Any(p => p is T))
-            {
-                plugins.Add(new T());
-            }
         }
     }
 }

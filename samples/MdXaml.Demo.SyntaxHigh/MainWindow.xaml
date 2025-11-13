@@ -1,0 +1,245 @@
+﻿<Window
+    x:Class="MdXaml.Demo.SyntaxHigh.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:MdXaml.Demo.SyntaxHigh"
+    xmlns:mdxam="clr-namespace:MdXaml.SyntaxHigh;assembly=MdXaml.SyntaxHigh"
+    Title="MdXaml Demo"
+    Width="800"
+    Height="600">
+
+    <Window.Resources>
+        <local:RGBConverter x:Key="Converter" />
+
+        <mdxam:Markdown x:Key="Markdown" Plugins="{StaticResource MdXamlPlugins}" />
+
+        <local:MarkdownXamlConverter x:Key="MarkdownXamlConverter" Markdown="{StaticResource Markdown}" />
+    </Window.Resources>
+
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
+    <TabControl SelectionChanged="TabControl_SelectionChanged">
+
+        <TabItem Header="BindingStyle">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <ComboBox
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    ItemsSource="{Binding Styles}"
+                    SelectedItem="{Binding SelectedStyleInfo}">
+
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+
+                </ComboBox>
+
+                <TabControl
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    TabStripPlacement="Bottom">
+                    <TabItem Header="Markdown">
+                        <TextBox
+                            Margin="5"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            AcceptsReturn="True"
+                            Text="{Binding TextView, UpdateSourceTrigger=PropertyChanged}"
+                            TextWrapping="Wrap"
+                            VerticalScrollBarVisibility="Auto" />
+                    </TabItem>
+                    <TabItem Header="Color">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="100*" />
+                            </Grid.ColumnDefinitions>
+
+
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.RowSpan="3"
+                                Grid.Column="0"
+                                VerticalAlignment="Center">
+                                Foreground
+                            </TextBlock>
+                            <TextBlock Grid.Row="0" Grid.Column="1">R</TextBlock>
+                            <TextBlock Grid.Row="1" Grid.Column="1">G</TextBlock>
+                            <TextBlock Grid.Row="2" Grid.Column="1">B</TextBlock>
+
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                Text="{Binding ForegroundRed}" />
+                            <Slider
+                                Grid.Row="0"
+                                Grid.Column="3"
+                                Maximum="255"
+                                Minimum="0"
+                                Value="{Binding ForegroundRed}" />
+
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                Text="{Binding ForegroundGreen}" />
+                            <Slider
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                Maximum="255"
+                                Minimum="0"
+                                Value="{Binding ForegroundGreen}" />
+
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="2"
+                                Text="{Binding ForegroundBlue}" />
+                            <Slider
+                                Grid.Row="2"
+                                Grid.Column="3"
+                                Maximum="255"
+                                Minimum="0"
+                                Value="{Binding ForegroundBlue}" />
+
+
+                            <Separator
+                                Grid.Row="3"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="4"
+                                Margin="0,8" />
+
+
+                            <TextBlock
+                                Grid.Row="4"
+                                Grid.RowSpan="3"
+                                Grid.Column="0"
+                                VerticalAlignment="Center">
+                                Background
+                            </TextBlock>
+                            <TextBlock Grid.Row="4" Grid.Column="1">R</TextBlock>
+                            <TextBlock Grid.Row="5" Grid.Column="1">G</TextBlock>
+                            <TextBlock Grid.Row="6" Grid.Column="1">B</TextBlock>
+
+                            <TextBox
+                                Grid.Row="4"
+                                Grid.Column="2"
+                                Text="{Binding BackgroundRed}" />
+                            <Slider
+                                Grid.Row="4"
+                                Grid.Column="3"
+                                Maximum="255"
+                                Minimum="0"
+                                Value="{Binding BackgroundRed}" />
+
+                            <TextBox
+                                Grid.Row="5"
+                                Grid.Column="2"
+                                Text="{Binding BackgroundGreen}" />
+                            <Slider
+                                Grid.Row="5"
+                                Grid.Column="3"
+                                Maximum="255"
+                                Minimum="0"
+                                Value="{Binding BackgroundGreen}" />
+
+                            <TextBox
+                                Grid.Row="6"
+                                Grid.Column="2"
+                                Text="{Binding BackgroundBlue}" />
+                            <Slider
+                                Grid.Row="6"
+                                Grid.Column="3"
+                                Maximum="255"
+                                Minimum="0"
+                                Value="{Binding BackgroundBlue}" />
+                        </Grid>
+                    </TabItem>
+                </TabControl>
+
+
+                <mdxam:MarkdownScrollViewer
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="5"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    ClickAction="SafetyDisplayWithRelativePath"
+                    Markdown="{Binding TextView}"
+                    MarkdownStyle="{Binding SelectedStyleInfo.Style}">
+
+                    <mdxam:MarkdownScrollViewer.Foreground>
+                        <MultiBinding Converter="{StaticResource Converter}">
+                            <Binding Path="ForegroundRed" />
+                            <Binding Path="ForegroundGreen" />
+                            <Binding Path="ForegroundBlue" />
+                        </MultiBinding>
+                    </mdxam:MarkdownScrollViewer.Foreground>
+                    <mdxam:MarkdownScrollViewer.Background>
+                        <MultiBinding Converter="{StaticResource Converter}">
+                            <Binding Path="BackgroundRed" />
+                            <Binding Path="BackgroundGreen" />
+                            <Binding Path="BackgroundBlue" />
+                        </MultiBinding>
+                    </mdxam:MarkdownScrollViewer.Background>
+                </mdxam:MarkdownScrollViewer>
+
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="ViewXaml">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="5"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    AcceptsReturn="True"
+                    Text="{Binding TextXaml, UpdateSourceTrigger=PropertyChanged}"
+                    TextWrapping="Wrap"
+                    VerticalScrollBarVisibility="Auto" />
+
+                <TextBox
+                    x:Name="outXaml3"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="5"
+                    AcceptsReturn="True"
+                    HorizontalScrollBarVisibility="Auto"
+                    IsReadOnly="True"
+                    Text="{Binding Path=TextXaml, Converter={StaticResource MarkdownXamlConverter}}"
+                    VerticalScrollBarVisibility="Auto" />
+            </Grid>
+        </TabItem>
+    </TabControl>
+
+</Window>

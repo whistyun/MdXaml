@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace MdXaml.Ext
 {
-    class BrightnessExtension : MarkupExtension
+    public class BrightnessExtension : MarkupExtension
     {
         public Color Base { get; }
         public string Foreground { get; }

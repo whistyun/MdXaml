@@ -32,6 +32,7 @@
     <ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
     <ProjectReference Include="..\MdXaml.Svg\MdXaml.Svg.csproj" />
     <ProjectReference Include="..\MdXaml\MdXaml.csproj" />
+	  <ProjectReference Include="..\MdXaml.SyntaxHigh\MdXaml.SyntaxHigh.csproj" />
   </ItemGroup>
 
 </Project>
