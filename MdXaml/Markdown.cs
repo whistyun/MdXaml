@@ -474,13 +474,19 @@ namespace MdXaml
         #region grammer - image or href
 
         /// <summary>
+        /// Reusable pattern to match not escaped characters
+        /// </summary>
+        private static readonly string _nonescapedPattern =
+                    @"(?<!\\)(?:\\\\)*";
+
+        /// <summary>
         /// Reusable pattern to match balanced [brackets]. See Friedl's 
         /// "Mastering Regular Expressions", 2nd Ed., pp. 328-331.
         /// </summary>
         private static readonly string _nestedBracketsPattern =
                     TextUtil.RepeatString(@"
-                    (?>              # Atomic matching
-                       [^\[\]]+      # Anything other than brackets
+                    (?>                     # Atomic matching
+                       [^\\\[\]]|\\[\s\S]   # Anything other than brackets, unless escaped
                      |
                        \[
                            ", _nestDepth)
@@ -495,8 +501,8 @@ namespace MdXaml
         /// </summary>
         private static readonly string _nestedParensPattern =
                     TextUtil.RepeatString(@"
-                    (?>            # Atomic matching
-                       [^()\n\t]+? # Anything other than parens or whitespace
+                    (?>                 # Atomic matching
+                       [^\\\s()]|\\[\S] # Anything other than parens or whitespace, unless escaped parens
                      |
                        \(
                            ", _nestDepth)
@@ -506,6 +512,7 @@ namespace MdXaml
                     , _nestDepth);
 
         private static readonly Regex _imageOrHrefInline = new(string.Format(@"
+                {2}                         # not escaped
                 (                           # wrap whole match in $1
                     (!)?                    # image maker = $2
                     \[
@@ -522,10 +529,11 @@ namespace MdXaml
                         [ ]*                # ignore any spaces between closing quote and )
                         )?                  # title is optional
                     \)
-                )", _nestedBracketsPattern, _nestedParensPattern),
+                )", _nestedBracketsPattern, _nestedParensPattern, _nonescapedPattern),
                   RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private static readonly Regex _resizeImage = new(string.Format(@"
+                {2}                         # not escaped
                 (                           # wrap whole match in $1
                     (!)                     # image maker = $2
                     \[
@@ -545,7 +553,7 @@ namespace MdXaml
                     \{{
                         ([^\}}]+)             # size = $8
                     \}}
-                )", _nestedBracketsPattern, _nestedParensPattern),
+                )", _nestedBracketsPattern, _nestedParensPattern, _nonescapedPattern),
                   RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
         private static readonly Regex _stylePattern = new Regex(@"
@@ -559,21 +567,57 @@ namespace MdXaml
                 ",
                 RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private Inline ImageOrHrefInlineEvaluator(Match match)
+        private bool IsHrefMatch(Match match)
         {
-            if (String.IsNullOrEmpty(match.Groups[2].Value))
+            return String.IsNullOrEmpty(match.Groups[2].Value);
+        }
+
+        private IEnumerable<Inline> ImageOrHrefInlineEvaluator(string text, Match match, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
+        {
+            if (IsHrefMatch(match))
             {
-                return TreatsAsHref(match);
+                return TreatsAsHref(text, match, engine, out parseTextBegin, out parseTextEnd);
             }
             else
             {
-                return TreatsAsImage(match);
+                return new[] { TreatsAsImage(text, match, engine, out parseTextBegin, out parseTextEnd) };
             }
         }
 
-        private Inline TreatsAsHref(Match match)
+        private string ExtractText(Inline inline)
         {
-            string linkText = match.Groups[3].Value;
+            string text = string.Empty;
+            if (inline is Run run)
+            {
+                text += run.Text;
+            }
+            else if (inline is Hyperlink link)
+            {
+                foreach (var subInline in link.Inlines)
+                {
+                    text += ExtractText(subInline);
+                }
+            }
+            return text;
+        }
+
+        private IEnumerable<Inline> TreatsAsHref(string text, Match match, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
+        {
+            parseTextBegin = match.Groups[1].Index;
+            parseTextEnd = match.Index + match.Length;
+
+            var linkGroup = match.Groups[3];
+
+            var innerMatch = _imageOrHrefInline.Match(text, linkGroup.Index, linkGroup.Length);
+            if (innerMatch.Success && IsHrefMatch(innerMatch))
+            {
+                // We have an inner href link inside link text.
+                // Inner links have higher priority.
+
+                return TreatsAsHref(text, innerMatch, engine, out parseTextBegin, out parseTextEnd);
+            }
+
+            string linkText = linkGroup.Value;
             string url = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
@@ -598,15 +642,44 @@ namespace MdXaml
                 result.Style = LinkStyle;
             }
 
-            return result;
+            return new[] { result };
         }
 
-        private Inline TreatsAsImage(Match match)
+        private Inline TreatsAsImage(string text, Match match, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
         {
-            string linkText = match.Groups[3].Value;
+            parseTextBegin = match.Groups[1].Index;
+            parseTextEnd = match.Index + match.Length;
+
+            var linkGroup = match.Groups[3];
+            string linkText = linkGroup.Value;
             string urlTxt = match.Groups[4].Value;
             string title = match.Groups[7].Value;
 
+            var innerMatch = _imageOrHrefInline.Match(linkText);
+            if (innerMatch.Success && IsHrefMatch(innerMatch))
+            {
+                // We have an inner href link inside link text.
+                // Process it but only extract the text content.
+                int innerParseBegin;
+                int innerParseEnd;
+                var href = TreatsAsHref(linkText, innerMatch, engine, out innerParseBegin, out innerParseEnd);
+                string outtext = string.Empty;
+                string extra = linkText.Substring(0, innerParseBegin);
+                foreach (var inline in PrivateRunSpanGamut(extra))
+                {
+                    outtext += ExtractText(inline);
+                }
+                foreach (var inline in href)
+                {
+                    outtext += ExtractText(inline);
+                }
+                extra = linkText.Substring(innerParseEnd);
+                foreach (var inline in PrivateRunSpanGamut(extra))
+                {
+                    outtext += ExtractText(inline);
+                }
+                linkText = outtext;
+            }
             try
             {
                 return LoadImage(linkText, urlTxt, title);
@@ -619,8 +692,11 @@ namespace MdXaml
             }
         }
 
-        private Inline ImageWithSizeEvaluator(Match match)
+        private IEnumerable<Inline> ImageWithSizeEvaluator(string text, Match match, IMarkdown engine, out int parseTextBegin, out int parseTextEnd)
         {
+            parseTextBegin = match.Groups[1].Index;
+            parseTextEnd = match.Index + match.Length;
+
             string linkText = match.Groups[3].Value;
             string urlTxt = match.Groups[4].Value;
             string title = match.Groups[7].Value;
@@ -643,7 +719,7 @@ namespace MdXaml
                         effect(element);
             });
 
-            return image;
+            return new[] { image };
         }
 
         public InlineUIContainer LoadImage(
@@ -1676,32 +1752,19 @@ namespace MdXaml
                         break;
 
                     case '\\': // escape
-                        if (++i < text.Length)
+                        buff.Append('\\');
+                        if (++i < text.Length && _markdown_punctuation.Contains(text.Substring(i, 1)))
                         {
-                            switch (text[i])
-                            {
-                                default:
-                                    buff.Append('\\').Append(text[i]);
-                                    break;
-
-                                case '\\': // escape
-                                case ':': // bold? or italic
-                                case '*': // bold? or italic
-                                case '~': // strikethrough?
-                                case '_': // underline?
-                                case '%': // color?
-                                    buff.Append(text[i]);
-                                    break;
-                            }
+                            buff.Append(text[i]);
+                            break;
                         }
-                        else
-                            buff.Append('\\');
-
+                        // not escaped
+                        --i;
                         break;
 
                     case ':': // emoji?
                         {
-                            var nxtI = text.IndexOf(':', i + 1);
+                            var nxtI = EscapedIndexOf(text, i + 1, ':');
                             if (nxtI != -1 && EmojiTable.TryGet(text.Substring(i + 1, nxtI - i - 1), out var emoji))
                             {
                                 buff.Append(emoji);
@@ -1884,11 +1947,15 @@ namespace MdXaml
 
                 if (c == '\\')
                 {
-                    i += 2;
-                    continue;
-
+                    if (++i < text.Length && _markdown_punctuation.Contains(text.Substring(i, 1)))
+                    {
+                        ++i;
+                        continue;
+                    }
+                    // not escaped
+                    --i;
                 }
-                else if (c == symbol)
+                if (c == symbol)
                 {
                     int endCnt = CountRepeat(text, i, symbol);
 
@@ -2021,8 +2088,12 @@ namespace MdXaml
             for (var i = start; i < text.Length; ++i)
             {
                 var ch = text[i];
-                if (ch == '\\') ++i;
-                else if (ch == target) return i;
+                if (ch == '\\') {
+                    if (++i < text.Length && _markdown_punctuation.Contains(text.Substring(i, 1))) continue;
+                    // not escaped
+                    --i;
+                }
+                if (ch == target) return i;
             }
             return -1;
         }
@@ -2092,7 +2163,8 @@ namespace MdXaml
         #region grammer - text
 
         private static readonly Regex _eoln = new("\\s+");
-        private static readonly Regex _lbrk = new(@"\ {2,}\n");
+        private static readonly Regex _lbrk = new(@"(?:\\| {2,})\n");
+        private static readonly string _markdown_punctuation = @"!""#$%&'()*+,-./:;<=>?@[\^_`{|~]}";
 
         public static IEnumerable<Inline> DoText(string text)
         {
@@ -2104,7 +2176,29 @@ namespace MdXaml
                     first = false;
                 else
                     yield return new LineBreak();
-                var t = _eoln.Replace(line, " ");
+
+                // Process escape characters
+                var buff = new StringBuilder();
+                for (var i = 0; i < line.Length; ++i) {
+                    var ch = line[i];
+                    switch (ch) {
+                    default:
+                        buff.Append(ch);
+                        break;
+
+                    case '\\': // escape
+                        if (++i < line.Length) {
+                            if (!_markdown_punctuation.Contains(line.Substring(i, 1))) {
+                                buff.Append('\\');
+                            }
+                            buff.Append(line[i]);
+                        } else
+                            buff.Append('\\');
+
+                        break;
+                    }
+                }
+                var t = _eoln.Replace(buff.ToString(), " ");
                 yield return new Run(t);
             }
         }

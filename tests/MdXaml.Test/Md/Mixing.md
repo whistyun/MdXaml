@@ -17,15 +17,22 @@ If there are any bug fixes to the regular expressions in MarkdownSharp, merging 
 
 ## Markdown capabilities and customizables styles ##
 
-* Links [Go to Google!](https://www.google.com)
-* Links with title [Go to Google!](https://www.google.com "google.")
+* Links \[Go to Google!](https://www.google.com) [Go to Google!](https://www.google.com)
+* Links with title \[Go to Google!](https://www.google.com "google.") [Go to Google!](https://www.google.com "google.")
 * Remote images
 
+!\[image1](https://avatars.githubusercontent.com/u/13712028?v=4)
+
 ![image1](https://avatars.githubusercontent.com/u/13712028?v=4)
+
+!\[imageleft](https://avatars.githubusercontent.com/u/13712028?v=4 "blue")!\[imageright](https://avatars.githubusercontent.com/u/13712028?v=4 "cyan")
 
 ![imageleft](https://avatars.githubusercontent.com/u/13712028?v=4 "blue")![imageright](https://avatars.githubusercontent.com/u/13712028?v=4 "cyan")
 
 * Local images
+
+!\[image](RscImg.png)\
+!\[image](ExtImg.png)
 
 ![image](RscImg.png)
 ![image](ExtImg.png)
