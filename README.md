@@ -80,8 +80,8 @@ We can use MarkdownScrollViewer with code-behind and with binding.
 
 ## Development
 
-IDE: Visual Studio 2019  
-Framework: .NET Framework 4.6.2, .NET Core 3, .NET 5
+IDE: Visual Studio 2022  
+Framework: .NET Framework 4.6.2, .NET 8
 
 ### Build
 
@@ -104,6 +104,9 @@ MdXaml is licensed under the MIT license.
 ## Dependencies (Runtime)
 
 * MdXaml
+  * None
+
+* MdXaml.SyntaxEditor
   * AvalonEdit (MIT) https://github.com/icsharpcode/AvalonEdit
 
 * MdXaml.Html

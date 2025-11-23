@@ -7,20 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Md\Blockquite.md" />
-    <None Remove="Md\BoldAndItalic1.md" />
-    <None Remove="Md\BoldAndItalic2.md" />
-    <None Remove="Md\Codes.md" />
-    <None Remove="Md\Emoji.md" />
-    <None Remove="Md\HorizontalRules.md" />
-    <None Remove="Md\Images.md" />
-    <None Remove="Md\Links_inline_style.md" />
-    <None Remove="Md\Lists1.md" />
-    <None Remove="Md\Lists2.md" />
-    <None Remove="Md\Mixing.md" />
-    <None Remove="Md\Tables.md" />
-    <None Remove="Md\Test1.md" />
-    <None Remove="Md\Text_style.md" />
+    <None Remove="Md\*.md" />
     <None Remove="RscImg.png" />
   </ItemGroup>
 
@@ -29,20 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Md\Blockquite.md" />
-    <EmbeddedResource Include="Md\BoldAndItalic2.md" />
-    <EmbeddedResource Include="Md\BoldAndItalic1.md" />
-    <EmbeddedResource Include="Md\Codes.md" />
-    <EmbeddedResource Include="Md\HorizontalRules.md" />
-    <EmbeddedResource Include="Md\Images.md" />
-    <EmbeddedResource Include="Md\Links_inline_style.md" />
-    <EmbeddedResource Include="Md\Lists2.md" />
-    <EmbeddedResource Include="Md\Lists1.md" />
-    <EmbeddedResource Include="Md\Mixing.md" />
-    <EmbeddedResource Include="Md\Tables.md" />
-    <EmbeddedResource Include="Md\Emoji.md" />
-    <EmbeddedResource Include="Md\Test1.md" />
-    <EmbeddedResource Include="Md\Text_style.md" />
+    <EmbeddedResource Include="Md\*.md" />
     <EmbeddedResource Include="Md\IndentTest.xaml">
       <Generator>MSBuild:Compile</Generator>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

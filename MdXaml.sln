@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32922.545
+# Visual Studio Version 18
+VisualStudioVersion = 18.0.11010.61 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml", "MdXaml\MdXaml.csproj", "{3B285B6B-C6C9-4FF5-AD2B-04808862D81E}"
 EndProject
@@ -37,6 +37,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MdXaml.Full", "MdXaml.Full\MdXaml.Full.csproj", "{0ABF174B-B7EA-4225-BB56-5A6E8C011CFB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckMemoryLeak", "samples\CheckMemoryLeak\CheckMemoryLeak.csproj", "{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdXaml.SyntaxHigh", "MdXaml.SyntaxHigh\MdXaml.SyntaxHigh.csproj", "{CAD8EC7F-E28A-49C0-B2C2-77B6097DDDBF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdXaml.SyntaxHigh.Test", "tests\MdXaml.SyntaxHigh.Test\MdXaml.SyntaxHigh.Test.csproj", "{68742EAC-05C4-4A04-8A89-D0A6981DA53F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MdXaml.Demo.SyntaxHigh", "samples\MdXaml.Demo.SyntaxHigh\MdXaml.Demo.SyntaxHigh.csproj", "{7BEA0BF3-9715-42B3-A4F5-E50EBFADE368}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -96,6 +102,18 @@ Global
 		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAD8EC7F-E28A-49C0-B2C2-77B6097DDDBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAD8EC7F-E28A-49C0-B2C2-77B6097DDDBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAD8EC7F-E28A-49C0-B2C2-77B6097DDDBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAD8EC7F-E28A-49C0-B2C2-77B6097DDDBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68742EAC-05C4-4A04-8A89-D0A6981DA53F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68742EAC-05C4-4A04-8A89-D0A6981DA53F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68742EAC-05C4-4A04-8A89-D0A6981DA53F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68742EAC-05C4-4A04-8A89-D0A6981DA53F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7BEA0BF3-9715-42B3-A4F5-E50EBFADE368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BEA0BF3-9715-42B3-A4F5-E50EBFADE368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BEA0BF3-9715-42B3-A4F5-E50EBFADE368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BEA0BF3-9715-42B3-A4F5-E50EBFADE368}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +126,8 @@ Global
 		{C45A1400-B4E9-4638-BF1F-4BB38CEC5E93} = {09BEAB2A-F47E-4D2B-AE81-8DC1BBB52638}
 		{CEF2B49F-90AF-4B65-AA0C-A12AB1C0A18F} = {09BEAB2A-F47E-4D2B-AE81-8DC1BBB52638}
 		{CC0EBCF6-0EE9-4873-BB6F-6A9F4CF84B79} = {435867FA-EE25-4708-9BBA-8509ABC7E389}
+		{68742EAC-05C4-4A04-8A89-D0A6981DA53F} = {09BEAB2A-F47E-4D2B-AE81-8DC1BBB52638}
+		{7BEA0BF3-9715-42B3-A4F5-E50EBFADE368} = {435867FA-EE25-4708-9BBA-8509ABC7E389}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {23DF7019-3B25-4B82-8955-25F1DDD72D84}

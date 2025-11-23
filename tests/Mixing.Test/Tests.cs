@@ -48,6 +48,10 @@ namespace MixingTest
                 BaseUri = baseUri,
                 DisabledContextMenu = true,
             };
+            if (markdown.Plugins.CodeBlockLoader.Count == 0)
+            {
+                markdown.Plugins.CodeBlockLoader.Add(new MdXaml.SyntaxHigh.AvalonCodeBlockLoader());
+            }
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);

@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph>
+    <Bold Tag="Bold">
+      <Italic Tag="Italic">strong emph</Italic>
+    </Bold>
+  </Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>bgntext<Bold Tag="Bold">strong emph</Bold>*</Paragraph>
+  <Paragraph>
+    <Bold Tag="Bold">strong emph</Bold>*endtext</Paragraph>
+  <Paragraph>bgntext<Bold Tag="Bold">strong emph</Bold>*endtext</Paragraph>
+  <Paragraph>bgntext*<Bold Tag="Bold">strong emph</Bold></Paragraph>
+  <Paragraph>*<Bold Tag="Bold">strong emph</Bold>endtext</Paragraph>
+  <Paragraph>bgntext*<Bold Tag="Bold">strong emph</Bold>endtext</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>bgntext<Bold Tag="Bold">strong emph</Bold>**</Paragraph>
+  <Paragraph>
+    <Bold Tag="Bold">strong emph</Bold>**endtext</Paragraph>
+  <Paragraph>bgntext<Bold Tag="Bold">strong emph</Bold>**endtext</Paragraph>
+  <Paragraph>bgntext**<Bold Tag="Bold">strong emph</Bold></Paragraph>
+  <Paragraph>**<Bold Tag="Bold">strong emph</Bold>endtext</Paragraph>
+  <Paragraph>bgntext**<Bold Tag="Bold">strong emph</Bold>endtext</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>
+    <Bold Tag="Bold">strong emph</Bold>*</Paragraph>
+  <Paragraph>*<Bold Tag="Bold">strong emph</Bold></Paragraph>
+  <Paragraph>
+    <Italic Tag="Italic">
+      <Bold Tag="Bold">strong</Bold> in emph</Italic>
+  </Paragraph>
+  <Paragraph>
+    <Italic Tag="Italic">
+      <Bold Tag="Bold">strong</Bold> in <Italic Tag="Italic">emph</Italic></Italic>
+  </Paragraph>
+  <Paragraph>
+    <Bold Tag="Bold">
+      <Italic Tag="Italic">emph</Italic> in strong</Bold>
+  </Paragraph>
+  <Paragraph>
+    <Bold Tag="Bold">in strong <Italic Tag="Italic">emph</Italic></Bold>
+  </Paragraph>
+  <Paragraph>
+    <Italic Tag="Italic">in emph <Bold Tag="Bold">strong</Bold></Italic>
+  </Paragraph>
+  <Paragraph>
+    <Italic Tag="Italic">emph <Italic Tag="Italic">with emph</Italic> in it</Italic>
+  </Paragraph>
+  <Paragraph>
+    <Bold Tag="Bold">strong <Bold Tag="Bold">with strong</Bold> in it</Bold>
+  </Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>internal emphasis: foo<Italic Tag="Italic">bar</Italic>baz no emphasis: foo_bar_baz</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>a <Italic Tag="Italic">asdf</Italic></Paragraph>
+  <Paragraph>a * asdf*</Paragraph>
+  <Paragraph>a *asdf *</Paragraph>
+  <Paragraph>a * asdf *</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>a <Italic Tag="Italic">asdf</Italic> <Italic Tag="Italic">asdf</Italic></Paragraph>
+  <Paragraph>a <Italic Tag="Italic">asdf</Italic> a <Italic Tag="Italic">asdf</Italic></Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>a <Bold Tag="Bold">asdf</Bold></Paragraph>
+  <Paragraph>a ** asdf**</Paragraph>
+  <Paragraph>a **asdf **</Paragraph>
+  <Paragraph>a ** asdf **</Paragraph>
+  <BlockUIContainer Tag="RuleSingle">
+    <Separator />
+  </BlockUIContainer>
+  <Paragraph>a <Bold Tag="Bold">asdf</Bold> <Bold Tag="Bold">asdf</Bold></Paragraph>
+  <Paragraph>a <Bold Tag="Bold">asdf</Bold> a <Bold Tag="Bold">asdf</Bold></Paragraph>
+</FlowDocument>

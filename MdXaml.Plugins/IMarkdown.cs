@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -25,5 +26,11 @@ namespace MdXaml.Plugins
         IEnumerable<Block> RunBlockGamut(string text, bool supportTextAlignment);
 
         IEnumerable<Inline> RunSpanGamut(string text);
+
+        bool DisabledContextMenu { get; set; }
+
+        Style? CodeBlockStyle { get; set; }
+
+        bool DisabledTag { get; set; }
     }
 }

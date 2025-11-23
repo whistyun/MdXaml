@@ -6,7 +6,7 @@ using System.Windows.Media;
 
 namespace MdXaml.Ext
 {
-    class AlphaExtension : MarkupExtension
+    public class AlphaExtension : MarkupExtension
     {
         private readonly string _key;
         private readonly float _power;

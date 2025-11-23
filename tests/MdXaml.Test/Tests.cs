@@ -61,19 +61,6 @@ namespace Markdown.Xaml.Test
 
         [Test]
         [Apartment(ApartmentState.STA)]
-        public void Transform_givenTest2_generatesExpectedResult()
-        {
-            var text = Utils.LoadText("Test1.md");
-            var markdown = new Markdown()
-            {
-                DisabledTag = true,
-            };
-            var result = markdown.Transform(text);
-            Approvals.Verify(Utils.AsXaml(result));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
         public void Transform_givenBoldAndItalic_generatesExpectedResult()
         {
             var text = Utils.LoadText("BoldAndItalic1.md");
@@ -88,6 +75,7 @@ namespace Markdown.Xaml.Test
         {
             var text = Utils.LoadText("Lists1.md");
             var markdown = new Markdown();
+            
             markdown.DisabledContextMenu = true;
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
@@ -98,6 +86,26 @@ namespace Markdown.Xaml.Test
         public void Transform_givenLists2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Lists2.md");
+            var markdown = new Markdown();
+            var result = markdown.Transform(text);
+            Approvals.Verify(Utils.AsXaml(result));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void Transform_givenLists3_generatesExpectedResult()
+        {
+            var text = Utils.LoadText("Lists3.md");
+            var markdown = new Markdown();
+            var result = markdown.Transform(text);
+            Approvals.Verify(Utils.AsXaml(result));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void Transform_givenLists4_generatesExpectedResult()
+        {
+            var text = Utils.LoadText("Lists4.md");
             var markdown = new Markdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
@@ -133,7 +141,8 @@ namespace Markdown.Xaml.Test
             var text = Utils.LoadText("HorizontalRules.md");
             var markdown = new Markdown() {
                 DisabledContextMenu = true,
-            };
+            }; 
+            
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
         }
@@ -269,6 +278,7 @@ namespace Markdown.Xaml.Test
                 BaseUri = baseUri,
                 DisabledContextMenu = true,
             };
+            
 
             var result = markdown.Transform(text);
             var resultXaml = Utils.AsXaml(result);
@@ -312,6 +322,7 @@ namespace Markdown.Xaml.Test
                 AssetPathRoot = assetPath,
                 DisabledContextMenu = true,
             };
+            
 
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
@@ -322,6 +333,21 @@ namespace Markdown.Xaml.Test
         public void Transform_givenEmoji()
         {
             var text = Utils.LoadText("Emoji.md");
+            var markdown = new Markdown()
+            {
+                AssetPathRoot = assetPath,
+                BaseUri = baseUri,
+            };
+
+            var result = markdown.Transform(text);
+            Approvals.Verify(Utils.AsXaml(result));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void Transform_givenInlineCodes()
+        {
+            var text = Utils.LoadText("InlineCodes.md");
             var markdown = new Markdown()
             {
                 AssetPathRoot = assetPath,

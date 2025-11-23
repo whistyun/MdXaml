@@ -67,17 +67,6 @@ namespace Markdown.Xaml.Test
 
         [Test]
         [Apartment(ApartmentState.STA)]
-        public void Transform_givenTest2_generatesExpectedResult()
-        {
-            var text = Utils.LoadText("Test1.md");
-            var markdown = CreateMarkdown();
-            markdown.DisabledTag = true;
-            var result = markdown.Transform(text);
-            Approvals.Verify(Utils.AsXaml(result));
-        }
-
-        [Test]
-        [Apartment(ApartmentState.STA)]
         public void Transform_givenBoldAndItalic_generatesExpectedResult()
         {
             var text = Utils.LoadText("BoldAndItalic2.md");
@@ -103,6 +92,26 @@ namespace Markdown.Xaml.Test
         public void Transform_givenLists2_generatesExpectedResult()
         {
             var text = Utils.LoadText("Lists2.md");
+            var markdown = CreateMarkdown();
+            var result = markdown.Transform(text);
+            Approvals.Verify(Utils.AsXaml(result));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void Transform_givenLists3_generatesExpectedResult()
+        {
+            var text = Utils.LoadText("Lists3.md");
+            var markdown = CreateMarkdown();
+            var result = markdown.Transform(text);
+            Approvals.Verify(Utils.AsXaml(result));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void Transform_givenLists4_generatesExpectedResult()
+        {
+            var text = Utils.LoadText("Lists4.md");
             var markdown = CreateMarkdown();
             var result = markdown.Transform(text);
             Approvals.Verify(Utils.AsXaml(result));
@@ -311,6 +320,19 @@ namespace Markdown.Xaml.Test
         public void Transform_givenEmoji()
         {
             var text = Utils.LoadText("Emoji.md");
+            var markdown = CreateMarkdown();
+            markdown.AssetPathRoot = assetPath;
+            markdown.BaseUri = baseUri;
+
+            var result = markdown.Transform(text);
+            Approvals.Verify(Utils.AsXaml(result));
+        }
+
+        [Test]
+        [Apartment(ApartmentState.STA)]
+        public void Transform_givenInlineCodes()
+        {
+            var text = Utils.LoadText("InlineCodes.md");
             var markdown = CreateMarkdown();
             markdown.AssetPathRoot = assetPath;
             markdown.BaseUri = baseUri;

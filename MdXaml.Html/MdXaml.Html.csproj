@@ -36,7 +36,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\MdXaml\MdXaml\MdXaml.csproj" />
+		<ProjectReference Include="..\MdXaml\MdXaml.csproj" />
 		<ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.42" />
   </ItemGroup>

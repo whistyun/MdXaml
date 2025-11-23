@@ -1,43 +1,32 @@
 <?xml version="1.0" encoding="utf-16"?>
-<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit" xmlns:icscaed="clr-namespace:ICSharpCode.AvalonEdit.Document;assembly=ICSharpCode.AvalonEdit" xmlns:scmd="clr-namespace:System.ComponentModel.Design;assembly=System" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Paragraph Tag="Heading1">
     <Run Tag="CodeSpan">```</Run>
   </Paragraph>
-  <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="```cs&#xA;public void Main(){&#xA;    Console.WriteLine(&quot;`Hello World`&quot;);&#xA;}&#xA;```" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>```cs
+  <Paragraph Tag="CodeBlock" xml:space="preserve">```cs
 public void Main(){
     Console.WriteLine("`Hello World`");
 }
-```</avalonedit:TextEditor>
-  </BlockUIContainer>
-  <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" Tag="cs" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;    Console.WriteLine(&quot;`Hello World`&quot;);&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+```</Paragraph>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
     Console.WriteLine("`Hello World`");
-}</avalonedit:TextEditor>
-  </BlockUIContainer>
+}</Paragraph>
   <Section Tag="Blockquote">
-    <BlockUIContainer Tag="CodeBlock">
-      <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" Tag="cs" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;    Console.WriteLine(&quot;`Hello World`&quot;);&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+    <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
     Console.WriteLine("`Hello World`");
-}</avalonedit:TextEditor>
-    </BlockUIContainer>
+}</Paragraph>
   </Section>
-  <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" Tag="cs" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="   public void Main(){&#xA;       Console.WriteLine(&quot;`Hello World`&quot;);&#xA;   }" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>   public void Main(){
+  <Paragraph Tag="CodeBlock" xml:space="preserve">   public void Main(){
        Console.WriteLine("`Hello World`");
-   }</avalonedit:TextEditor>
-  </BlockUIContainer>
-  <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="```cs&#xA;public void Main(){&#xA;    Console.WriteLine(&quot;`Hello World`&quot;);&#xA;}&#xA;```" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>```cs
+   }</Paragraph>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">```cs
 public void Main(){
     Console.WriteLine("`Hello World`");
 }
-```</avalonedit:TextEditor>
-  </BlockUIContainer>
+```</Paragraph>
   <List MarkerStyle="Disc">
     <ListItem>
-      <BlockUIContainer Tag="CodeBlock">
-        <avalonedit:TextEditor SyntaxHighlighting="C#" IsReadOnly="True" IsModified="True" Tag="cs" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
 
 
 
@@ -47,8 +36,7 @@ public void Main(){
 
 
 
-}</avalonedit:TextEditor>
-      </BlockUIContainer>
+}</Paragraph>
     </ListItem>
   </List>
   <BlockUIContainer Tag="RuleBold">
@@ -60,8 +48,7 @@ public void Main(){
   <List MarkerStyle="Box">
     <ListItem>
       <Paragraph>one</Paragraph>
-      <BlockUIContainer Tag="CodeBlock">
-        <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
 
 
 
@@ -71,8 +58,7 @@ public void Main(){
 
 
 
-}</avalonedit:TextEditor>
-      </BlockUIContainer>
+}</Paragraph>
     </ListItem>
   </List>
   <BlockUIContainer Tag="RuleDouble">
@@ -84,8 +70,7 @@ public void Main(){
   <List MarkerStyle="Box">
     <ListItem>
       <Paragraph>one</Paragraph>
-      <BlockUIContainer Tag="CodeBlock">
-        <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
 
 
 
@@ -95,46 +80,36 @@ public void Main(){
 
 
 
-}</avalonedit:TextEditor>
-      </BlockUIContainer>
+}</Paragraph>
     </ListItem>
   </List>
   <Paragraph Tag="Heading1">Indent</Paragraph>
-  <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="abcd&#xA;efgh" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>abcd
-efgh</avalonedit:TextEditor>
-  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock" xml:space="preserve">abcd
+efgh</Paragraph>
   <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text=" abcd&#xA;efgh" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options> abcd
-efgh</avalonedit:TextEditor>
-  </BlockUIContainer>
+  <Paragraph Tag="CodeBlock" xml:space="preserve"> abcd
+efgh</Paragraph>
   <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
-  <BlockUIContainer Tag="CodeBlock">
-    <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="abcd&#xA; efgh&#xA;&#xA; ijkl&#xA;&#xA;opqr" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>abcd
+  <Paragraph Tag="CodeBlock" xml:space="preserve">abcd
  efgh
 
  ijkl
 
-opqr</avalonedit:TextEditor>
-  </BlockUIContainer>
+opqr</Paragraph>
   <BlockUIContainer Tag="RuleSingle">
     <Separator />
   </BlockUIContainer>
   <Section Tag="Blockquote">
-    <BlockUIContainer Tag="CodeBlock">
-      <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="asdf&#xA; ghij" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>asdf
- ghij</avalonedit:TextEditor>
-    </BlockUIContainer>
+    <Paragraph Tag="CodeBlock" xml:space="preserve">asdf
+ ghij</Paragraph>
   </Section>
   <List MarkerStyle="Disc">
     <ListItem>
-      <BlockUIContainer Tag="CodeBlock">
-        <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
 
 
 
@@ -144,8 +119,7 @@ opqr</avalonedit:TextEditor>
 
 
 
-}</avalonedit:TextEditor>
-      </BlockUIContainer>
+}</Paragraph>
     </ListItem>
   </List>
   <BlockUIContainer Tag="RuleBold">
@@ -157,22 +131,7 @@ opqr</avalonedit:TextEditor>
   <List MarkerStyle="Box">
     <ListItem>
       <Paragraph>one public void Main(){</Paragraph>
-      <BlockUIContainer Tag="CodeBlock">
-        <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch">
-          <avalonedit:TextEditor.Document>
-            <icscaed:TextDocument Text="}" FileName="{x:Null}">
-              <icscaed:TextDocument.UndoStack>
-                <icscaed:UndoStack SizeLimit="2147483647" />
-              </icscaed:TextDocument.UndoStack>
-              <icscaed:TextDocument.ServiceProvider>
-                <scmd:ServiceContainer />
-              </icscaed:TextDocument.ServiceProvider>
-            </icscaed:TextDocument>
-          </avalonedit:TextEditor.Document>
-          <avalonedit:TextEditor.Options>
-            <avalonedit:TextEditorOptions />
-          </avalonedit:TextEditor.Options>}</avalonedit:TextEditor>
-      </BlockUIContainer>
+      <Paragraph Tag="CodeBlock">}</Paragraph>
     </ListItem>
   </List>
   <BlockUIContainer Tag="RuleBold">
@@ -184,8 +143,7 @@ opqr</avalonedit:TextEditor>
   <List MarkerStyle="Box">
     <ListItem>
       <Paragraph>one</Paragraph>
-      <BlockUIContainer Tag="CodeBlock">
-        <avalonedit:TextEditor IsReadOnly="True" IsModified="True" HorizontalAlignment="Stretch" xml:space="preserve"><avalonedit:TextEditor.Document><icscaed:TextDocument Text="public void Main(){&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;&#xA;}" FileName="{x:Null}"><icscaed:TextDocument.UndoStack><icscaed:UndoStack SizeLimit="2147483647" /></icscaed:TextDocument.UndoStack><icscaed:TextDocument.ServiceProvider><scmd:ServiceContainer /></icscaed:TextDocument.ServiceProvider></icscaed:TextDocument></avalonedit:TextEditor.Document><avalonedit:TextEditor.Options><avalonedit:TextEditorOptions /></avalonedit:TextEditor.Options>public void Main(){
+      <Paragraph Tag="CodeBlock" xml:space="preserve">public void Main(){
 
 
 
@@ -195,8 +153,7 @@ opqr</avalonedit:TextEditor>
 
 
 
-}</avalonedit:TextEditor>
-      </BlockUIContainer>
+}</Paragraph>
     </ListItem>
   </List>
 </FlowDocument>

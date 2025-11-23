@@ -8,7 +8,7 @@ using System.Windows.Markup;
 
 namespace MdXaml.Ext
 {
-    class FontSizeScaleExtension : MarkupExtension
+    public class FontSizeScaleExtension : MarkupExtension
     {
         private readonly float power;
 

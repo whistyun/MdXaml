@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MdXaml.Full
 {
-    public class Markdown : MdXaml.Markdown
+    public class Markdown : MdXaml.SyntaxHigh.Markdown
     {
         public override MdXamlPlugins? Plugins
         {
@@ -27,14 +27,6 @@ namespace MdXaml.Full
         public Markdown()
         {
             Plugins = new MdXamlPlugins();
-        }
-
-        private void AddIfAbsent<T>(IList<IPluginSetup> plugins) where T : IPluginSetup, new()
-        {
-            if (!plugins.Any(p => p is T))
-            {
-                plugins.Add(new T());
-            }
         }
     }
 }

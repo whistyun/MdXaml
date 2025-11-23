@@ -26,10 +26,14 @@
   <ItemGroup>
     <None Include="..\pack_readme\MdXaml.Svg.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Svg" Version="3.0.84" />
-  </ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+		<PackageReference Include="Svg" Version="3.0.84" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' != 'net45' ">
+		<PackageReference Include="Svg" Version="3.4.7" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MdXaml.Plugins\MdXaml.Plugins.csproj" />

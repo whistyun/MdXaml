@@ -23,13 +23,14 @@ namespace MdXaml.Plugins
         public ObservableCollection<IInlineParser> Inline { get; }
         public ObservableCollection<IImageLoader> ImageLoader { get; }
         public ObservableCollection<IElementLoader> ElementLoader { get; }
+        public ObservableCollection<ICodeBlockLoader> CodeBlockLoader { get; }
         public ObservableCollection<Definition> Highlights { get; }
 
         public MdXamlPlugins() : this(new SyntaxManager())
         {
         }
 
-        public MdXamlPlugins(SyntaxManager manager) : this(manager, new(), new(), new(), new(), new(), new(), new())
+        public MdXamlPlugins(SyntaxManager manager) : this(manager, new(), new(), new(), new(), new(), new(), new(), new())
         {
         }
 
@@ -41,7 +42,8 @@ namespace MdXaml.Plugins
             ObservableCollection<IInlineParser> inline,
             ObservableCollection<IImageLoader> imageLoader,
             ObservableCollection<IElementLoader> elementLoader,
-            ObservableCollection<Definition> highlights)
+            ObservableCollection<Definition> highlights,
+            ObservableCollection<ICodeBlockLoader> codeBlockLoader)
         {
             Syntax = manager;
             Setups = setups;
@@ -51,6 +53,7 @@ namespace MdXaml.Plugins
             ImageLoader = imageLoader;
             ElementLoader = elementLoader;
             Highlights = highlights;
+            CodeBlockLoader = codeBlockLoader;
 
             Setups.CollectionChanged += Setups_CollectionChanged;
             TopBlock.CollectionChanged += (s, e) => NotifyUpdated();
@@ -59,6 +62,7 @@ namespace MdXaml.Plugins
             ImageLoader.CollectionChanged += (s, e) => NotifyUpdated();
             ElementLoader.CollectionChanged += (s, e) => NotifyUpdated();
             Highlights.CollectionChanged += (s, e) => NotifyUpdated();
+            CodeBlockLoader.CollectionChanged += (s, e) => NotifyUpdated();
         }
 
         private void Setups_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -84,7 +88,8 @@ namespace MdXaml.Plugins
                         new(Inline),
                         new(ImageLoader),
                         new(ElementLoader),
-                        new(Highlights));
+                        new(Highlights),
+                        new(CodeBlockLoader));
 
     }
 }

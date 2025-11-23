@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-16"?>
+<FlowDocument Style="{x:Null}" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Paragraph Tag="Heading3">Question 5 (Multiple Choice):</Paragraph>
+  <Paragraph>Which term refers to being present everywhere at the same time?</Paragraph>
+  <List MarkerStyle="UpperLatin">
+    <ListItem>
+      <Paragraph>Omnipsapient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph xml:space="preserve">Omnibenevolent </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnipotential</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnipresent</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omniscient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omniscient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>None of the above</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>All of the above</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="LowerLatin">
+    <ListItem>
+      <Paragraph>Omnipsapient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph xml:space="preserve">Omnibenevolent </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnipotential</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnipresent</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omniscient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omniscient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>None of the above</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>All of the above</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="Decimal">
+    <ListItem>
+      <Paragraph>Omnipsapient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph xml:space="preserve">Omnibenevolent </Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnipotential</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnipresent</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omniscient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omniscient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>None of the above</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>All of the above</Paragraph>
+    </ListItem>
+  </List>
+  <List MarkerStyle="LowerRoman">
+    <ListItem>
+      <Paragraph>Omnipresent</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omniscient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnibenevolent</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnipotential</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omnipsapient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>Omniscient</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>None of the above</Paragraph>
+    </ListItem>
+    <ListItem>
+      <Paragraph>All of the above</Paragraph>
+    </ListItem>
+  </List>
+  <Paragraph>Please select the correct answer (A, B, C, or D).</Paragraph>
+</FlowDocument>

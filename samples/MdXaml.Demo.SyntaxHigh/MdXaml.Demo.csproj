@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFrameworks>$(SampleTargetFrameworks)</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+    <Configurations>Debug;Release</Configurations>
+    <IsPackable>False</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Asset\Pegasus-Mode.xshd" />
+    <None Remove="Asset\ResourceImage.png" />
+    <None Remove="MainWindow.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MainWindow.md">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MdXaml.AnimatedGif\MdXaml.AnimatedGif.csproj" />
+    <ProjectReference Include="..\..\MdXaml.Plugins\MdXaml.Plugins.csproj" />
+    <ProjectReference Include="..\..\MdXaml\MdXaml.csproj" />
+    <ProjectReference Include="..\..\MdXaml.Html\MdXaml.Html.csproj" />
+    <ProjectReference Include="..\..\MdXaml.Svg\MdXaml.Svg.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Asset\Pegasus-Mode.xshd" />
+    <Resource Include="Asset\ResourceImage.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="LocalPath.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

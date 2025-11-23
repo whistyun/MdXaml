@@ -21,7 +21,7 @@ namespace CheckMemoryLeak
             var vm = (MainWindowViewModel)DataContext;
             foreach (var content in vm.Contents)
             {
-                var viewer = new MarkdownScrollViewer();
+                var viewer = new MdXaml.MarkdownScrollViewer();
 
                 if (content.ContentType == ContentType.Resource)
                 {

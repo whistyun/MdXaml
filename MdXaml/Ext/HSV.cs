@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace MdXaml.Ext
 {
-    struct HSV
+    public struct HSV
     {
         public int Hue;
         public byte Saturation;
