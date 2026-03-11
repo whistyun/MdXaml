@@ -1,14 +1,14 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:std="clr-namespace:System;assembly=mscorlib"
     xmlns:mde="clr-namespace:MdXaml.Ext"
-    xmlns:mdx="clr-namespace:MdXaml">
+    xmlns:mdx="clr-namespace:MdXaml"
+    xmlns:std="clr-namespace:System;assembly=mscorlib">
 
     <Style x:Key="DocumentStyleStandard" TargetType="FlowDocument">
-        <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
         <Setter Property="PagePadding" Value="0" />
+        <Setter Property="TextAlignment" Value="Left" />
 
         <Style.Resources>
             <std:String x:Key="MarkdownStyleName">DocumentStyleStandard</std:String>
@@ -16,9 +16,9 @@
             <Style TargetType="Section">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Blockquote">
-                        <Setter Property="Padding" Value="10,5" />
                         <Setter Property="BorderBrush" Value="#DEDEDE" />
                         <Setter Property="BorderThickness" Value="5,0,0,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -27,43 +27,43 @@
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Heading1">
                         <Setter Property="FontSize" Value="42" />
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontWeight" Value="Light" />
+                        <Setter Property="Foreground" Value="#ff000000" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading2">
                         <Setter Property="FontSize" Value="20" />
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontWeight" Value="Light" />
+                        <Setter Property="Foreground" Value="#ff000000" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading3">
                         <Setter Property="FontSize" Value="20" />
-                        <Setter Property="Foreground" Value="#99000000" />
                         <Setter Property="FontWeight" Value="Light" />
+                        <Setter Property="Foreground" Value="#99000000" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading4">
                         <Setter Property="FontSize" Value="14" />
-                        <Setter Property="Foreground" Value="#99000000" />
                         <Setter Property="FontWeight" Value="Light" />
+                        <Setter Property="Foreground" Value="#99000000" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="CodeBlock">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="DarkBlue" />
                         <Setter Property="Background" Value="#EEEEEE" />
                         <Setter Property="BorderBrush" Value="#DEDEDE" />
                         <Setter Property="BorderThickness" Value="0,5,0,5" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="DarkBlue" />
                         <Setter Property="Margin" Value="5,0,5,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Note">
-                        <Setter Property="Margin" Value="5,0,5,0" />
-                        <Setter Property="Padding" Value="10,5" />
+                        <Setter Property="Background" Value="#FAFAFA" />
                         <Setter Property="BorderBrush" Value="#DEDEDE" />
                         <Setter Property="BorderThickness" Value="3,3,3,3" />
-                        <Setter Property="Background" Value="#FAFAFA" />
+                        <Setter Property="Margin" Value="5,0,5,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
 
                 </Style.Triggers>
@@ -72,18 +72,18 @@
             <Style TargetType="Run">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="DarkBlue" />
                         <Setter Property="Background" Value="#E0E0E0" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="DarkBlue" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
             <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="DarkBlue" />
                         <Setter Property="Background" Value="#E0E0E0" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="DarkBlue" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -107,23 +107,23 @@
                 it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
-                <Setter Property="CellSpacing" Value="0" />
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="Gray" />
+                <Setter Property="BorderThickness" Value="0.5" />
+                <Setter Property="CellSpacing" Value="0" />
             </Style>
 
             <Style TargetType="TableRowGroup">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="TableHeader">
-                        <Setter Property="FontWeight" Value="DemiBold" />
                         <Setter Property="Background" Value="LightGray" />
+                        <Setter Property="FontWeight" Value="DemiBold" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="TableCell">
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="Gray" />
+                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="Padding" Value="2" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
@@ -155,10 +155,10 @@
     </Style>
 
     <Style x:Key="DocumentStyleCompact" TargetType="FlowDocument">
-        <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="TextAlignment" Value="Left" />
-        <Setter Property="PagePadding" Value="0" />
+        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
         <Setter Property="FontSize" Value="12" />
+        <Setter Property="PagePadding" Value="0" />
+        <Setter Property="TextAlignment" Value="Left" />
 
         <Style.Resources>
             <std:String x:Key="MarkdownStyleName">DocumentStyleCompact</std:String>
@@ -166,9 +166,9 @@
             <Style TargetType="Section">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Blockquote">
-                        <Setter Property="Padding" Value="10,5" />
                         <Setter Property="BorderBrush" Value="#DEDEDE" />
                         <Setter Property="BorderThickness" Value="5,0,0,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -178,53 +178,53 @@
 
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Heading1">
-                        <Setter Property="Margin" Value="0,10,0,2" />
-
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontSize" Value="16" />
                         <Setter Property="FontWeight" Value="UltraBold" />
+
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="Margin" Value="0,10,0,2" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading2">
-                        <Setter Property="Margin" Value="0,10,0,2" />
-
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontSize" Value="14" />
                         <Setter Property="FontWeight" Value="Bold" />
+
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="Margin" Value="0,10,0,2" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading3">
-                        <Setter Property="Margin" Value="0,6,0,2" />
-
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontSize" Value="13" />
                         <Setter Property="FontWeight" Value="Light" />
+
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="Margin" Value="0,6,0,2" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading4">
-                        <Setter Property="Margin" Value="0,6,0,2" />
+                        <Setter Property="FontSize" Value="12" />
+                        <Setter Property="FontStyle" Value="Italic" />
+                        <Setter Property="FontWeight" Value="Light" />
 
                         <Setter Property="Foreground" Value="#aa000000" />
-                        <Setter Property="FontSize" Value="12" />
-                        <Setter Property="FontWeight" Value="Light" />
-                        <Setter Property="FontStyle" Value="Italic" />
+                        <Setter Property="Margin" Value="0,6,0,2" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="CodeBlock">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="DarkBlue" />
                         <Setter Property="Background" Value="#EEEEEE" />
                         <Setter Property="BorderBrush" Value="#DEDEDE" />
                         <Setter Property="BorderThickness" Value="0,5,0,5" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="DarkBlue" />
                         <Setter Property="Margin" Value="5,0,5,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Note">
-                        <Setter Property="Margin" Value="5,0,5,0" />
-                        <Setter Property="Padding" Value="10,5" />
+                        <Setter Property="Background" Value="#FAFAFA" />
                         <Setter Property="BorderBrush" Value="#DEDEDE" />
                         <Setter Property="BorderThickness" Value="3,3,3,3" />
-                        <Setter Property="Background" Value="#FAFAFA" />
+                        <Setter Property="Margin" Value="5,0,5,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -232,18 +232,18 @@
             <Style TargetType="Run">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="DarkBlue" />
                         <Setter Property="Background" Value="#E0E0E0" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="DarkBlue" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
             <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="DarkBlue" />
                         <Setter Property="Background" Value="#E0E0E0" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="DarkBlue" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -271,23 +271,23 @@
                 it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
-                <Setter Property="CellSpacing" Value="0" />
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="Gray" />
+                <Setter Property="BorderThickness" Value="0.5" />
+                <Setter Property="CellSpacing" Value="0" />
             </Style>
 
             <Style TargetType="TableRowGroup">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="TableHeader">
-                        <Setter Property="FontWeight" Value="DemiBold" />
                         <Setter Property="Background" Value="LightGray" />
+                        <Setter Property="FontWeight" Value="DemiBold" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="TableCell">
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="Gray" />
+                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="Padding" Value="1" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
@@ -319,10 +319,10 @@
     </Style>
 
     <Style x:Key="DocumentStyleGithubLike" TargetType="FlowDocument">
-        <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="TextAlignment" Value="Left" />
-        <Setter Property="PagePadding" Value="0" />
+        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="PagePadding" Value="0" />
+        <Setter Property="TextAlignment" Value="Left" />
 
         <Style.Resources>
             <std:String x:Key="MarkdownStyleName">DocumentStyleGithubLike</std:String>
@@ -330,9 +330,9 @@
             <Style TargetType="Section">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Blockquote">
-                        <Setter Property="Padding" Value="10,5" />
                         <Setter Property="BorderBrush" Value="#DEDEDE" />
                         <Setter Property="BorderThickness" Value="5,0,0,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -342,50 +342,50 @@
 
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Heading1">
-                        <Setter Property="Margin" Value="0,0,15,0" />
-
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontSize" Value="28" />
                         <Setter Property="FontWeight" Value="UltraBold" />
+
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="Margin" Value="0,0,15,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading2">
-                        <Setter Property="Margin" Value="0,0,15,0" />
-
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontSize" Value="21" />
                         <Setter Property="FontWeight" Value="Bold" />
+
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="Margin" Value="0,0,15,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading3">
-                        <Setter Property="Margin" Value="0,0,10,0" />
-
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontSize" Value="17.5" />
                         <Setter Property="FontWeight" Value="Bold" />
+
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="Margin" Value="0,0,10,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading4">
-                        <Setter Property="Margin" Value="0,0,5,0" />
-
-                        <Setter Property="Foreground" Value="#ff000000" />
                         <Setter Property="FontSize" Value="14" />
                         <Setter Property="FontWeight" Value="Bold" />
+
+                        <Setter Property="Foreground" Value="#ff000000" />
+                        <Setter Property="Margin" Value="0,0,5,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="CodeBlock">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="FontSize" Value="11.9" />
                         <Setter Property="Background" Value="#12181F25" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontSize" Value="11.9" />
                         <Setter Property="Padding" Value="20,10" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Note">
-                        <Setter Property="Margin" Value="5,0,5,0" />
-                        <Setter Property="Padding" Value="10,5" />
+                        <Setter Property="Background" Value="#FAFAFA" />
                         <Setter Property="BorderBrush" Value="#DEDEDE" />
                         <Setter Property="BorderThickness" Value="3,3,3,3" />
-                        <Setter Property="Background" Value="#FAFAFA" />
+                        <Setter Property="Margin" Value="5,0,5,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
 
                 </Style.Triggers>
@@ -394,18 +394,18 @@
             <Style TargetType="Run">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="FontSize" Value="11.9" />
                         <Setter Property="Background" Value="#12181F25" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontSize" Value="11.9" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
             <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="FontSize" Value="11.9" />
                         <Setter Property="Background" Value="#12181F25" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontSize" Value="11.9" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -429,13 +429,13 @@
                 it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
-                <Setter Property="CellSpacing" Value="0" />
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="#DFE2E5" />
+                <Setter Property="BorderThickness" Value="0.5" />
+                <Setter Property="CellSpacing" Value="0" />
                 <Style.Resources>
                     <Style TargetType="TableCell">
-                        <Setter Property="BorderThickness" Value="0.5" />
                         <Setter Property="BorderBrush" Value="#DFE2E5" />
+                        <Setter Property="BorderThickness" Value="0.5" />
                         <Setter Property="Padding" Value="13,6" />
                     </Style>
                 </Style.Resources>
@@ -444,9 +444,9 @@
             <Style TargetType="TableRowGroup">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="TableHeader">
+                        <Setter Property="Background" Value="#FFFFFF" />
                         <Setter Property="FontWeight" Value="DemiBold" />
                         <Setter Property="FontWeight" Value="Bold" />
-                        <Setter Property="Background" Value="#FFFFFF" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -484,10 +484,10 @@
     <Style x:Key="DocumentStyleSasabune" TargetType="FlowDocument">
         <Setter Property="Background" Value="{mde:Alpha Background, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
 
-        <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="TextAlignment" Value="Left" />
-        <Setter Property="PagePadding" Value="0" />
+        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
         <Setter Property="FontSize" Value="{mde:FontSizeScale 1.1667, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+        <Setter Property="PagePadding" Value="0" />
+        <Setter Property="TextAlignment" Value="Left" />
 
         <Style.Resources>
             <std:String x:Key="MarkdownStyleName">DocumentStyleSasabune</std:String>
@@ -495,9 +495,9 @@
             <Style TargetType="Section">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Blockquote">
-                        <Setter Property="Padding" Value="10,5" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderThickness" Value="5,0,0,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -507,50 +507,50 @@
 
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Heading1">
-                        <Setter Property="Margin" Value="0,0,15,0" />
-
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="28" />
                         <Setter Property="FontWeight" Value="UltraBold" />
+
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="0,0,15,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading2">
-                        <Setter Property="Margin" Value="0,0,15,0" />
-
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="21" />
                         <Setter Property="FontWeight" Value="Bold" />
+
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="0,0,15,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading3">
-                        <Setter Property="Margin" Value="0,0,10,0" />
-
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="17.5" />
                         <Setter Property="FontWeight" Value="Bold" />
+
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="0,0,10,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading4">
-                        <Setter Property="Margin" Value="0,0,5,0" />
-
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="14" />
                         <Setter Property="FontWeight" Value="Bold" />
+
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="0,0,5,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="CodeBlock">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="FontSize" Value="11.9" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontSize" Value="11.9" />
                         <Setter Property="Padding" Value="20,10" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Note">
-                        <Setter Property="Margin" Value="5,0,5,0" />
-                        <Setter Property="Padding" Value="10,5" />
+                        <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0196, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.1294, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderThickness" Value="3,3,3,3" />
-                        <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0196, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="5,0,5,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
 
                 </Style.Triggers>
@@ -559,25 +559,25 @@
             <Style TargetType="Run">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="FontSize" Value="11.9" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontSize" Value="11.9" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
             <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="FontSize" Value="11.9" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontSize" Value="11.9" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="Hyperlink">
-                <Setter Property="TextDecorations" Value="None" />
                 <Setter Property="Foreground" Value="{mde:Brightness Blue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                <Setter Property="TextDecorations" Value="None" />
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Foreground" Value="{mde:Brightness Red, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
@@ -600,13 +600,13 @@
                 it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
-                <Setter Property="CellSpacing" Value="0" />
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.4980, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                <Setter Property="BorderThickness" Value="0.5" />
+                <Setter Property="CellSpacing" Value="0" />
                 <Style.Resources>
                     <Style TargetType="TableCell">
-                        <Setter Property="BorderThickness" Value="0.5" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.4980, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="BorderThickness" Value="0.5" />
                         <Setter Property="Padding" Value="13,6" />
                     </Style>
                 </Style.Resources>
@@ -654,9 +654,9 @@
     <Style x:Key="DocumentStyleSasabuneStandard" TargetType="FlowDocument">
         <Setter Property="Background" Value="{mde:Alpha Background, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
 
-        <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="TextAlignment" Value="Left" />
+        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
         <Setter Property="PagePadding" Value="0" />
+        <Setter Property="TextAlignment" Value="Left" />
 
         <Style.Resources>
             <std:String x:Key="MarkdownStyleName">DocumentStyleSasabuneStandard</std:String>
@@ -664,9 +664,9 @@
             <Style TargetType="Section">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Blockquote">
-                        <Setter Property="Padding" Value="10,5" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderThickness" Value="5,0,0,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -674,44 +674,44 @@
             <Style TargetType="Paragraph">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Heading1">
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="{mde:FontSizeScale 3.5, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontWeight" Value="Light" />
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading2">
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="{mde:FontSizeScale 1.6667, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontWeight" Value="Light" />
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading3">
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 0.7, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="{mde:FontSizeScale 1.6667, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontWeight" Value="Light" />
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 0.7, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading4">
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 0.7, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="{mde:FontSizeScale 1.1667, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontWeight" Value="Light" />
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 0.7, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="CodeBlock">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderThickness" Value="0,5,0,5" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="Margin" Value="5,0,5,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Note">
-                        <Setter Property="Margin" Value="5,0,5,0" />
-                        <Setter Property="Padding" Value="10,5" />
+                        <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderThickness" Value="3,3,3,3" />
-                        <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="5,0,5,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
 
                 </Style.Triggers>
@@ -720,25 +720,25 @@
             <Style TargetType="Run">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
             <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="Hyperlink">
-                <Setter Property="TextDecorations" Value="None" />
                 <Setter Property="Foreground" Value="{mde:Brightness Blue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                <Setter Property="TextDecorations" Value="None" />
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Foreground" Value="{mde:Brightness Red, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
@@ -761,23 +761,23 @@
                 it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
-                <Setter Property="CellSpacing" Value="0" />
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.4980, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                <Setter Property="BorderThickness" Value="0.5" />
+                <Setter Property="CellSpacing" Value="0" />
             </Style>
 
             <Style TargetType="TableRowGroup">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="TableHeader">
-                        <Setter Property="FontWeight" Value="DemiBold" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.1850, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontWeight" Value="DemiBold" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="TableCell">
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.4980, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="Padding" Value="2" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
@@ -811,10 +811,10 @@
     <Style x:Key="DocumentStyleSasabuneCompact" TargetType="FlowDocument">
         <Setter Property="Background" Value="{mde:Alpha Background, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
 
-        <Setter Property="FontFamily" Value="Calibri" />
-        <Setter Property="TextAlignment" Value="Left" />
-        <Setter Property="PagePadding" Value="0" />
+        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
         <Setter Property="FontSize" Value="{mde:FontSizeScale 1.0, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+        <Setter Property="PagePadding" Value="0" />
+        <Setter Property="TextAlignment" Value="Left" />
 
         <Style.Resources>
             <std:String x:Key="MarkdownStyleName">DocumentStyleSasabuneCompact</std:String>
@@ -822,9 +822,9 @@
             <Style TargetType="Section">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Blockquote">
-                        <Setter Property="Padding" Value="10,5" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderThickness" Value="5,0,0,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -834,53 +834,53 @@
 
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="Heading1">
-                        <Setter Property="Margin" Value="0,10,0,2" />
-
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="{mde:FontSizeScale 1.3333, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontWeight" Value="UltraBold" />
+
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="0,10,0,2" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading2">
-                        <Setter Property="Margin" Value="0,10,0,2" />
-
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="{mde:FontSizeScale 1.1666, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontWeight" Value="Bold" />
+
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="0,10,0,2" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading3">
-                        <Setter Property="Margin" Value="0,6,0,2" />
-
-                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontSize" Value="{mde:FontSizeScale 1.083, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="FontWeight" Value="Light" />
+
+                        <Setter Property="Foreground" Value="{mde:Alpha Foreground, 1, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="0,6,0,2" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Heading4">
-                        <Setter Property="Margin" Value="0,6,0,2" />
+                        <Setter Property="FontSize" Value="{mde:FontSizeScale 1.0, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontStyle" Value="Italic" />
+                        <Setter Property="FontWeight" Value="Light" />
 
                         <Setter Property="Foreground" Value="{mde:Alpha Foreground, 0.7530, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
-                        <Setter Property="FontSize" Value="{mde:FontSizeScale 1.0, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
-                        <Setter Property="FontWeight" Value="Light" />
-                        <Setter Property="FontStyle" Value="Italic" />
+                        <Setter Property="Margin" Value="0,6,0,2" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="CodeBlock">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderThickness" Value="0,5,0,5" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="Margin" Value="5,0,5,0" />
                     </Trigger>
 
                     <Trigger Property="Tag" Value="Note">
-                        <Setter Property="Margin" Value="5,0,5,0" />
-                        <Setter Property="Padding" Value="10,5" />
+                        <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.1839, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="BorderThickness" Value="3,3,3,3" />
-                        <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Margin" Value="5,0,5,0" />
+                        <Setter Property="Padding" Value="10,5" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
@@ -888,25 +888,25 @@
             <Style TargetType="Run">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
             <Style TargetType="Span">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="CodeSpan">
-                        <Setter Property="FontFamily" Value="Courier New" />
-                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.0800, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontFamily" Value="{Binding FontFamily, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="Foreground" Value="{mde:Brightness DarkBlue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="Hyperlink">
-                <Setter Property="TextDecorations" Value="None" />
                 <Setter Property="Foreground" Value="{mde:Brightness Blue, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                <Setter Property="TextDecorations" Value="None" />
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="Foreground" Value="{mde:Brightness Red, Foreground, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
@@ -933,23 +933,23 @@
                 it looks like the ruled lines are not doubled.
             -->
             <Style TargetType="Table">
-                <Setter Property="CellSpacing" Value="0" />
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.4980, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                <Setter Property="BorderThickness" Value="0.5" />
+                <Setter Property="CellSpacing" Value="0" />
             </Style>
 
             <Style TargetType="TableRowGroup">
                 <Style.Triggers>
                     <Trigger Property="Tag" Value="TableHeader">
-                        <Setter Property="FontWeight" Value="DemiBold" />
                         <Setter Property="Background" Value="{mde:Alpha Foreground, 0.1850, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                        <Setter Property="FontWeight" Value="DemiBold" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
 
             <Style TargetType="TableCell">
-                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="BorderBrush" Value="{mde:Alpha Foreground, 0.4980, TargetType={x:Type mdx:MarkdownScrollViewer}}" />
+                <Setter Property="BorderThickness" Value="0.5" />
                 <Setter Property="Padding" Value="1" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TableRow}}, Path=Tag}" Value="EvenTableRow">
